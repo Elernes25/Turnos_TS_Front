@@ -1,0 +1,213 @@
+import { useForm, useFieldArray } from 'react-hook-form';
+import { useState } from "react";
+import { useFetch } from '../../hooks/useFetch';
+import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
+import { Form, Button, Card, InputGroup } from 'react-bootstrap';
+import { crearAgendaMedicoSchema,ICrearAgendaMedicoDTO,DiaSemana } from '../../types/Agenda.types';
+import BuscadorMedicos from '../medicos/components/BuscadorMedicos';
+import { IMedico } from "../../types/Medico.type";
+//import styles from './FormularioUsuario.module.scss';
+
+
+/*interface Props {
+  medicoId: string;
+}*/
+const FormularioAgendaMedico = () => {
+//const FormularioAgendaMedico: React.FC<Props> = () => {
+  const { register, control, handleSubmit, watch, formState: { errors, isSubmitting },
+  } = useForm<ICrearAgendaMedicoDTO>({
+    resolver: zodResolver(crearAgendaMedicoSchema)
+  });
+
+/*
+const onSubmit = async (datosValidados: IcrearPacienteDTO) => {
+        try {
+            await clientesAxios.post('/pacientes', datosValidados);
+            alert("Paciente guardado en base de datos");
+        }catch (error:any) {
+            const mensaje = axios.isAxiosError(error)
+                ? error.response?.data?.message ?? "Error del servidor"
+                : "el servidor esta apagado o no responde";
+            alert(mensaje); 
+        };
+        console.log(datosValidados);
+    }
+  */
+
+  const [busqueda, setBusqueda] = useState<string>("");
+  const { response: response, data: medicos, setData: setMedicos, isLoading } = useFetch<IMedico[]>('/medicos');
+  console.log("Medicos:", medicos);
+  console.log("Response en Formulario Agenda:", response);
+//  const medicosFiltrados = (medicos || []).filter(medico =>
+//        (medico.nombre ?? "medico sin asignar").toLocaleLowerCase().includes(busqueda.toLocaleLowerCase())
+//    );
+ const medicoEncontrado = medicos?.find(
+  medico => medico.nombre.toLowerCase().includes(busqueda.toLowerCase())
+  );
+  console.log ("Medico Encontrado:----->",medicoEncontrado);
+
+  
+  
+
+  const onSubmit = async (datosValidados: ICrearAgendaMedicoDTO) => {
+    
+    if (!medicoEncontrado) { console.log("No se encontró médico para asignar su agenda");
+      return
+     }
+    datosValidados.medicoId = medicoEncontrado.id;
+
+    try {
+    /* 
+      // Filtramos solo los días que el médico marcó como activos
+      const agendaFiltrada = datosValidados.body.dias
+        .filter((d) => d.activo)
+        .map((d) => ({
+          diaSemana: d.diaSemana,
+          rangos: d.rangos,
+        }));
+
+      const payload = {
+        medicoId: datosValidados.body.medicoId,
+        duracionTurnoMinutos:datosValidados.body.duracionTurnoMinutos,
+        agenda:  //agendaFiltrada,
+      };
+*/
+      const response = await axios.post('/api/v1/medicos/agenda', datosValidados);
+        alert('Agenda creada con éxito');
+        console.log(response.data);
+    } catch (error) {
+        console.error('Error al guardar la agenda:', error);
+        alert('Ocurrió un error al guardar la agenda.');
+    }
+  };
+
+  return (
+    <Card className={`${styles.contenedorFormulario} mx-auto my-4 shadow-sm`} style={{ maxWidth: '48rem' }}>
+      <BuscadorMedicos valor={busqueda} alCambiar={setBusqueda} />
+
+      <Card.Body className="p-4">
+          <Form onSubmit={handleSubmit(onSubmit, (err) => console.log("Errores de validación:", err))} noValidate>
+                <select {...register("medicoId")}>
+          {medicos?.map(medico => (
+            <option key={medico.id} value={medico.id}>
+              {medico.nombre}
+            </option>
+          ))}
+        </select>
+
+
+          <h2 className="h4 fw-bold mb-4">Configuración de Agenda Médica</h2>
+
+          <Form.Group className="mb-4" controlId="duracionTurnoMinutos">
+            <Form.Label>Duración estándar de cada turno (minutos)</Form.Label>
+            <Form.Control
+              type="number"
+              defaultValue={30}
+              min={1}
+              max={60}
+              isInvalid={!!errors.duracionTurnoMinutos}
+              {...register('duracionTurnoMinutos', { valueAsNumber: true })}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.duracionTurnoMinutos?.message}
+            </Form.Control.Feedback>
+          </Form.Group>
+
+            <div className="d-flex flex-column gap-3 mb-4">
+            {Object.values(DiaSemana).map((dia, index) => (
+              <DiaItem
+                key={dia}
+                index={index}
+                nombreDia={dia}
+                value={DiaSemana}
+                isActivo={!!watch(`dias.${index}`)}
+                control={control}
+                register={register}
+              />
+            ))}
+          </div>
+
+
+          <div className="d-grid">
+            <Button type="submit" variant="primary" disabled={isSubmitting}>
+              {isSubmitting ? 'Guardando...' : 'Guardar Configuración de Agenda'}
+            </Button>
+          </div>
+        </Form>
+      </Card.Body>
+    </Card>
+  );
+};
+
+// Subcomponente para gestionar los rangos dinámicos por día
+const DiaItem = ({ index, nombreDia, isActivo, control, register }: any) => {
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: `dias.${index}.rangos`,
+  });
+
+  return (
+    <Card className="bg-light">
+      <Card.Body className="p-3">
+        <div className="d-flex align-items-center justify-content-between">
+          <Form.Check
+            type="checkbox"
+            id={`dia-activo-${index}`}
+            label={<span className="fw-semibold">{nombreDia}</span>}
+            {...register(`dias.${index}`)}
+          />
+
+          {isActivo && (
+            <Button
+              type="button"
+              variant="outline-primary"
+              size="sm"
+              onClick={() => append({ horaInicio: '08:00', horaFin: '12:00' })}
+            >
+              + Agregar Rango Horario
+            </Button>
+          )}
+        </div>
+
+        {isActivo && (
+          <div className="d-flex flex-column gap-2 mt-3 ps-4">
+            {fields.map((field, rIndex) => (
+              <div key={field.id} className="d-flex align-items-center flex-wrap gap-2">
+                <small className="text-muted fw-medium">Rango {rIndex + 1}:</small>
+                <InputGroup size="sm" style={{ width: 'auto' }}>
+                  <Form.Control
+                    type="time"
+                    aria-label={`Hora de inicio del rango ${rIndex + 1}`}
+                    {...register(`dias.${index}.rangos.${rIndex}.horaInicio`)}
+                  />
+                  <InputGroup.Text>a</InputGroup.Text>
+                  <Form.Control
+                    type="time"
+                    aria-label={`Hora de fin del rango ${rIndex + 1}`}
+                    {...register(`dias.${index}.rangos.${rIndex}.horaFin`)}
+                  />
+                </InputGroup>
+                {fields.length > 1 && (
+                  <Button
+                    type="button"
+                    variant="link"
+                    size="sm"
+                    className="text-danger fw-bold text-decoration-none"
+                    aria-label={`Quitar rango ${rIndex + 1}`}
+                    onClick={() => remove(rIndex)}
+                  >
+                    ✕
+                  </Button>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </Card.Body>
+    </Card>
+  );
+};
+
+
+export default FormularioAgendaMedico;
