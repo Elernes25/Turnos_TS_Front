@@ -7,3 +7,17 @@
 .renglonCompacto {
   padding: 4px 8px;   // menos espacio arriba/abajo
 }
+
+.renglonCompacto2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.renglonPar {
+  background-color: #f8f9fa;
+}
+
+.renglonImpar {
+  background-color: #ffffff;
+}

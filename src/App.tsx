@@ -2,7 +2,7 @@ import { Toaster } from "sonner"
 import DashboardRecepcion from "./pages/DashboardRecepcion"
 import FormularioPaciente from "./components/pacientes/FormularioPaciente"
 import FormularioMedico from "./components/medicos/FormularioMedico"
-import ListadoEspecialidades from "./components/especialidad/ListadoEspecialidades"
+import FormularioEspecialidades from "./components/especialidad/FormularioEspecialidades"
 import ListadoMedicos from "./components/medicos/ListadoMedicos"
 import DetalleTurno from "./components/turnos/DetalleTurno"
 import NotFound from "./components/utils/notfound"
@@ -77,7 +77,7 @@ function App() {
                     </Route>
                     <Route element={<RutasProtegidas roles={[RolUsuario.ADMIN,RolUsuario.SUPERVISOR,RolUsuario.MEDICO,RolUsuario.RECEPCIONISTA]} />}>
                         <Route path="listado-medicos" element={<ListadoMedicos />} />
-                        <Route path="especialidades" element={<ListadoEspecialidades />} />
+                        <Route path="especialidades" element={<FormularioEspecialidades />} />
                     </Route>
                     
                     <Route element={<RutasProtegidas roles={[RolUsuario.ADMIN]} />}>
