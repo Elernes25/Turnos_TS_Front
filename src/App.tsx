@@ -7,7 +7,6 @@ import ListadoMedicos from "./components/medicos/ListadoMedicos"
 import DetalleTurno from "./components/turnos/DetalleTurno"
 import NotFound from "./components/utils/notfound"
 import LoginPage from  './pages/Login'
-//import PrivateRoute from "./components/utils/privateRoute"
 import LogoutButton from "./components/logoutButton"
 
 import { Routes, Route, Navigate, Outlet} from "react-router-dom";
@@ -15,7 +14,9 @@ import { Routes, Route, Navigate, Outlet} from "react-router-dom";
 import DashboardLayout from "./components/layout/DashboardLayout"
 import FormularioAdministrador from "./components/administrador/FormularioAdministrador"
 import FormularioAgendaMedico from "./components/administrador/FormularioAgenda"
+import FormularioObraSocial from "./components/obraSocial/FormularioObraSocial"
 import ForbiddenPage from "./pages/ForbiddenPage"
+import EditarMedico from "./components/medicos/components/EditarMedico"
 
 //import { jwtDecode } from "jwt-decode";
 //import type {ITokenPayload} from "./types/Usuario.type";
@@ -24,6 +25,7 @@ import { getSession } from "./auth/session"
 import DashboardSupervisor from "./components/supervisor/DashboardSupervisor"
 import PrimerIngreso from "./pages/PrimerIngreso"
 import { useLocation } from "react-router-dom";
+import ListadoMedicosMain from "./components/medicos/ListadoMedicosMain"
 
 interface RutaPrivadaProps {
     roles: IRolUsuario[];
@@ -74,15 +76,21 @@ function App() {
                     <Route element={<RutasProtegidas roles={[RolUsuario.ADMIN,RolUsuario.SUPERVISOR]} />}>
                         <Route path="nuevo-medico" element={<FormularioMedico />} />
                         <Route path="supervisor" element={<DashboardSupervisor />} />
+                        <Route path="medicos" element={<ListadoMedicosMain/>} />
+                        <Route path="/medicos/:id/editar" element={<EditarMedico />} />
+                        <Route path="medicos/:id/agenda" element={<FormularioAgendaMedico/>} />
                     </Route>
                     <Route element={<RutasProtegidas roles={[RolUsuario.ADMIN,RolUsuario.SUPERVISOR,RolUsuario.MEDICO,RolUsuario.RECEPCIONISTA]} />}>
                         <Route path="listado-medicos" element={<ListadoMedicos />} />
                         <Route path="especialidades" element={<FormularioEspecialidades />} />
+                        
                     </Route>
-                    
+                     <Route element={<RutasProtegidas roles={[RolUsuario.ADMIN,RolUsuario.SUPERVISOR,RolUsuario.RECEPCIONISTA]} />}>
+                        <Route path="Obra Social" element={<FormularioObraSocial />} />
+                    </Route>
                     <Route element={<RutasProtegidas roles={[RolUsuario.ADMIN]} />}>
                         <Route path="administrador" element={<FormularioAdministrador />} />
-                        <Route path="administrador-agenda" element={<FormularioAgendaMedico/>} />
+                        
                     </Route>
 
                     <Route path="cerrar-sesion" element={<LogoutButton />} />

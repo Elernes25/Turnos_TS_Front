@@ -6,10 +6,9 @@ interface Props {
     errores: FieldErrors<IcrearMedicoDTO>;
     styles: any;
 }
-
 const TelefonoMedico = ({ register, errores, styles }:Props)=> ( 
 <fieldset>
-    <legend> Telefono </legend>
+    <legend> Teléfono </legend>
         <div className={styles.filaInput} >
             <select
                 id="opciones"
@@ -33,7 +32,7 @@ const TelefonoMedico = ({ register, errores, styles }:Props)=> (
                 type="text"
                 {...register("telefono.codigoArea")}
                 className={styles.campoInput}
-                placeholder="Código de Área"
+                placeholder="3777"
             />
             {errores.telefono?.codigoArea && <span className={styles.error}>{errores.telefono.codigoArea.message}</span>}
             <input

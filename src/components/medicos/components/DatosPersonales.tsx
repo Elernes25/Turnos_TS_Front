@@ -1,15 +1,15 @@
-import {UseFormRegister,FieldErrors} from 'react-hook-form';
+import {UseFormRegister,FieldErrors,Control } from 'react-hook-form';
 import {IcrearMedicoDTO} from '../../../types/Medico.type';
-import {SelectEspecialidad} from '../../../components/especialidad/SelectEspecialidad';
-
+import { SelectEspecialidad } from '../../especialidad/SelectEspecialidad';
 
 interface Props {
     register: UseFormRegister<IcrearMedicoDTO>;
+    control: Control<IcrearMedicoDTO>;
     errores: FieldErrors<IcrearMedicoDTO>;
     styles: any;
 }
 
-const DatosPersonales = ({ register, errores, styles }:Props) => (
+const DatosPersonales = ({ register, control, errores, styles }: Props) => (
     <fieldset>
         <legend> Datos Personales </legend>
         <input
@@ -38,10 +38,10 @@ const DatosPersonales = ({ register, errores, styles }:Props) => (
         />
         
      */}
-        <SelectEspecialidad register={register} styles={styles} />
-        {errores.especialidad && <span className={styles.error}>{errores.especialidad.message}</span>}
-
-    {/*    <select
+         <SelectEspecialidad control={control} styles={styles} />
+             {errores.especialidad && (<span className={styles.error}>{errores.especialidad.message}</span>)}
+   
+   { /*    <select
             {...register("especialidad")}
             className={styles.campoInput}
         >
@@ -55,7 +55,7 @@ const DatosPersonales = ({ register, errores, styles }:Props) => (
     */}   
         <input
             type="text" 
-            {...register("matriculaNumero")}
+            {...register("numeroMatricula")}
             className={styles.campoInput} 	
             placeholder="Numero de Matricula"
         />

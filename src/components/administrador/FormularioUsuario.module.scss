@@ -3,7 +3,17 @@ $color-fondo: #c9c9c9;
 $color-borde: #acaaaa;
 
 /*Nesting-anidamiento */
+.encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
 
+  h1 { font-size: 1.75rem; margin: 0; }
+  p  { margin: 0.25rem 0 0; color: #475569; }
+}
 .contenedorFormulario {
     background-color: $color-fondo;
     padding: 30px;

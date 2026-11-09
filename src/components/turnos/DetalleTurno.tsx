@@ -90,7 +90,7 @@ const DetalleTurno = () => {
                         </Col>
                         <Col xs={12} md={4}>
                             <div className="small text-body-secondary">Especialidad</div>
-                            <div className="fw-semibold text-capitalize">{turno.especialidad}</div>
+                            <div className="fw-semibold text-capitalize">{turno.especialidad?.nombre ?? "Sin especialidad"}</div>
                         </Col>
                         <Col xs={12} md={4}>
                             <div className="small text-body-secondary">Identificador</div>
@@ -110,9 +110,9 @@ const DetalleTurno = () => {
                             <Card.Header className="bg-white fw-semibold">Datos del paciente</Card.Header>
                             <ListGroup variant="flush">
                                 <ListGroup.Item><span className="text-body-secondary">DNI</span><br />{paciente.dni}</ListGroup.Item>
-                                <ListGroup.Item><span className="text-body-secondary">Email</span><br />{paciente.email}</ListGroup.Item>
+                                <ListGroup.Item><span className="text-body-secondary">Email</span><br />{paciente.email ? `(${paciente.email}`: "No registrado"}</ListGroup.Item>
                                 <ListGroup.Item><span className="text-body-secondary">Telefono</span><br />{paciente.telefono ? `(${paciente.telefono.codigoArea}) ${paciente.telefono.numero}` : "No registrado"}</ListGroup.Item>
-                                <ListGroup.Item><span className="text-body-secondary">Direccion</span><br />{paciente.direccion ? `${paciente.direccion.calle} ${paciente.direccion.numero}, ${paciente.direccion.barrio}` : "No registrada"}</ListGroup.Item>
+                                <ListGroup.Item><span className="text-body-secondary">Direccion</span><br />{paciente.direccion ? `${paciente.direccion.calle} ${paciente.direccion.numero} - ${paciente.direccion.barrio}` : "No registrada"}</ListGroup.Item>
                             </ListGroup>
                         </Card>
                     </Col>

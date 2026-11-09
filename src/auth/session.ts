@@ -1,7 +1,8 @@
 import type { SessionPayload } from '../types/Session';
 import { RolUsuario } from '../types/Usuario.type';
+import { Navigate} from "react-router-dom";
 
-/*TODO usar jwtDecode */
+//TODO usar jwtDecode 
 const SESSION_EVENT = 'session-changed';
 
 const isUserRole = (value: unknown): value is RolUsuario => (
@@ -10,7 +11,6 @@ const isUserRole = (value: unknown): value is RolUsuario => (
     || value === 'ADMIN'
     || value === 'MEDICO'
     || value === 'SUPERVISOR'
-
 );
 
 const parsePayload = (token: string): SessionPayload | null => {
@@ -44,15 +44,34 @@ const parsePayload = (token: string): SessionPayload | null => {
     }
 };
 
+/*
 export const getSession = (): SessionPayload | null => {
     const token = localStorage.getItem('token');
     return token ? parsePayload(token) : null;
+};
+*/
+
+export const getSession = (): SessionPayload | null => {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+
+    const session = parsePayload(token);
+    if (!session) return null;
+
+    if (session.exp && Date.now() >= session.exp * 1000) { //elimina tokens expirados
+        clearSession();
+        return null;
+
+    }
+    return session;
 };
 
 export const saveSession = (token: string): void => {
     localStorage.setItem('token', token);
     window.dispatchEvent(new Event(SESSION_EVENT));
 };
+
+
 
 export const clearSession = (): void => {
     localStorage.removeItem('token');
@@ -71,8 +90,7 @@ export const subscribeSession = (callback: () => void): (() => void) => {
 /*
 import { jwtDecode } from 'jwt-decode';
 import { z } from 'zod';
-
-import type { SessionPayload } from '../types/Api.type';
+import type { SessionPayload } from '../types/Session';
 
 const SESSION_EVENT = 'session-changed';
 

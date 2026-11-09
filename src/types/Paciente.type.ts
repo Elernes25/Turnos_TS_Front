@@ -16,7 +16,7 @@ export interface TelefonoPaciente {
 }
 
 export interface ObraSocialPaciente {
-  obraSocialNombre: ObraSocial;
+  nombreObraSocial: string;
   numeroAfiliado: string;
 }
 
@@ -31,8 +31,8 @@ export interface IPaciente {
   telefono: TelefonoPaciente;
   obraSocial: ObraSocialPaciente;
 }
-
-export enum ObraSocial {
+ 
+/*export enum ObraSocial {
     PAMI = 'PAMI',
     OSPEL = 'OSPEL',
     OSDE = 'OSDE',
@@ -46,7 +46,7 @@ export enum ObraSocial {
     OTRAS = 'OTRAS',
     NINGUNA = 'NINGUNA',
 }
-
+*/
 export enum TipoTelefono {
     CELULAR = 'CELULAR',
     FIJO = 'FIJO'
@@ -61,31 +61,35 @@ export enum TipoSexo {
 
 // idem a medicos
 export const direccionSchema = z.object({
-    calle: z.string(),
-    numero: z.string(),
+    calle: z.string().trim().min(1, { error: "La calle es obligatoria" }),
+    numero: z.string().trim().min(1, { error: "El número es obligatorio" }),
     piso: z.string().optional().default(""),
     departamento: z.string().optional().default(""),
     barrio: z.string().optional().default("")
 });
 //idem a medicos
 export const telefonoSchema = z.object({
-    tipo: z.enum(TipoTelefono).optional().default(TipoTelefono.CELULAR),
-    codigoPais: z.string(),
-    codigoArea: z.string(),
-    numero: z.string()
+    tipo: z.enum(TipoTelefono),
+    codigoPais: z.string().trim().min(1, { error: "Código de país obligatorio" }),
+    codigoArea: z.string().trim().min(1, { error: "Código de área obligatorio" }),
+    numero: z.string().trim().min(1, { error: "El número es obligatorio" })
 });
 //
-export const pacienteSchema = z.object({
+export const pacienteSchema = z.object({  //se usa en turno
     nombre: z.string(),
-    dni: z.string(),
-    fechaDeNacimiento : z.iso.date(),
+    dni: z.string({ error: "El DNI es obligatorio" }).trim().regex(/^\d{7,8}$/, { error: "El DNI debe tener entre 7 y 8 dígitos, sin puntos" }),
+    fechaDeNacimiento: z
+        .string()
+        .min(1, { error: "La fecha de nacimiento es obligatoria" })
+        .pipe(z.iso.date({ error: "Fecha inválida" }))
+        .refine((f) => new Date(f) <= new Date(), { error: "La fecha no puede ser futura" }),
     sexo : z.enum(TipoSexo),
     direccion: direccionSchema,
-    email: z.email(),
+    email:z.union([z.email({ error: "Email inválido" }), z.literal("")]).optional(),
     telefono: telefonoSchema,
     obraSocial: z.object({
-        nombreObraSocial: z.enum(ObraSocial),
-        numeroAfiliado: z.string().optional().default("")
+        obraSocialID: z.string().regex(/^[0-9a-fA-F]{24}$/, { error: "Obra social inválida" }).or(z.literal("")),
+        numeroAfiliado: z.string().trim().default("")
     }),
     createdAt: z.string(),
     updatedAt: z.string(),
@@ -94,16 +98,27 @@ export const pacienteSchema = z.object({
 
 export const crearPacienteSchema = z.object({
     nombre: z.string().min(2, "El nombre del paciente es obligatorio"),
-    dni: z.string().min(7, "DNI invalido debe tener al menos 7 digitos"),
-    fechaDeNacimiento : z.iso.date(),
+    dni: z.string({ error: "El DNI es obligatorio" }).trim().regex(/^\d{7,8}$/, { error: "El DNI debe tener entre 7 y 8 dígitos, sin puntos" }),
+    fechaDeNacimiento: z.string().min(1, { error: "La fecha de nacimiento es obligatoria" })
+        .pipe(z.iso.date({ error: "Fecha inválida" })).refine((f) => new Date(f) <= new Date(), { error: "La fecha no puede ser futura" }),
     sexo : z.enum(TipoSexo),
     direccion: direccionSchema,
-    email: z.email('Email invalido'),
+    email: z.union([z.email('Email inválido'), z.literal('')]).optional(),
     telefono: telefonoSchema,
     obraSocial: z.object({
-        nombreObraSocial: z.enum(ObraSocial),
-        numeroAfiliado: z.string().optional().default("")
-    })
+        obraSocialID: z.string().regex(/^[0-9a-fA-F]{24}$/, { error: "Obra social inválida" }).or(z.literal("")),
+        numeroAfiliado: z.string().trim().default("")
+    }).refine((data) => {
+        if (data.obraSocialID === "") {
+            return true; // NINGUNA
+        }
+        return data.numeroAfiliado.trim().length > 0;
+        },
+        {
+        message: "El número de afiliado es obligatorio",
+        path: ["numeroAfiliado"],
+        }
+)
 });
 
 export type IcrearPacienteDTO = z.input<typeof crearPacienteSchema>;

@@ -1,0 +1,36 @@
+// medicos/ListadoMedicos.module.scss
+.contenedor {
+  max-width: 75rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+
+  h1 { font-size: 1.75rem; margin: 0; }
+  p  { margin: 0.25rem 0 0; color: #475569; }
+}
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.buscador { flex: 1; min-width: 15rem; }
+.selector { width: auto; }
+
+.tabla { background: #fff; vertical-align: middle; }
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}

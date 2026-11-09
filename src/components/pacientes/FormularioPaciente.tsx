@@ -6,28 +6,23 @@ import styles from './FormularioPaciente.module.scss';
 import {JsonDebugger} from '../utils/JsonDebugger';
 import {Button} from 'react-bootstrap';
 //import {UseFormRegister,FieldErrors} from 'react-hook-form';
-import { crearPacienteSchema, TipoSexo } from '../../types/Paciente.type';  //importa el esquema de validacion de datos
+import { crearPacienteSchema, TipoSexo, TipoTelefono } from '../../types/Paciente.type';  //importa el esquema de validacion de datos
+
 import type {IcrearPacienteDTO} from '../../types/Paciente.type' //tipo de datos para el formulario de paciente
 
 import DatosPersonales from './components/DatosPersonales';
 import DireccionPaciente from './components/DireccionPaciente';
-//import HistorialMedicoPaciente from './components/HistorialMedicoPaciente';
-import ObraSocialPaciente from './components/ObraSocialPaciente';
+import ObraSocialPaciente from './../obraSocial/ObraSocialPaciente';
 import TelefonoPaciente from './components/TelefonoPaciente';
 import axios from 'axios';
-import {clientesAxios} from '../../config/axios'
+import {clientesAxios} from '../../config/axios';
+import { toast } from 'sonner';
 
 /*React (y ESLint) espera que los componentes se nombren con PascalCase
 (primera letra mayúscula). Si usas minúscula (formularioPaciente), 
 ESLint lo interpreta como una función normal y no como un componente válido,
 por eso te subraya useState. */
-/*
-interface Props {
-    register: UseFormRegister<IcrearPacienteInput>;
-    error: FieldErrors<IcrearPacienteInput>;
-    styles: any;
-}
-*/
+
 const FormularioPaciente = () => {
     /*
     zodResolver es una función que viene del paquete @hookform/resolvers/zod.
@@ -37,24 +32,47 @@ const FormularioPaciente = () => {
     en el formato de errores que React Hook Form espera (formState.errors).
      */
 
-    const { register, handleSubmit, watch, formState: { errors }} 
-            = useForm<IcrearPacienteDTO>({ resolver: zodResolver(crearPacienteSchema), defaultValues: {
-            sexo: TipoSexo.FEMENINO} });
+    const { register, handleSubmit, setValue, control, reset, formState: { errors, isSubmitting  }} 
+            = useForm<IcrearPacienteDTO>({ resolver: zodResolver(crearPacienteSchema), 
+                mode: "onChange",            // valida mientras se escribe
+                reValidateMode: "onChange", //revalida mientras se escribe tras un submit fallido
+                defaultValues: {
+                    nombre: "",
+                    dni: "",
+                    fechaDeNacimiento: "",
+                    sexo: TipoSexo.FEMENINO,
+                    email: "",
+                    direccion: {
+                        calle: "",
+                        numero: "",
+                        piso: "",
+                        departamento: "",
+                        barrio: "",
+                    },
+                    telefono: {
+                        tipo: TipoTelefono.CELULAR,
+                        codigoPais: "54",
+                        codigoArea: "3777",
+                        numero: "",
+                    },
+                    obraSocial: {
+                        obraSocialID: "",
+                        numeroAfiliado: ""
+                    },
+                }
+            });
  
- /*
- const { register, handleSubmit, watch, formState: { errors }} 
-            = useForm<IcrearPacienteDTO>({ resolver: zodResolver(crearPacienteSchema) });
- 
- */
     const onSubmit = async (datosValidados: IcrearPacienteDTO) => {
         try {
             await clientesAxios.post('/pacientes', datosValidados);
-            alert("Paciente guardado en base de datos");
+            //alert("Paciente guardado en base de datos");
+             toast.success("Paciente guardado correctamente");
+             reset(); // vuelve a los defaultValues de useForm
         }catch (error:any) {
             const mensaje = axios.isAxiosError(error)
                 ? error.response?.data?.message ?? "Error del servidor"
                 : "el servidor esta apagado o no responde";
-            alert(mensaje); /*hacer con sonner toast */
+            toast.error(mensaje);
         };
         console.log(datosValidados);
     };
@@ -80,16 +98,19 @@ const FormularioPaciente = () => {
                     styles={styles}
                 />
                <ObraSocialPaciente
+                    control={control}
                     register={register}
                     errores={errors}
                     styles={styles}
+                    setValue={setValue}
                 />
-              <Button type="submit"> Guardar Paciente </Button>
-            
-{/*todos los fieldset podrian ser un componente de React diferente */}
-{/*YA SON UN COMPONENTE DIFERENTE */}
+
+              <Button type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? "Guardando..." : "Guardar Paciente"}
+               </Button>
+
             </form>
-            <JsonDebugger watch={watch} titulo="ESTADO DEL JSON" />
+            <JsonDebugger control={control} titulo="ESTADO DEL JSON" />
         </div>
     );
 };

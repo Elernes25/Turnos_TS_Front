@@ -30,15 +30,19 @@ const Sidebar = () => {
             `nav-link text-white rounded p-2 ${isActive ? 'bg-primary' : 'hover-effect'}`
           }
         >
-          🏠 Dashboard
+          Dashboard
         </NavLink>
         <Nav.Link as={Link} to="/nuevo-paciente"> Registrar Paciente </Nav.Link>
         <Nav.Link as={Link} to="/nuevo-medico"> Registrar Medico </Nav.Link>
         <Nav.Link as={Link} to="/listado-medicos"> Listado Medicos </Nav.Link>
+        <Nav.Link as={Link} to="/medicos" > Medicos</Nav.Link> 
+        <Nav.Link as={Link} to="/medicos/:id/editar" > *EditarMedico</Nav.Link> 
+
         <Nav.Link as={Link} to="/especialidades"> Especialidades </Nav.Link>
+        <Nav.Link as={Link} to="/Obra Social"> Obra Social </Nav.Link>
         <Nav.Link as={Link} to="/supervisor"> DashboardSupervisor </Nav.Link>
         <Nav.Link as={Link} to="/administrador"> Administrador </Nav.Link>
-        <Nav.Link as={Link} to="/administrador-agenda"> Agenda Medicos </Nav.Link>
+        {/*<Nav.Link as={Link} to="/medicos/:id/agenda"> Agenda Medicos </Nav.Link>*}
 
         {/* 3. Mi Perfil */}
         <NavLink 
@@ -47,7 +51,7 @@ const Sidebar = () => {
             `nav-link text-white rounded p-2 ${isActive ? 'bg-primary' : 'hover-effect'}`
           }
         >
-          👤 Mi Perfil
+          Mi Perfil
         </NavLink>
 
       </Nav>
@@ -59,7 +63,7 @@ const Sidebar = () => {
         onClick={cerrarSesion} 
         className="text-danger rounded p-2 w-100 text-start bg-transparent border-0 hover-effect"
       >
-        🚪 Cerrar Sesión
+        Cerrar Sesión
       </button>
     </div>
   );
