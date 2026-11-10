@@ -12,25 +12,33 @@ interface Props {
 const DatosPersonales = ({ register, control, errores, styles }: Props) => (
     <fieldset>
         <legend> Datos Personales </legend>
-        <input
-            type="text"
-            {...register("nombre")}
-            className={styles.campoInput} 	placeholder="Nombre Completo"
-        />
-        {errores.nombre && <span className={styles.error}>{errores.nombre.message}</span>}
-        <input
-            type="text" 
-            {...register("dni")}
-            className={styles.campoInput} 	placeholder="DNI"
-        />
-        {errores.dni && <span className={styles.error}>{errores.dni.message}</span>}
-        
-        <input
-            type="email"
-            {...register("email")}
-            className={styles.campoInput} 	placeholder="E-mail"
-        />
-        {errores.email && <span className={styles.error}>{errores.email.message}</span>}
+        <div className={styles.grupoCampo}>
+            <small className={styles.ayudaCampo}>Nombre y apellido tal como figura en el DNI.</small>
+            <input
+                type="text"
+                {...register("nombre")}
+                className={styles.campoInput} 	placeholder="Nombre Completo"
+            />
+            {errores.nombre && <span className={styles.error}>{errores.nombre.message}</span>}
+        </div>
+        <div className={styles.grupoCampo}>
+            <small className={styles.ayudaCampo}>Número de documento sin puntos.</small>
+            <input
+                type="text" 
+                {...register("dni")}
+                className={styles.campoInput} 	placeholder="DNI"
+            />
+            {errores.dni && <span className={styles.error}>{errores.dni.message}</span>}
+        </div>
+        <div className={styles.grupoCampo}>
+            <small className={styles.ayudaCampo}>Correo electrónico de contacto profesional.</small>
+            <input
+                type="email"
+                {...register("email")}
+                className={styles.campoInput} 	placeholder="E-mail"
+            />
+            {errores.email && <span className={styles.error}>{errores.email.message}</span>}
+        </div>
      {/*   <input
             type="text" name="especialidad" value={esp}
             className={styles.campoInput} 	placeholder="Especialidad"
@@ -38,27 +46,21 @@ const DatosPersonales = ({ register, control, errores, styles }: Props) => (
         />
         
      */}
+        <div className={styles.grupoCampo}>
+            <small className={styles.ayudaCampo}>Selecciona la especialidad del médico.</small>
          <SelectEspecialidad control={control} styles={styles} />
-             {errores.especialidad && (<span className={styles.error}>{errores.especialidad.message}</span>)}
+            {errores.especialidad && (<span className={styles.error}>{errores.especialidad.message}</span>)}
+        </div>
    
-   { /*    <select
-            {...register("especialidad")}
-            className={styles.campoInput}
-        >
-        <option value="" disabled>Seleccione especialidad</option>
-            {especialidad.map(esp => (
-                <option key={esp.id} value={esp.id}>
-                    {esp.especialidad}
-                </option>
-            ))}
-        </select>
-    */}   
-        <input
-            type="text" 
-            {...register("numeroMatricula")}
-            className={styles.campoInput} 	
-            placeholder="Numero de Matricula"
-        />
+        <div className={styles.grupoCampo}>
+            <small className={styles.ayudaCampo}>Número de matrícula profesional.</small>
+            <input
+                type="text" 
+                {...register("numeroMatricula")}
+                className={styles.campoInput} 	
+                placeholder="Numero de Matricula"
+            />
+        </div>
     </fieldset>
 );
 export default DatosPersonales;

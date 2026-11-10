@@ -35,7 +35,7 @@ const FormularioMedico = ({ medicoId, valoresIniciales }: FormularioMedicoProps)
     const onSubmit = async (datosValidados: IcrearMedicoDTO): Promise<void> => {
         try {
         if (esEdicion) {
-            await clientesAxios.put(`/medicos/${medicoId}`, datosValidados);
+            await clientesAxios.put(`/medicos/${medicoId}/editar`, datosValidados);
         } else {
             await clientesAxios.post('/medicos', datosValidados);
         }

@@ -1,4 +1,181 @@
+import { useEffect, useState } from 'react';
 import { Nav } from 'react-bootstrap';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { 
+  HouseDoor, 
+  PersonPlus, 
+  HeartPulse, 
+  People, 
+  Hospital, 
+  ClipboardCheck, 
+  ShieldLock, 
+  CalendarWeek, 
+  PersonCircle, 
+  BoxArrowRight,
+  type Icon
+} from 'react-bootstrap-icons';
+
+// Ajusta estas rutas de importación según la ubicación de tus archivos
+import { getSession, clearSession, subscribeSession } from '../../auth/session'; 
+import { RolUsuario } from '../../types/Usuario.type';
+import styles from './Sidebar.module.scss';
+
+interface MenuItem {
+  ruta: string;
+  texto: string;
+  icono: Icon;
+  end?: boolean;
+  roles: RolUsuario[];
+}
+
+// 1. Definimos los enlaces usando tus tipos exactos de RolUsuario
+const MENU_ITEMS: MenuItem[] = [
+  { 
+    ruta: '/', 
+    texto: 'Dashboard', 
+    icono: HouseDoor, 
+    end: true, 
+    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR, RolUsuario.MEDICO, RolUsuario.RECEPCIONISTA, RolUsuario.PACIENTE] 
+  },
+  { 
+    ruta: '/nuevo-paciente', 
+    texto: 'Registrar Paciente', 
+    icono: PersonPlus, 
+    roles: [RolUsuario.ADMIN, RolUsuario.RECEPCIONISTA] 
+  },
+  { 
+    ruta: '/nuevo-medico', 
+    texto: 'Registrar Médico', 
+    icono: HeartPulse, 
+    roles: [RolUsuario.ADMIN] 
+  },
+  { 
+    ruta: '/listado-medicos', 
+    texto: 'Listado Médicos', 
+    icono: People, 
+    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR, RolUsuario.RECEPCIONISTA] 
+  },
+  { 
+    ruta: '/medicos', 
+    texto: 'Médicos', 
+    icono: People, 
+    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR] 
+  },
+  { 
+    ruta: '/especialidades', 
+    texto: 'Especialidades', 
+    icono: Hospital, 
+    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR] 
+  },
+  { 
+    ruta: '/supervisor', 
+    texto: 'Dashboard Supervisor', 
+    icono: ClipboardCheck, 
+    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR] 
+  },
+  { 
+    ruta: '/administrador', 
+    texto: 'Administrador', 
+    icono: ShieldLock, 
+    roles: [RolUsuario.ADMIN] 
+  },
+  { 
+    ruta: '/administrador-agenda', 
+    texto: 'Agenda Médicos', 
+    icono: CalendarWeek, 
+    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR, RolUsuario.MEDICO, RolUsuario.RECEPCIONISTA] 
+  },
+  { 
+    ruta: '/perfil', 
+    texto: 'Mi Perfil', 
+    icono: PersonCircle, 
+    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR, RolUsuario.MEDICO, RolUsuario.RECEPCIONISTA, RolUsuario.PACIENTE] 
+  }
+];
+
+const Sidebar = () => {
+  const navigate = useNavigate();
+  
+  // 2. Estado reactivo conectado a getSession()
+  const [session, setSession] = useState(() => getSession());
+
+  // 3. Escuchamos cambios en la sesión (login, logout o cambios en otra pestaña)
+  useEffect(() => {
+    const actualizarSesion = () => setSession(getSession());
+    return subscribeSession(actualizarSesion);
+  }, []);
+
+  const cerrarSesion = () => {
+    clearSession(); // Usa tu función para borrar el token y disparar el evento
+    navigate('/login');
+  };
+
+ const estiloEnlace = ({ isActive }: { isActive: boolean }) =>
+    `nav-link text-white rounded p-2 d-flex align-items-center gap-2 ${
+      isActive ? 'bg-primary' : styles.hoverEffect
+    }`;
+
+  // Si no hay sesión válida, no renderizamos el sidebar (o podrías redirigir)
+  if (!session) return null;
+
+  // 4. Filtramos según el rol decodificado del JWT
+  const enlacesPermitidos = MENU_ITEMS.filter((item) => 
+    item.roles.includes(session.rol)
+  );
+
+  return (
+    <div 
+      className="bg-dark text-white p-3 d-flex flex-column vh-100 position-sticky top-0"
+      style={{ minWidth: '220px', maxWidth: '220px' }}
+    >
+      <div className="text-center my-4">
+        <h3 className="fw-bold">Mi Sistema</h3>
+        <small className="text-info d-block">{session.user}</small>
+        <span className="badge bg-secondary mt-1">{session.rol}</span>
+      </div>
+
+      <hr className="text-secondary" />
+
+      {/* Navegación filtrada por rol */}
+      <Nav className="flex-column flex-grow-1 gap-2">
+        {enlacesPermitidos.map((item) => {
+          const IconoComponente = item.icono;
+          return (
+            <NavLink 
+              key={item.ruta} 
+              
+              to={item.ruta} 
+              end={item.end} 
+              className={estiloEnlace}
+            >
+              <IconoComponente size={18} />
+              <span>{item.texto}</span>
+            </NavLink>
+          );
+        })}
+      </Nav>
+
+      <hr className="text-secondary" />
+
+      {/* Botón de Salida */}
+      <button 
+        onClick={cerrarSesion} 
+        className="text-danger rounded p-2 w-100 text-start bg-transparent border-0 hover-effect d-flex align-items-center gap-2"
+      >
+        <BoxArrowRight size={18} />
+        <span>Cerrar Sesión</span>
+      </button>
+    </div>
+  );
+};
+
+export default Sidebar;
+
+
+
+
+
+/*import { Nav } from 'react-bootstrap';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 
 const Sidebar = () => {
@@ -21,10 +198,10 @@ const Sidebar = () => {
       
       <hr className="text-secondary" />
 
-      {/* Navegación */}
+      {// Navegación //}
       <Nav className="flex-column flex-grow-1 gap-2">
         
-        {/* 1. Inicio */}
+        {// 1. Inicio //}
         <NavLink to="/" 
           className={({ isActive }) => 
             `nav-link text-white rounded p-2 ${isActive ? 'bg-primary' : 'hover-effect'}`
@@ -44,7 +221,7 @@ const Sidebar = () => {
         <Nav.Link as={Link} to="/administrador"> Administrador </Nav.Link>
         {/*<Nav.Link as={Link} to="/medicos/:id/agenda"> Agenda Medicos </Nav.Link>*}
 
-        {/* 3. Mi Perfil */}
+        {// 3. Mi Perfil //}
         <NavLink 
           to="/perfil" 
           className={({ isActive }) => 
@@ -58,7 +235,7 @@ const Sidebar = () => {
 
       <hr className="text-secondary" />
 
-      {/* Botón de Salida */}
+      {// Botón de Salida //}
       <button 
         onClick={cerrarSesion} 
         className="text-danger rounded p-2 w-100 text-start bg-transparent border-0 hover-effect"
@@ -70,3 +247,4 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+*/

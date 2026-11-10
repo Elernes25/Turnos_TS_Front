@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
-import { Form, Button, Card, Spinner } from 'react-bootstrap';
+import { Form, Button, Card } from 'react-bootstrap';
 import { useFetch } from '../../hooks/useFetch';
 import { clientesAxios } from '../../config/axios';
 import { crearAgendaMedicoSchema, ICrearAgendaMedicoDTO, DiaSemana,} from '../../types/Agenda.types';
@@ -75,23 +75,16 @@ const FormularioAgendaMedico = () => {
     };
 
     return (
-        <div
-            className={`${styles.contenedorFormulario} mx-auto my-4 shadow-sm`}
-            style={{ maxWidth: '48rem' }}
-        >
+        <div className={`${styles.contenedorFormulario} mx-auto my-4 shadow-sm`} style={{ maxWidth: '48rem' }} >
              
             <div className={styles.encabezado}>
                 <div>
-                 <h1>{esEdicion ? 'Editar Agenda Médica' : 'Configuración de Agenda Médica'}</h1>
-                 </div>
+                    <h1>{esEdicion ? 'Editar Agenda Médica' : 'Configuración de Agenda Médica'}</h1>
+                </div>
             </div>
 
             <Card.Body className="p-4">
-                <Form
-                    onSubmit={handleSubmit(onSubmit)}
-                    noValidate
-                >
-                  
+                <Form onSubmit={handleSubmit(onSubmit)} noValidate >
                     <Form.Group className="mb-4">
                         <Form.Label>Médico</Form.Label>
                         <Form.Control
@@ -102,14 +95,8 @@ const FormularioAgendaMedico = () => {
                         />
                     </Form.Group>
 
-                    <Form.Group
-                        className={styles.contenedorFormulario}
-                        controlId="duracionTurnoMinutos"
-                    >
-                        <Form.Label>
-                            Duración estándar de cada turno (minutos)
-                        </Form.Label>
-
+                    <Form.Group className={styles.contenedorFormulario} controlId="duracionTurnoMinutos" >
+                        <Form.Label> Duración estándar de cada turno (minutos)</Form.Label>
                         <Form.Control
                             type="number"
                             min={1}
@@ -120,7 +107,6 @@ const FormularioAgendaMedico = () => {
                                 }
                             )}
                         />
-
                         <Form.Control.Feedback type="invalid">
                             {errors.duracionTurnoMinutos?.message}
                         </Form.Control.Feedback>
@@ -128,30 +114,26 @@ const FormularioAgendaMedico = () => {
 
                     <div className="d-flex flex-column gap-3 mb-4">
                         {Object.values(DiaSemana).map((dia) => {
-                            const indiceEnArray =
-                                diasSeleccionados.findIndex(
-                                    (d) =>
-                                        d.diaSemana === dia
-                                );
-
-                            const esActivo =
-                                indiceEnArray !== -1;
+                            const indiceEnArray =diasSeleccionados.findIndex((d) => d.diaSemana === dia );
+                            const esActivo = indiceEnArray !== -1;
 
                             return (
                                 <DiaItem
                                     key={dia}
                                     nombreDia={dia}
                                     isActivo={esActivo}
-                                    indexEnArray={
-                                        indiceEnArray
-                                    }
+                                    indexEnArray={indiceEnArray }
                                     appendDia={appendDia}
                                     removeDia={removeDia}
                                     control={control}
+                                    errors={errors}
                                     register={register}
+                                    styles={styles}
                                 />
                             );
                         })}
+                        
+                   
                     </div>
 
                     <div className="d-grid">

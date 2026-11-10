@@ -59,7 +59,24 @@ export const crearMedicoSchema = z.object({
 
 export type IcrearMedicoDTO = z.input<typeof crearMedicoSchema>;
 
+export const medicoDetalleSchema = z.object({
+  id: z.string(),
+  nombre: z.string(),
+  dni: z.string(),
+  email: z.string().email(),
+  direccion: direccionSchema,
+  telefono: telefonoSchema,
+  numeroMatricula: z.string(),
 
+  especialidad: z.array(
+    z.object({
+      id: z.string(),
+      nombre: z.string(),
+    })
+  ),
+});
+
+export type ImedicoDetalleSchema = z.input< typeof medicoDetalleSchema >
 
 export const medicoListadoSchema = z.object({
   id: z.string(),
