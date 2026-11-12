@@ -11,7 +11,7 @@ const TelefonoMedico = ({ register, errores, styles }:Props)=> (
     <legend> Teléfono </legend>
         <div className={styles.filaInput} >
             <div className={styles.grupoCampo}>
-                <small className={styles.ayudaCampo}>Selecciona si el teléfono es celular o fijo.</small>
+                <small className={styles.ayudaCampo}>Indica si es celular o fijo.</small>
                 <select
                     id="opciones"
                     {...register("telefono.tipo")}

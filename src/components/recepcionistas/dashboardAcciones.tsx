@@ -10,7 +10,7 @@ const DashboardAcciones = () => {
             </Card.Header>
 
             <Card.Body className="d-grid gap-2">
-                <Link to="/pacientes/nuevo">
+                <Link to="/nuevo-paciente">
                     <Button> Nuevo Paciente </Button>
                 </Link>
                 <Link to="/turnos/nuevo">

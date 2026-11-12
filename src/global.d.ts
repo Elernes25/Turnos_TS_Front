@@ -23,6 +23,9 @@ declare module '*.module.scss' {
   const classes: { readonly [key: string]: string };
   export default classes;
 }
+
+declare module '*.png';
+
 /*
 Si tu proyecto mezcla SCSS globales y CSS Modules, lo mejor es tener ambos:
 declare module "*.scss";

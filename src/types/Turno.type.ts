@@ -17,12 +17,11 @@ export const medicoDelTurnoSchema = z.object({
 });
 
 export const turnoSchema = z.object({
-  paciente: pacienteSchema.nullable(),
-  especialidad: crearEspecialidadSchema,
-  medico: medicoDelTurnoSchema.nullable().optional(),
+  pacienteId: pacienteSchema.nullable(),
+  especialidadId: crearEspecialidadSchema,
+  medicoId: medicoDelTurnoSchema.nullable().optional(),
   // compat: medicoID / medicoId (CrearTurnoDTO del backend)
-  medicoID: z.string().optional(),
-  medicoId: z.string().optional(),
+  //medicoId: z.string().optional(),
   fechaTurno: z.string(),
   estado: z.enum(['pendiente', 'atendido', 'cancelado']),
   observaciones: z.string().optional(),
@@ -35,17 +34,17 @@ export type ITurno = z.infer<typeof turnoSchema>;
 
 /**************************************************** */
 /* Alta de turno — CrearTurnoDTO del backend           */
-/* { pacienteID, especialidadID, medicoID, fechaTurno }*/
+/* { pacienteId, especialidadId, medicoId, fechaTurno }*/
 /**************************************************** */
 export const crearTurnoSchema = z
   .object({
-    pacienteID: z
+    pacienteId: z
       .string({ error: 'Seleccioná un paciente' })
       .min(1, 'Seleccioná un paciente'),
-    especialidadID: z
+    especialidadId: z
       .string({ error: 'La especialidad es obligatoria' })
       .min(1, 'La especialidad es obligatoria'),
-    medicoID: z.string().optional(),
+    medicoId: z.string().optional(),
     fechaTurno: z
       .string({ error: 'La fecha y hora son obligatorias' })
       .min(1, 'La fecha y hora son obligatorias')
@@ -73,9 +72,9 @@ export type ICrearTurnoDTO = z.infer<typeof crearTurnoSchema>;
 
 /** Lo que realmente se POSTea a /turnos (forma del backend). */
 export interface TurnoPayloadBackend {
-  pacienteID: string;
-  especialidadID: string;
-  medicoID?: string;
+  pacienteId: string;
+  especialidadId: string;
+  medicoId?: string;
   fechaTurno: string;
   observaciones?: string;
 }

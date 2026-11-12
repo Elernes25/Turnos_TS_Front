@@ -8,6 +8,7 @@ interface Props {
 const DashboardMetricas = ({
     turnos,
     medicos,
+    
 }: Props) => {
     const atendidos = turnos.filter(
         (t) => t.estado === "atendido"

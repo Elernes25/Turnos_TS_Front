@@ -17,6 +17,7 @@ import FormularioAgendaMedico from "./components/administrador/FormularioAgenda"
 import FormularioObraSocial from "./components/obraSocial/FormularioObraSocial"
 import ForbiddenPage from "./pages/ForbiddenPage"
 import EditarMedico from "./components/medicos/components/EditarMedico"
+import DetalleMedico from "./components/medicos/DetalleMedico"
 
 //import { jwtDecode } from "jwt-decode";
 //import type {ITokenPayload} from "./types/Usuario.type";
@@ -26,6 +27,7 @@ import DashboardSupervisor from "./components/supervisor/DashboardSupervisor"
 import PrimerIngreso from "./pages/PrimerIngreso"
 import { useLocation } from "react-router-dom";
 import ListadoMedicosMain from "./components/medicos/ListadoMedicosMain"
+import ListadoTurnos from "./components/turnos/ListadoTurnos"
 
 interface RutaPrivadaProps {
     roles: IRolUsuario[];
@@ -71,7 +73,9 @@ function App() {
                     
                     <Route element={<RutasProtegidas roles={[RolUsuario.ADMIN,RolUsuario.RECEPCIONISTA]} />}>
                         <Route path="nuevo-paciente" element={<FormularioPaciente />} />
+                        <Route path="turnos" element={<ListadoTurnos />} />
                         <Route path="turno-detalle/:id" element={<DetalleTurno />} />
+                        <Route path="medico-detalle/:id" element={<DetalleMedico />} />
                     </Route>
                     <Route element={<RutasProtegidas roles={[RolUsuario.ADMIN,RolUsuario.SUPERVISOR]} />}>
                         <Route path="nuevo-medico" element={<FormularioMedico />} />
@@ -86,7 +90,7 @@ function App() {
                         
                     </Route>
                      <Route element={<RutasProtegidas roles={[RolUsuario.ADMIN,RolUsuario.SUPERVISOR,RolUsuario.RECEPCIONISTA]} />}>
-                        <Route path="Obra Social" element={<FormularioObraSocial />} />
+                        <Route path="obra-social" element={<FormularioObraSocial />} />
                     </Route>
                     <Route element={<RutasProtegidas roles={[RolUsuario.ADMIN]} />}>
                         <Route path="administrador" element={<FormularioAdministrador />} />
@@ -105,4 +109,3 @@ function App() {
 }
 
 export default App
-

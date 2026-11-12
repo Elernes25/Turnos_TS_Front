@@ -12,3 +12,23 @@ hoverEffect {
     background-color: rgba(255, 255, 255, 0.1);
   }
 }
+
+.menuScroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+
+  scrollbar-width: thin;                          // Firefox
+  scrollbar-color: #495057 transparent;           // Firefox
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #495057;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}

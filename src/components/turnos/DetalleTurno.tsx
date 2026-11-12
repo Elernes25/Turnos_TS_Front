@@ -64,7 +64,7 @@ const DetalleTurno = () => {
         );
     }
 
-    const paciente = turno.paciente;
+    const paciente = turno.pacienteId;
     const fecha = new Date(turno.fechaTurno);
     //const historial = paciente?.historialMedico; // en mi caso no tengo el historial ahi
 
@@ -90,7 +90,7 @@ const DetalleTurno = () => {
                         </Col>
                         <Col xs={12} md={4}>
                             <div className="small text-body-secondary">Especialidad</div>
-                            <div className="fw-semibold text-capitalize">{turno.especialidad?.nombre ?? "Sin especialidad"}</div>
+                            <div className="fw-semibold text-capitalize">{turno.especialidadId?.nombre ?? "Sin especialidad"}</div>
                         </Col>
                         <Col xs={12} md={4}>
                             <div className="small text-body-secondary">Identificador</div>

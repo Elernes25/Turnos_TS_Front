@@ -59,9 +59,9 @@ export const getSession = (): SessionPayload | null => {
     if (!session) return null;
 
     if (session.exp && Date.now() >= session.exp * 1000) { //elimina tokens expirados
+        console.log("Sesion expirada");
         clearSession();
         return null;
-
     }
     return session;
 };

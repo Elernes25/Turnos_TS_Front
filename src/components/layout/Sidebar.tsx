@@ -8,17 +8,20 @@ import {
   People, 
   Hospital, 
   ClipboardCheck, 
+  Clipboard2Check,
   ShieldLock, 
   CalendarWeek, 
   PersonCircle, 
   BoxArrowRight,
+  ShieldPlus,
   type Icon
 } from 'react-bootstrap-icons';
+import logo1 from '../../assets/logo1.png';
 
-// Ajusta estas rutas de importación según la ubicación de tus archivos
 import { getSession, clearSession, subscribeSession } from '../../auth/session'; 
 import { RolUsuario } from '../../types/Usuario.type';
 import styles from './Sidebar.module.scss';
+
 
 interface MenuItem {
   ruta: string;
@@ -55,6 +58,12 @@ const MENU_ITEMS: MenuItem[] = [
     icono: People, 
     roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR, RolUsuario.RECEPCIONISTA] 
   },
+  {
+    ruta: '/turnos',
+    texto: 'Listado de Turnos',
+    icono: Clipboard2Check,
+    roles: [RolUsuario.ADMIN, RolUsuario.RECEPCIONISTA]
+  },
   { 
     ruta: '/medicos', 
     texto: 'Médicos', 
@@ -83,6 +92,12 @@ const MENU_ITEMS: MenuItem[] = [
     ruta: '/administrador-agenda', 
     texto: 'Agenda Médicos', 
     icono: CalendarWeek, 
+    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR, RolUsuario.MEDICO, RolUsuario.RECEPCIONISTA] 
+  },
+    { 
+    ruta: '/obra-social', 
+    texto: 'Obra Social', 
+    icono: ShieldPlus, 
     roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR, RolUsuario.MEDICO, RolUsuario.RECEPCIONISTA] 
   },
   { 
@@ -128,16 +143,20 @@ const Sidebar = () => {
       className="bg-dark text-white p-3 d-flex flex-column vh-100 position-sticky top-0"
       style={{ minWidth: '220px', maxWidth: '220px' }}
     >
-      <div className="text-center my-4">
-        <h3 className="fw-bold">Mi Sistema</h3>
+    <div className="text-center my-2 flex-shrink-0">
+        <img src={logo1} alt="Salud Municipal" className="rounded-circle mb-1" style={{ width: '36px', height: '36px', objectFit: 'cover' }}
+        />
+
+        <h6 className="fw-bold mb-0">Salud Municipal</h6>
         <small className="text-info d-block">{session.user}</small>
         <span className="badge bg-secondary mt-1">{session.rol}</span>
-      </div>
-
-      <hr className="text-secondary" />
+    </div>
+      <hr className="text-secondary flex-shrink-0" />
 
       {/* Navegación filtrada por rol */}
-      <Nav className="flex-column flex-grow-1 gap-2">
+      <Nav className={`flex-column flex-nowrap flex-grow-1 gap-2 ${styles.menuScroll}`}
+      style={{ minHeight: 0 }}
+      >
         {enlacesPermitidos.map((item) => {
           const IconoComponente = item.icono;
           return (
@@ -160,7 +179,7 @@ const Sidebar = () => {
       {/* Botón de Salida */}
       <button 
         onClick={cerrarSesion} 
-        className="text-danger rounded p-2 w-100 text-start bg-transparent border-0 hover-effect d-flex align-items-center gap-2"
+        className="text-danger rounded p-2 w-100 text-start bg-transparent border-0 hover-effect d-flex align-items-center gap-2 flex-shrink-0"
       >
         <BoxArrowRight size={18} />
         <span>Cerrar Sesión</span>

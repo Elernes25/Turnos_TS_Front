@@ -13,7 +13,7 @@ const TelefonoPaciente = ({ register, errores, styles }:Props)=> (
     <legend> Teléfono </legend>
         <div className={styles.filaInput} >
             <div className={styles.grupoCampo}>
-                <small className={styles.ayudaCampo}>Indica si el número es celular o fijo.</small>
+                <small className={styles.ayudaCampo}>Indica si es celular o fijo.</small>
                 <select
                     id="opciones"
                     className={styles.campoInput}
@@ -44,7 +44,7 @@ const TelefonoPaciente = ({ register, errores, styles }:Props)=> (
                 {errores.telefono?.codigoArea && <span className={styles.error}>{errores.telefono.codigoArea.message}</span>}
             </div>
             <div className={styles.grupoCampo}>
-                <small className={styles.ayudaCampo}>Número de teléfono sin el código de área.</small>
+                <small className={styles.ayudaCampo}>Número de teléfono.</small>
                 <input
                     type="text"
                     className={styles.campoInput}

@@ -92,13 +92,12 @@ const DashboardRecepcion = () => {
     const {data: medicos = [], isLoading: loadingMedicos} = useFetch<IMedico[]>("/medicos");
     const {data: especialidades = [], isLoading: loadingEspecialidades} = useFetch<IEspecialidad[]>("/especialidad");
     const turnosFiltrados = (turnos ?? []).filter(
-        (turno) =>(turno.paciente?.nombre ?? "Paciente sin asignar").toLowerCase().includes(busqueda.toLowerCase())
+        (turno) =>(turno.pacienteId?.nombre ?? "Paciente sin asignar").toLowerCase().includes(busqueda.toLowerCase())
     );
 
     const marcarComoAtendido = async (idTurno:string) => {
         try {
             await clientesAxios.patch(`/turnos/${idTurno}`);
-
             const turnosActualizados = turnos?.map(turno => {  // signo de pregunta porque puede ser nulo
                 if (turno.id === idTurno) return { ...turno, estado: "atendido" as const};
                 return turno;
@@ -120,7 +119,6 @@ const DashboardRecepcion = () => {
             <DashboardMetricas
                 turnos={turnos??[]}
                 medicos={medicos??[]}
-                especialidades={especialidades??[]}
             />
             <Row className="g-4">
                 <Col lg={8}>

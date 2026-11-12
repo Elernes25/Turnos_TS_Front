@@ -1,0 +1,35 @@
+.contenedor {
+  max-width: 90rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.encabezado {
+  margin-bottom: 1.25rem;
+
+  h1 {
+    font-size: 1.75rem;
+    margin: 0;
+  }
+
+  p {
+    color: #475569;
+    margin: 0.25rem 0 0;
+  }
+}
+
+.filtros {
+  max-width: 20rem;
+  margin-bottom: 1rem;
+}
+
+.tabla {
+  background: #fff;
+  vertical-align: middle;
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}

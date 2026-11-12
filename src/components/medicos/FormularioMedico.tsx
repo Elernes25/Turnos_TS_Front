@@ -61,15 +61,15 @@ const FormularioMedico = ({ medicoId, valoresIniciales }: FormularioMedicoProps)
             <DatosPersonales register={register} control={control} errores={errors} styles={styles} />
             <DireccionMedico register={register} errores={errors} styles={styles} />
             <TelefonoMedico register={register} errores={errors} styles={styles} />
-            
-            <Button onClick={volver}>
-                Volver
-            </Button>
-            
-            <Button type="submit" disabled={isSubmitting}>
-            {esEdicion ? 'Guardar cambios' : 'Guardar Médico'}
-            </Button>
-
+            <div className="d-flex gap-3">
+                <Button onClick={volver}>
+                    Volver
+                </Button>
+                
+                <Button type="submit" disabled={isSubmitting}>
+                    {esEdicion ? 'Guardar cambios' : 'Guardar Médico'}
+                </Button>
+            </div>
 
         </form>
         <JsonDebugger control={control} titulo="ESTADO DEL JSON" />
