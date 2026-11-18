@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import type { ChangeEvent } from 'react';
 import { Alert, Badge, Button, Form, Modal, Spinner, Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -37,6 +38,10 @@ const ListadoTurnos = () => {
       });
   }, [turnos, filtroFecha]);
 
+  const handleCambioFiltro = (evento: ChangeEvent<HTMLSelectElement>): void => {
+    setFiltroFecha(evento.target.value as FiltroFecha);
+  };
+
   const llamarTurno = async (turno: ITurno): Promise<void> => {
     try {
       setTurnoEnProceso(turno.id);
@@ -58,7 +63,7 @@ const ListadoTurnos = () => {
 
     try {
       setTurnoEnProceso(turnoACancelar.id);
-      await clientesAxios.patch(`/turnos/${turnoACancelar.id}`, { estado: 'cancelado' });
+      await clientesAxios.patch(`/turnos/cancelar/${turnoACancelar.id}`, { estado: 'cancelado' });
       setTurnos((turnos ?? []).map((actual) =>
         actual.id === turnoACancelar.id ? { ...actual, estado: 'cancelado' } : actual
       ));
@@ -81,10 +86,7 @@ const ListadoTurnos = () => {
 
       <Form.Group className={styles.filtros} controlId="filtroFechaTurnos">
         <Form.Label>Mostrar turnos</Form.Label>
-        <Form.Select
-          value={filtroFecha}
-          onChange={(evento) => setFiltroFecha(evento.target.value as FiltroFecha)}
-        >
+        <Form.Select value={filtroFecha} onChange={handleCambioFiltro}>
           <option value="pasados">Pasados</option>
           <option value="hoy">De Hoy</option>
           <option value="futuros">Futuros</option>
@@ -127,38 +129,48 @@ const ListadoTurnos = () => {
                     <td>{turno.medicoId?.nombre ?? 'Sin médico asignado'}</td>
                     <td>
                       {fecha.toLocaleDateString('es-AR')} ·{' '}
-                      {fecha.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false,})}
+                      {fecha.toLocaleTimeString('es-AR', {hour: '2-digit', minute: '2-digit',  hour12: false,})}
                     </td>
                     <td>
                       <Badge
-                        bg={turno.estado === 'atendido' ? 'success' : turno.estado === 'cancelado' ? 'secondary' : 'warning'}
+                        bg={turno.estado === 'atendido' ? 'success': turno.estado === 'cancelado'? 'secondary': 'warning' }
                         text={turno.estado === 'pendiente' ? 'dark' : undefined}
                       >
-                        {turno.estado === 'pendiente' ? 'Pendiente' : turno.estado === 'atendido' ? 'Atendido' : 'Cancelado'}
+                        {turno.estado === 'pendiente' ? 'Pendiente' : turno.estado === 'atendido' ? 'Atendido': 'Cancelado'}
                       </Badge>
                     </td>
                     <td>
                       <div className={styles.acciones}>
-                        <Button
-                          size="sm"
-                          variant="primary"
-                          disabled={noPendiente || estaEnProceso}
-                          onClick={() => void llamarTurno(turno)}
-                        >
-                          Llamar
-                        </Button>
-                        <Button size="sm" variant="outline-secondary" disabled title="Disponible próximamente">
-                          Editar
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline-danger"
-                          disabled={noPendiente || estaEnProceso}
+                        {filtroFecha !== 'futuros' && (
+                          <Button
+                            size="sm"
+                            variant="primary"
+                            disabled={noPendiente || estaEnProceso}
+                            onClick={() => void llamarTurno(turno)}
+                          >
+                            Llamar
+                          </Button>
+                        )}
+
+                        {noPendiente ? (
+                          <Button size="sm" variant="outline-secondary" disabled>
+                            Editar
+                          </Button>
+                        ) : (
+                          <Link to={`/nuevo-turno?editar=${turno.id}`} className="btn btn-sm btn-outline-secondary" >
+                            Editar
+                          </Link>
+                        )}
+
+                        <Button size="sm" variant="outline-danger"disabled={noPendiente || estaEnProceso}
                           onClick={() => setTurnoACancelar(turno)}
                         >
                           Cancelar
                         </Button>
-                        <Link to="/turno-detalle/${turno.id}" className="btn btn-outline-secondary mt-4">Detalle</Link>
+
+                        <Link to={`/turno-detalle/${turno.id}`} className="btn btn-sm btn-outline-secondary" >
+                          Detalle
+                        </Link>
                       </div>
                     </td>
                   </tr>

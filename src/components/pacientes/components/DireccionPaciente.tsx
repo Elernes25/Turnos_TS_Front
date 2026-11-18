@@ -12,7 +12,7 @@ const DireccionPaciente = ({ register, errores, styles }:Props) =>  (
         <legend> Dirección </legend>
         <div className={styles.filaInput} >
             <div className={styles.grupoCampo}>
-                <small className={styles.ayudaCampo}>Nombre de la calle donde vive el paciente.</small>
+                <small className={styles.ayudaCampo}>Nombre de la calle.</small>
                 <input
                     type="text"
                     className={styles.campoInput}   
@@ -22,7 +22,7 @@ const DireccionPaciente = ({ register, errores, styles }:Props) =>  (
                 {errores.direccion?.calle && <span className={styles.error}>{errores.direccion.calle.message}</span>}
             </div>
             <div className={styles.grupoCampo}>
-                <small className={styles.ayudaCampo}>Número de la puerta o domicilio.</small>
+                <small className={styles.ayudaCampo}>Altura de la calle.</small>
                 <input
                     type="text"
                     className={styles.campoInput}
@@ -32,7 +32,7 @@ const DireccionPaciente = ({ register, errores, styles }:Props) =>  (
                 {errores.direccion?.numero && <span className={styles.error}>{errores.direccion.numero.message}</span>}
             </div>
             <div className={styles.grupoCampo}>
-                <small className={styles.ayudaCampo}>Piso del domicilio, si corresponde.</small>
+                <small className={styles.ayudaCampo}>Piso si corresponde.</small>
                 <input
                     type="text"
                     className={styles.campoInput}
@@ -42,7 +42,7 @@ const DireccionPaciente = ({ register, errores, styles }:Props) =>  (
                 {errores.direccion?.piso && <span className={styles.error}>{errores.direccion.piso.message}</span>}
             </div>
             <div className={styles.grupoCampo}>
-                <small className={styles.ayudaCampo}>Departamento, si corresponde.</small>
+                <small className={styles.ayudaCampo}>Departamento si corresponde.</small>
                 <input
                     type="text" 
                     className={styles.campoInput}
@@ -51,16 +51,7 @@ const DireccionPaciente = ({ register, errores, styles }:Props) =>  (
                 />
                 {errores.direccion?.departamento && <span className={styles.error}>{errores.direccion.departamento.message}</span>}
             </div>
-            <div className={styles.grupoCampo}>
-                <small className={styles.ayudaCampo}>Barrio o zona del domicilio.</small>
-                <input
-                    type="text"
-                    className={styles.campoInput}
-                    placeholder="Barrio"
-                    {...register('direccion.barrio')}
-                />
-                {errores.direccion?.barrio && <span className={styles.error}>{errores.direccion.barrio.message}</span>}
-            </div>
+          
         </div>
     </fieldset>
 

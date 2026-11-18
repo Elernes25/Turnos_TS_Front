@@ -1,29 +1,3 @@
-/*
-import {useParams} from "react-router-dom";
-import {useFetch} from "../../hooks/useFetch";
-import { ITurno } from "../../types/Turno.type";
-//import {Spinner} from "react-bootstrap"
-//import styles from "./DetalleTurno.module.scss"
-
-
-const Detalleturno = () => {
-    const {id} = useParams();
-    const {data: turno } = useFetch<ITurno>(`/turnos/${id}`); //DEBE COINCIDIR CON LA RUTA DEL BACKEND 
-    return(
-        <div>
-            <h2>Detalle del Turno {id}</h2>
-            <p>Información del turno...</p>
-            <h3 > {turno?.id}</h3> 
-            
-        </div>
-
-
-    );
-};
-
-export default Detalleturno;
-
-*/
 
 /*********************************************** */
 // se agrego para cargar notas
@@ -112,7 +86,7 @@ const DetalleTurno = () => {
                                 <ListGroup.Item><span className="text-body-secondary">DNI</span><br />{paciente.dni}</ListGroup.Item>
                                 <ListGroup.Item><span className="text-body-secondary">Email</span><br />{paciente.email ? `(${paciente.email}`: "No registrado"}</ListGroup.Item>
                                 <ListGroup.Item><span className="text-body-secondary">Telefono</span><br />{paciente.telefono ? `(${paciente.telefono.codigoArea}) ${paciente.telefono.numero}` : "No registrado"}</ListGroup.Item>
-                                <ListGroup.Item><span className="text-body-secondary">Direccion</span><br />{paciente.direccion ? `${paciente.direccion.calle} ${paciente.direccion.numero} - ${paciente.direccion.barrio}` : "No registrada"}</ListGroup.Item>
+                                <ListGroup.Item><span className="text-body-secondary">Direccion</span><br />{paciente.direccion ? `${paciente.direccion.calle} ${paciente.direccion.numero}` : "No registrada"}</ListGroup.Item>
                             </ListGroup>
                         </Card>
                     </Col>

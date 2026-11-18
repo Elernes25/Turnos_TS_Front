@@ -6,7 +6,7 @@ import styles from './FormularioPaciente.module.scss';
 import {JsonDebugger} from '../utils/JsonDebugger';
 import {Button} from 'react-bootstrap';
 //import {UseFormRegister,FieldErrors} from 'react-hook-form';
-import { crearPacienteSchema, TipoSexo, TipoTelefono } from '../../types/Paciente.type';  //importa el esquema de validacion de datos
+import { crearPacienteSchema, TipoTelefono } from '../../types/Paciente.type';  //importa el esquema de validacion de datos
 
 import type {IcrearPacienteDTO} from '../../types/Paciente.type' //tipo de datos para el formulario de paciente
 
@@ -40,14 +40,12 @@ const FormularioPaciente = () => {
                     nombre: "",
                     dni: "",
                     fechaDeNacimiento: "",
-                    sexo: TipoSexo.FEMENINO,
                     email: "",
                     direccion: {
                         calle: "",
                         numero: "",
                         piso: "",
                         departamento: "",
-                        barrio: "",
                     },
                     telefono: {
                         tipo: TipoTelefono.CELULAR,
@@ -110,7 +108,7 @@ const FormularioPaciente = () => {
                </Button>
 
             </form>
-            <JsonDebugger control={control} titulo="ESTADO DEL JSON" />
+          {/*  <JsonDebugger control={control} titulo="ESTADO DEL JSON" /> */}
         </div>
     );
 };

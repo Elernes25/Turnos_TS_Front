@@ -51,16 +51,6 @@ const DireccionMedico = ({ register, errores, styles }:Props) =>  (
                 />
                 {errores.direccion?.departamento && <span className={styles.error}>{errores.direccion.departamento.message}</span>}
             </div>
-            <div className={styles.grupoCampo}>
-                <small className={styles.ayudaCampo}>Ingresa el barrio donde se encuentra el consultorio.</small>
-                <input
-                    type="text"
-                    {...register("direccion.barrio")}
-                    className={styles.campoInput}
-                    placeholder="Barrio"
-                />
-                {errores.direccion?.barrio && <span className={styles.error}>{errores.direccion.barrio.message}</span>}
-            </div>
         </div>
     </fieldset>
 

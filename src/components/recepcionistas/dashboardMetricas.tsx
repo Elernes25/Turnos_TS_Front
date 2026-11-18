@@ -1,72 +1,77 @@
 import { Card, Col, Row } from "react-bootstrap";
+import type { ITurno } from "../../types/Turno.type";
 
 interface Props {
-    turnos: any[];
-    medicos: any[];
+    turnos: ITurno[];
 }
 
-const DashboardMetricas = ({
-    turnos,
-    medicos,
-    
-}: Props) => {
-    const atendidos = turnos.filter(
-        (t) => t.estado === "atendido"
-    ).length;
+interface GrupoMetricasProps {
+    titulo: string;
+    turnos: ITurno[];
+}
 
-    const pendientes = turnos.filter(
-        (t) => t.estado === "pendiente"
-    ).length;
+const GrupoMetricas = ({ titulo, turnos }: GrupoMetricasProps) => {
+    const metricas = [
+        {
+            titulo: "Atendidos",
+            cantidad: turnos.filter((turno) => turno.estado === "atendido").length,
+        },
+        {
+            titulo: "Pendientes",
+            cantidad: turnos.filter((turno) => turno.estado === "pendiente").length,
+        },
+        {
+            titulo: "Cancelados",
+            cantidad: turnos.filter((turno) => turno.estado === "cancelado").length,
+        },
+    ];
 
     return (
-        <Row className="mb-4">
+        <Card className="h-100">
+            {/* Reduce el padding de la Card principal con p-2 o p-3 */}
+            <Card.Body className="p-2 px-3">
+            {/* Achica el título a h5/h6 y reduce su margen inferior */}
+            <h5 className="mb-2 fs-6 fw-bold">
+                {titulo} <span className="text-body-secondary">{turnos.length}</span>
+            </h5>
 
-            <Col md={3}>
-                <Card>
-                    <Card.Body>
-                        <Card.Title>
-                            Turnos
+            {/* g-3 por g-2 para acercar las 3 cards entre sí */}
+            <Row className="g-2">
+                {metricas.map((metrica) => (
+                <Col key={metrica.titulo} xs={12} sm={4}>
+                    <Card className="h-100 text-center">
+                    {/* py-1 px-2 para quitar el padding vertical por defecto */}
+                    <Card.Body className="py-1 px-2">
+                        {/* small o una clase custom en .module.scss para el título */}
+                        <Card.Title className="mb-0 small text-muted text-nowrap">
+                        {metrica.titulo}
                         </Card.Title>
-                        <h3>{turnos.length}</h3>
+                        {/* fs-4 a fs-5 y el interlineado con lh-sm */}
+                        <p className="mb-0 fs-5 fw-bold lh-sm">{metrica.cantidad}</p>
                     </Card.Body>
-                </Card>
-            </Col>
-
-            <Col md={3}>
-                <Card>
-                    <Card.Body>
-                        <Card.Title>
-                            Pendientes
-                        </Card.Title>
-                        <h3>{pendientes}</h3>
-                    </Card.Body>
-                </Card>
-            </Col>
-
-            <Col md={3}>
-                <Card>
-                    <Card.Body>
-                        <Card.Title>
-                            Atendidos
-                        </Card.Title>
-                        <h3>{atendidos}</h3>
-                    </Card.Body>
-                </Card>
-            </Col>
-
-            <Col md={3}>
-                <Card>
-                    <Card.Body>
-                        <Card.Title>
-                            Médicos Hoy
-                        </Card.Title>
-                        <h3>{medicos.length}</h3>
-                    </Card.Body>
-                </Card>
-            </Col>
-
-        </Row>
+                    </Card>
+                </Col>
+                ))}
+            </Row>
+            </Card.Body>
+        </Card>
     );
+};
+
+const DashboardMetricas = ({ turnos }: Props) => {
+    const inicioHoy = new Date();
+    inicioHoy.setHours(0, 0, 0, 0);
+    const hoy = inicioHoy.getTime();
+
+    const turnosDeHoy = turnos.filter((turno) => {
+        const fechaTurno = new Date(turno.fechaTurno);
+        if (Number.isNaN(fechaTurno.getTime())) return false;
+
+        fechaTurno.setHours(0, 0, 0, 0);
+        return fechaTurno.getTime() === hoy;
+    });
+
+    return <GrupoMetricas titulo="Turnos Hoy: " turnos={turnosDeHoy} />;
 };
 
 export default DashboardMetricas;

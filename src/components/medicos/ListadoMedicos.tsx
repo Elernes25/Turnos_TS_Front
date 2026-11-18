@@ -1,16 +1,35 @@
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Container, Spinner, Table } from 'react-bootstrap';
 import { useFetch } from '../../hooks/useFetch';
 import type { IMedico } from '../../types/Medico.type';
+import BuscadorMedicos from './components/BuscadorMedicos';
 import styles from './ListadoMedicos.module.scss';
+
+const normalizar = (texto: string): string =>
+  texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
 const ListadoMedicos = () => {
   const navigate = useNavigate();
   const { data: medicos, isLoading } = useFetch<IMedico[]>('/medicos');
+  const [busqueda, setBusqueda] = useState('');
+  const medicosFiltrados = useMemo(() => {
+    const termino = normalizar(busqueda.trim());
+    if (!termino) return medicos ?? [];
+
+    return (medicos ?? []).filter((medico) =>
+      normalizar(medico.nombre).includes(termino)
+      || medico.especialidad.some((especialidad) => normalizar(especialidad.nombre).includes(termino))
+    );
+  }, [busqueda, medicos]);
 
   return (
     <Container>
       <h1 className="mb-4">Médicos</h1>
+
+      {!isLoading && (
+        <BuscadorMedicos valor={busqueda} alCambiar={setBusqueda} />
+      )}
 
       {isLoading ? (
         <div className="text-center py-5">
@@ -29,14 +48,14 @@ const ListadoMedicos = () => {
             </tr>
           </thead>
           <tbody>
-            {!medicos || medicos.length === 0 ? (
+            {medicosFiltrados.length === 0 ? (
               <tr>
                 <td colSpan={4} className="text-center text-muted py-4">
                   No se encontraron médicos.
                 </td>
               </tr>
             ) : (
-              medicos.map((medico) => (
+              medicosFiltrados.map((medico) => (
                 <tr key={medico.id}>
                   <td><strong>{medico.nombre}</strong></td>
                   <td>{medico.especialidad.map((especialidad) => especialidad.nombre).join(', ') || 'Sin especialidades'}</td>

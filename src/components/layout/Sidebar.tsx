@@ -101,6 +101,12 @@ const MENU_ITEMS: MenuItem[] = [
     roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR, RolUsuario.MEDICO, RolUsuario.RECEPCIONISTA] 
   },
   { 
+    ruta: '/Medico', 
+    texto: 'Dashboard Medico', 
+    icono: ShieldLock, 
+    roles: [RolUsuario.ADMIN,RolUsuario.MEDICO ] 
+  },
+  { 
     ruta: '/perfil', 
     texto: 'Mi Perfil', 
     icono: PersonCircle, 
@@ -211,7 +217,7 @@ const Sidebar = () => {
       style={{ minWidth: '200px', maxWidth: '200px' }}
     >
       <div className="text-center my-4">
-        <h3 className="fw-bold">Mi Sistema</h3>
+        <h3 className="fw-bold">Salud Municipal</h3>
         <small className="text-muted">Panel de Control</small>
       </div>
       

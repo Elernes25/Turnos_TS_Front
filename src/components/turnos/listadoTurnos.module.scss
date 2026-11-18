@@ -28,6 +28,13 @@
   vertical-align: middle;
 }
 
+.tablaTurnosHoy {
+  thead th {
+    padding-top: 0.35rem;
+    padding-bottom: 0.35rem;
+  }
+}
+
 .acciones {
   display: flex;
   flex-wrap: wrap;

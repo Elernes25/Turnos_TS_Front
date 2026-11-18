@@ -72,7 +72,7 @@ const FormularioMedico = ({ medicoId, valoresIniciales }: FormularioMedicoProps)
             </div>
 
         </form>
-        <JsonDebugger control={control} titulo="ESTADO DEL JSON" />
+        {/*<JsonDebugger control={control} titulo="ESTADO DEL JSON" />*/}
         </div>
     );
 };

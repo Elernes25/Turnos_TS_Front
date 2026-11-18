@@ -59,36 +59,9 @@ $color-borde: #acaaaa;
             box-shadow: 0 0 5px rgba(0, 86, 179, 0.3);
         }
     }
-    .campoInput[type="radio"] {
-        margin-right: 6px;
-        width: 18px;
-        height: 18px;
-        accent-color: #3498db;
-        //vertical-align: top;     // asegura que el círculo se centre
-    }
-
-    label {
-        display: inline-flex;     // asegura que input + texto estén alineados
-        align-items: top;      // centra verticalmente
-        margin-right: 12px;       // espacio entre opciones
-    }
     .inputArea {
         flex: 0 0 120px;
         margin-bottom: 0;
-    }
-
-    .grupoSexo {
-        flex: 1 1 180px;
-    }
-
-    .opcionesSexo {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-
-        label {
-            margin-right: 0;
-        }
     }
 
    

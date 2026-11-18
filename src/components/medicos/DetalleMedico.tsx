@@ -4,6 +4,7 @@ import { Alert, Card, Col, Container, ListGroup, Row, Spinner } from 'react-boot
 import { clientesAxios } from '../../config/axios';
 import { medicoDetalleSchema, type ImedicoDetalleSchema } from '../../types/Medico.type';
 import { obtenerMensajeError } from '../utils/obtenerMensajeError';
+import AtencionMedico from './AtencionMedico';
 
 const DetalleMedico = () => {
   const { id } = useParams<{ id: string }>();
@@ -73,7 +74,6 @@ const DetalleMedico = () => {
     `${medico.direccion.calle} ${medico.direccion.numero}`,
     medico.direccion.piso && `Piso ${medico.direccion.piso}`,
     medico.direccion.departamento && `Departamento ${medico.direccion.departamento}`,
-    medico.direccion.barrio && `Barrio ${medico.direccion.barrio}`,
   ].filter(Boolean).join(' · ');
   const telefono = `+${medico.telefono.codigoPais} (${medico.telefono.codigoArea}) ${medico.telefono.numero}`;
 
@@ -81,6 +81,8 @@ const DetalleMedico = () => {
     <Container className="pb-5">
       <p className="text-body-secondary mb-1">Detalle del médico</p>
       <h1 className="h2 mb-4">{medico.nombre}</h1>
+
+      <AtencionMedico medicoId={medico.id} />
 
       <Card className="border-0 shadow-sm mb-4">
         <Card.Body>

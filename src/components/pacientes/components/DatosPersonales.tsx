@@ -1,5 +1,5 @@
 import {UseFormRegister,FieldErrors} from 'react-hook-form';
-import {IcrearPacienteDTO , TipoSexo} from '../../../types/Paciente.type';
+import {IcrearPacienteDTO} from '../../../types/Paciente.type';
 
 interface Props {
     register: UseFormRegister<IcrearPacienteDTO>;
@@ -18,7 +18,7 @@ const DatosPersonales =({register, errores, styles}:Props) => (
     <fieldset>
         <legend>  Datos Personales </legend>
         <div className={styles.grupoCampo}>
-            <small className={styles.ayudaCampo}>Escribe el nombre y apellido tal como figura en el DNI.</small>
+            <small className={styles.ayudaCampo}>Nombre y apellido tal como figura en el DNI.</small>
             <input
                 type="text"
                 className={styles.campoInput} 	placeholder="Nombre Completo"
@@ -27,7 +27,7 @@ const DatosPersonales =({register, errores, styles}:Props) => (
             {errores.nombre && <span className={styles.error}>{errores.nombre.message}</span>}
         </div>
         <div className={styles.grupoCampo}>
-            <small className={styles.ayudaCampo}>Ingresa el número de documento sin puntos.</small>
+            <small className={styles.ayudaCampo}>Número de documento sin puntos.</small>
             <input
                 type="text" 
                 className={styles.campoInput} 	placeholder="DNI"
@@ -44,30 +44,6 @@ const DatosPersonales =({register, errores, styles}:Props) => (
                     {...register ('fechaDeNacimiento')}
                 />
                 {errores.fechaDeNacimiento && <span className={styles.error}>{errores.fechaDeNacimiento.message}</span>}
-            </div>
-            <div className={styles.grupoSexo}>
-                <small className={styles.ayudaCampo}>Selecciona una opción.</small>
-                <div className={styles.opcionesSexo}>
-                    <label>
-                        <input
-                            type="radio"
-                            className={styles.campoInput} 
-                            value={TipoSexo.FEMENINO}
-                            {...register('sexo')}
-                            />
-                            Femenino
-                    </label>
-                    <label>
-                        <input
-                            type="radio"
-                            className={styles.campoInput} 
-                            value={TipoSexo.MASCULINO}
-                            {...register('sexo')}
-                        />
-                        Masculino
-                    </label>
-                </div>
-                {errores.sexo && <span className={styles.error}>{errores.sexo.message}</span>}
             </div>
         </div>
         <div className={styles.grupoCampo}>

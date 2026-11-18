@@ -70,7 +70,7 @@ export const crearTurnoSchema = z
 
 export type ICrearTurnoDTO = z.infer<typeof crearTurnoSchema>;
 
-/** Lo que realmente se POSTea a /turnos (forma del backend). */
+/** Lo que realmente se POSTea a /turnos (forma del backend).
 export interface TurnoPayloadBackend {
   pacienteId: string;
   especialidadId: string;
@@ -78,3 +78,4 @@ export interface TurnoPayloadBackend {
   fechaTurno: string;
   observaciones?: string;
 }
+*/

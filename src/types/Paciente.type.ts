@@ -5,7 +5,6 @@ export interface DireccionPaciente {
   numero: string;
   piso: string;
   departamento: string;
-  barrio: string;
 }
 
 export interface TelefonoPaciente {
@@ -25,7 +24,6 @@ export interface IPaciente {
   nombre: string;
   dni: string;
   email: string;
-  sexo: string;
   fechaDeNacimiento: string;
   direccion: DireccionPaciente;
   telefono: TelefonoPaciente;
@@ -52,20 +50,12 @@ export enum TipoTelefono {
     FIJO = 'FIJO'
 }
 
-export enum TipoSexo {
-    FEMENINO = 'FEMENINO',
-    MASCULINO = 'MASCULINO'
-}
-
-
-
 // idem a medicos
 export const direccionSchema = z.object({
     calle: z.string().trim().min(1, { error: "La calle es obligatoria" }),
     numero: z.string().trim().min(1, { error: "El número es obligatorio" }),
     piso: z.string().optional().default(""),
-    departamento: z.string().optional().default(""),
-    barrio: z.string().optional().default("")
+    departamento: z.string().optional().default("")
 });
 //idem a medicos
 export const telefonoSchema = z.object({
@@ -83,7 +73,6 @@ export const pacienteSchema = z.object({  //se usa en turno
         .min(1, { error: "La fecha de nacimiento es obligatoria" })
         .pipe(z.iso.date({ error: "Fecha inválida" }))
         .refine((f) => new Date(f) <= new Date(), { error: "La fecha no puede ser futura" }),
-    sexo : z.enum(TipoSexo),
     direccion: direccionSchema,
     email:z.union([z.email({ error: "Email inválido" }), z.literal("")]).optional(),
     telefono: telefonoSchema,
@@ -101,7 +90,6 @@ export const crearPacienteSchema = z.object({
     dni: z.string({ error: "El DNI es obligatorio" }).trim().regex(/^\d{7,8}$/, { error: "El DNI debe tener entre 7 y 8 dígitos, sin puntos" }),
     fechaDeNacimiento: z.string().min(1, { error: "La fecha de nacimiento es obligatoria" })
         .pipe(z.iso.date({ error: "Fecha inválida" })).refine((f) => new Date(f) <= new Date(), { error: "La fecha no puede ser futura" }),
-    sexo : z.enum(TipoSexo),
     direccion: direccionSchema,
     email: z.union([z.email('Email inválido'), z.literal('')]).optional(),
     telefono: telefonoSchema,

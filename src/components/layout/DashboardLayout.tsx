@@ -17,7 +17,7 @@ const DashboardLayout = () => {
         
         {/* Navbar superior miniatura opcional para móviles (aparece solo en d-block d-md-none) */}
         <div className="bg-dark text-white p-3 d-block d-md-none text-center">
-          <span className="fw-bold">Mi Sistema (Móvil)</span>
+          <span className="fw-bold">Salud Municipal (Móvil)</span>
           {/* Aquí podrías poner un botón de hamburguesa si quieres colapsarlo en celular */}
         </div>
 

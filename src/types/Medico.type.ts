@@ -11,7 +11,6 @@ export interface DireccionMedico {
   numero: string;
   piso: string;
   departamento: string;
-  barrio: string;
 }
 
 export interface TelefonoMedico {
@@ -36,8 +35,7 @@ export const direccionSchema = z.object({
     calle: z.string().trim().min(1, { error: "La calle es obligatoria" }),
     numero: z.string().trim().min(1, { error: "El número es obligatorio" }),
     piso: z.string().optional().default(""),
-    departamento: z.string().optional().default(""),
-    barrio: z.string().optional().default("")
+    departamento: z.string().optional().default("")
 });
 
 export const telefonoSchema = z.object({

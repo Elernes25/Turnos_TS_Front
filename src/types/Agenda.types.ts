@@ -1,5 +1,17 @@
 import {z} from 'zod';
 
+export interface TurnoOcupado {
+    fechaTurno: string;
+    estado?: string;
+}
+
+export interface HorarioDisponible {
+    hora: string;
+    fecha: Date;
+    ocupado: boolean;
+    pasado: boolean;
+}
+
 export enum DiaSemana {
     LUNES = 'LUNES',
     MARTES = 'MARTES',
@@ -54,6 +66,20 @@ const DiaAgendaSchema = z.object({
   }
 });
 
+export interface IRangoHorario {
+  horaInicio: string; // "HH:mm"
+  horaFin: string;    // "HH:mm"
+}
+export interface IDiaAgenda {
+  diaSemana: DiaSemana;
+  rangos: IRangoHorario[]; // 1 a 3 rangos
+}
+export interface IAgenda {
+  _id: string;
+  medicoId: string;
+  dias: IDiaAgenda[];
+  duracionTurnoMinutos: number;
+}
 
 
 export const crearAgendaMedicoSchema =z.object ({
@@ -106,12 +132,5 @@ export const rangosSchema = z
     }
   });
 */
-
-
-
-
-
-
-
 
 export type ICrearAgendaMedicoDTO = z.infer <typeof crearAgendaMedicoSchema>
