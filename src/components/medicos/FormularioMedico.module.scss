@@ -16,14 +16,19 @@ $color-borde: #acaaaa;
         color: $color-primario;
         margin-bottom: 20px;
         text-align: center;
+        font-size: 1.5rem;
+    }
+
+    legend {
+        font-size: 1.1rem;
     }
 
     .filaInput {
         display: flex;
-        gap: 10px;
+        gap: 5px;
         align-items: flex-start;
         flex-wrap: wrap;
-        margin-bottom: 15px;
+        margin-bottom: 10px;
     }
 
     .grupoCampo {
@@ -42,7 +47,7 @@ $color-borde: #acaaaa;
     .campoInput {
         vertical-align: middle; /*para los radiobutton*/
         width: 100%;
-        padding: 10px;
+        padding: 8px 10px;
         margin-right: 6px;   /*para los radiobutton*/
         margin-bottom: 15px;
         border: 1px solid $color-borde;
@@ -66,6 +71,7 @@ $color-borde: #acaaaa;
         display: inline-flex;     // asegura que input + texto estén alineados
         align-items: top;      // centra verticalmente
         margin-right: 12px;       // espacio entre opciones
+        color: #00705e;
     }
     .inputArea {
         flex: 0 0 120px;

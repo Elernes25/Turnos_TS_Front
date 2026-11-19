@@ -34,11 +34,23 @@ interface MenuItem {
 // 1. Definimos los enlaces usando tus tipos exactos de RolUsuario
 const MENU_ITEMS: MenuItem[] = [
   { 
-    ruta: '/', 
+    ruta: '/recepcion', 
     texto: 'Dashboard', 
     icono: HouseDoor, 
     end: true, 
-    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR, RolUsuario.MEDICO, RolUsuario.RECEPCIONISTA, RolUsuario.PACIENTE] 
+    roles: [RolUsuario.ADMIN, RolUsuario.RECEPCIONISTA] 
+  },
+   { 
+    ruta: '/supervisor', 
+    texto: 'Dashboard Supervisor', 
+    icono: ClipboardCheck, 
+    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR] 
+  },
+   { 
+    ruta: '/medico', 
+    texto: 'Dashboard Medico', 
+    icono: ShieldLock, 
+    roles: [RolUsuario.ADMIN,RolUsuario.MEDICO ] 
   },
   { 
     ruta: '/nuevo-paciente', 
@@ -50,19 +62,7 @@ const MENU_ITEMS: MenuItem[] = [
     ruta: '/nuevo-medico', 
     texto: 'Registrar Médico', 
     icono: HeartPulse, 
-    roles: [RolUsuario.ADMIN] 
-  },
-  { 
-    ruta: '/listado-medicos', 
-    texto: 'Listado Médicos', 
-    icono: People, 
-    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR, RolUsuario.RECEPCIONISTA] 
-  },
-  {
-    ruta: '/turnos',
-    texto: 'Listado de Turnos',
-    icono: Clipboard2Check,
-    roles: [RolUsuario.ADMIN, RolUsuario.RECEPCIONISTA]
+    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR] 
   },
   { 
     ruta: '/medicos', 
@@ -71,17 +71,31 @@ const MENU_ITEMS: MenuItem[] = [
     roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR] 
   },
   { 
-    ruta: '/especialidades', 
+    ruta: '/listado-medicos', 
+    texto: 'Listado Médicos', 
+    icono: People, 
+    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR, RolUsuario.RECEPCIONISTA, RolUsuario.MEDICO] 
+  },
+   { 
+    ruta: '/nuevo-recepcionista', 
+    texto: 'Registrar Recepcionista', 
+    icono: People, 
+    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR] 
+  },
+   {
+    ruta: '/turnos',
+    texto: 'Listado de Turnos',
+    icono: Clipboard2Check,
+    roles: [RolUsuario.ADMIN, RolUsuario.RECEPCIONISTA]
+  },
+  
+  { 
+    ruta: '/especialidades',     // para crear especialidades
     texto: 'Especialidades', 
     icono: Hospital, 
     roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR] 
   },
-  { 
-    ruta: '/supervisor', 
-    texto: 'Dashboard Supervisor', 
-    icono: ClipboardCheck, 
-    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR] 
-  },
+ 
   { 
     ruta: '/administrador', 
     texto: 'Administrador', 
@@ -92,20 +106,15 @@ const MENU_ITEMS: MenuItem[] = [
     ruta: '/administrador-agenda', 
     texto: 'Agenda Médicos', 
     icono: CalendarWeek, 
-    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR, RolUsuario.MEDICO, RolUsuario.RECEPCIONISTA] 
+    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR] 
   },
     { 
     ruta: '/obra-social', 
     texto: 'Obra Social', 
     icono: ShieldPlus, 
-    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR, RolUsuario.MEDICO, RolUsuario.RECEPCIONISTA] 
+    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR, RolUsuario.RECEPCIONISTA] 
   },
-  { 
-    ruta: '/Medico', 
-    texto: 'Dashboard Medico', 
-    icono: ShieldLock, 
-    roles: [RolUsuario.ADMIN,RolUsuario.MEDICO ] 
-  },
+ 
   { 
     ruta: '/perfil', 
     texto: 'Mi Perfil', 

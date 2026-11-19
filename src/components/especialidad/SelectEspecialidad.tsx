@@ -1,9 +1,11 @@
+//****usado por DatosProfesionales.tsx de medicos******/
 import { useEffect, useState } from "react";
 import { useController } from "react-hook-form";
 import type { Control } from "react-hook-form";
 import { clientesAxios } from "../../config/axios";
 import type { IEspecialidad } from "../../types/Especialidad.type";
 import type { IcrearMedicoDTO } from "../../types/Medico.type";
+import estilosEspecialidad from "./EspecialidadListado.module.scss";
 
 interface Props {
   control: Control<IcrearMedicoDTO>;
@@ -74,16 +76,7 @@ export const SelectEspecialidad = ({ control, styles }: Props) => {
         {seleccionadas.map((id) => (
           <span
             key={id}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "4px 10px",
-              borderRadius: 16,
-              background: "#e7f1ff",
-              color: "#0b5ed7",
-              fontSize: 14,
-            }}
+            className={estilosEspecialidad.tagEspecialidad}
           >
             {nombreDe(id)}
             <button

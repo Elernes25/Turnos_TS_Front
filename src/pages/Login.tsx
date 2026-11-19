@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import {clientesAxios} from "../config/axios";
 import { Button, Container, Card } from "react-bootstrap";
 import { LoginDTO,loginSchema } from "../types/Login.types";
-import { saveSession } from "../auth/session";
+import { getSession, saveSession } from "../auth/session";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -34,7 +34,14 @@ const Login = () => {
             //localStorage.setItem('token', token);
             saveSession(token);
 
-            console.log("Token guardado en localStorage:", token);
+            if (getSession()?.debeCambiarPassword) {
+                navigate('/primer-ingreso', {
+                    replace: true,
+                    state: { email: datos.email },
+                });
+                return;
+            }
+
             console.log("login exito" );
             toast.success("Ingreso fue exitoso");
             navigate('/'); //navigate('/dashboard'); 

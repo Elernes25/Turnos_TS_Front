@@ -22,6 +22,7 @@ export interface TelefonoMedico {
 
 export interface IMedico {
   id: string;
+  usuario: string;
   nombre: string;
   dni: string;
   email: string;
@@ -29,6 +30,11 @@ export interface IMedico {
   telefono: TelefonoMedico;
   especialidad: IEspecialidad[];
   numeroMatricula: string;
+}
+
+export interface ICredencialesMedico {
+  user: string;
+  password: string;
 }
 
 export const direccionSchema = z.object({
@@ -52,13 +58,20 @@ export const crearMedicoSchema = z.object({
     email: z.email('Email invalido'),
     telefono: telefonoSchema,
     especialidad:z.array(z.string("La especialidad es obligatoria")), 
-    numeroMatricula: z.string().min(2, "El número de matrícula es obligatorio") 
+    numeroMatricula: z.string().min(2, "El número de matrícula es obligatorio"),
+    usuario: z.object({
+      password: z.string().min(7, 'La contraseña debe tener al menos 7 caracteres')
+    }).optional()
 });
 
 export type IcrearMedicoDTO = z.input<typeof crearMedicoSchema>;
+export type ICrearMedicoRequest = Omit<IcrearMedicoDTO, 'usuario'> & {
+  usuario: ICredencialesMedico;
+};
 
 export const medicoDetalleSchema = z.object({
   id: z.string(),
+  usuario: z.string(),
   nombre: z.string(),
   dni: z.string(),
   email: z.string().email(),

@@ -32,6 +32,8 @@ import ListadoMedicosMain from "./components/medicos/ListadoMedicosMain"
 import ListadoTurnos from "./components/turnos/ListadoTurnos"
 import FormularioTurno from "./components/turnos/FormularioTurno"
 import TurnosFuturos from "./components/turnos/TurnosFuturos"
+import FormularioRecepcionista from "./components/recepcionistas/FormularioRecepcionista"
+import { DashboardPorRol } from "./components/layout/DashboardPorRol"
 
 interface RutaPrivadaProps {
     roles: IRolUsuario[];
@@ -73,14 +75,15 @@ function App() {
                         roles={[RolUsuario.ADMIN, RolUsuario.SUPERVISOR, RolUsuario.MEDICO,
                                 RolUsuario.RECEPCIONISTA, RolUsuario.PACIENTE]} />}>  {/* devuelve Outlet o Navigate */}
                 <Route path="/" element={<DashboardLayout />}>      {/*element={<LayoutPrincipal />}>*/}
-                    <Route index element={<DashboardRecepcion />} />                    
+                    <Route index element={<DashboardPorRol/>} />                    
                     <Route element={<RutasProtegidas roles={[RolUsuario.ADMIN,RolUsuario.RECEPCIONISTA]} />}>
+                        <Route path="recepcion"  element={<DashboardRecepcion />} />
                         <Route path="nuevo-paciente" element={<FormularioPaciente />} />
                         <Route path="nuevo-turno" element={<FormularioTurno />} />
                         <Route path="turnos" element={<ListadoTurnos />} />
                         <Route path="turnos-futuros" element={<TurnosFuturos />} />
                         <Route path="turno-detalle/:id" element={<DetalleTurno />} />
-                        <Route path="medico-detalle/:id" element={<DetalleMedico />} />
+                        
                     </Route>
                     <Route element={<RutasProtegidas roles={[RolUsuario.ADMIN,RolUsuario.SUPERVISOR]} />}>
                         <Route path="nuevo-medico" element={<FormularioMedico />} />
@@ -88,11 +91,12 @@ function App() {
                         <Route path="medicos" element={<ListadoMedicosMain/>} />
                         <Route path="medicos/:id/editar" element={<EditarMedico />} />
                         <Route path="medicos/:id/agenda" element={<FormularioAgendaMedico/>} />
+                        <Route path="nuevo-recepcionista" element={<FormularioRecepcionista/>} />
                     </Route>
                     <Route element={<RutasProtegidas roles={[RolUsuario.ADMIN,RolUsuario.SUPERVISOR,RolUsuario.MEDICO,RolUsuario.RECEPCIONISTA]} />}>
                         <Route path="listado-medicos" element={<ListadoMedicos />} />
                         <Route path="especialidades" element={<FormularioEspecialidades />} />
-                        
+                        <Route path="medico-detalle/:id" element={<DetalleMedico />} />
                     </Route>
                     <Route element={<RutasProtegidas roles={[RolUsuario.ADMIN, RolUsuario.MEDICO]} />}>
                         <Route path="historia-clinica/:pacienteId" element={<HistoriaClinica />} />

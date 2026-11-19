@@ -1,0 +1,28 @@
+.botonChico {
+  padding: 2px 8px;   // menos espacio interno
+  font-size: 0.8rem;  // letra más chica
+  line-height: 1;     // altura de línea más compacta
+}
+
+.renglonCompacto {
+  padding: 4px 8px;   // menos espacio arriba/abajo
+}
+
+.renglonPar {
+  background-color: #f8f9fa;
+}
+
+.renglonImpar {
+  background-color: #ffffff;
+}
+
+.tagEspecialidad {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 16px;
+  background: #e7f1ff;
+  color: #0b5ed7;
+  font-size: 14px;
+}

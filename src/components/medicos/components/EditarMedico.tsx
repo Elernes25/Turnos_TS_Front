@@ -28,8 +28,13 @@ const EditarMedico = () => {
         const medicoDetalle = medicoDetalleSchema.parse(data.datos);
 
         const medicoFormulario: IcrearMedicoDTO = {
-          ...medicoDetalle,
+          nombre: medicoDetalle.nombre,
+          dni: medicoDetalle.dni,
+          email: medicoDetalle.email,
+          direccion: medicoDetalle.direccion,
+          telefono: medicoDetalle.telefono,
           especialidad: medicoDetalle.especialidad.map((esp) => esp.id),
+          numeroMatricula: medicoDetalle.numeroMatricula,
         };
 
         if (!cancelado) {
