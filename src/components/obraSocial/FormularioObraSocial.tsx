@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { clientesAxios } from "../../config/axios";
 import { crearObraSocialSchema } from "../../types/ObraSocial.type";
 import type { IcrearObraSocialDTO,IObraSocial,IRespuestaObrasSociales} from "../../types/ObraSocial.type";
+import ModalEliminarObraSocial from "./ModalEliminarObraSocial";
 import styles from "./listado.module.scss";
 
 const obtenerValoresIniciales = (): IcrearObraSocialDTO => ({ nombreObraSocial: "" });
@@ -19,13 +20,21 @@ const obtenerMensajeError = (error: unknown, porDefecto: string): string =>
 const FormularioObraSocial = () => {
     const [obrasSociales, setObrasSociales] = useState<IObraSocial[]>([]);
     const [obraSocialEditando, setObraSocialEditando] = useState<IObraSocial | null>(null);
+    const [obraSocialAEliminar, setObraSocialAEliminar] = useState<IObraSocial | null>(null);
     const [cargandoLista, setCargandoLista] = useState<boolean>(true);
+    const [eliminando, setEliminando] = useState<boolean>(false);
 
-    const { register, handleSubmit, reset, formState: { errors, isSubmitting }} = useForm<IcrearObraSocialDTO>({
+    const { register, handleSubmit, reset, setFocus, formState: { errors, isSubmitting }} = useForm<IcrearObraSocialDTO>({
         resolver: zodResolver(crearObraSocialSchema),
         mode: "onChange",
         defaultValues: obtenerValoresIniciales(),
     });
+
+    useEffect(() => {
+        if (obraSocialEditando) {
+            setFocus("nombreObraSocial");
+        }
+    }, [obraSocialEditando, setFocus]);
 
     const cargarObrasSociales = useCallback(async (): Promise<void> => {
         try {
@@ -68,20 +77,24 @@ const FormularioObraSocial = () => {
 
     const handleCancelarEdicion = (): void => { setObraSocialEditando(null); reset(obtenerValoresIniciales()); };
 
-    const handleEliminar = async (obraSocial: IObraSocial): Promise<void> => {
-        const confirmar = window.confirm(`¿Desea eliminar la obra social "${obraSocial.nombreObraSocial}"?`);
-        if (!confirmar) return;
+    const confirmarEliminacion = async (): Promise<void> => {
+        if (!obraSocialAEliminar) return;
+
         try {
-            await clientesAxios.delete(`/obraSocial/${obraSocial.id}`);
+            setEliminando(true);
+            await clientesAxios.delete(`/obraSocial/${obraSocialAEliminar.id}`);
             toast.success("Obra social eliminada correctamente");
             // si estaba editando justo esa, salir del modo edición
-            if (obraSocialEditando?.id === obraSocial.id) {
+            if (obraSocialEditando?.id === obraSocialAEliminar.id) {
                 handleCancelarEdicion();
             }
+            setObraSocialAEliminar(null);
             await cargarObrasSociales();
         } catch (error: unknown) {
             console.error(error);
             toast.error(obtenerMensajeError(error, "No fue posible eliminar la obra social"));
+        } finally {
+            setEliminando(false);
         }
     };
 
@@ -106,14 +119,9 @@ const FormularioObraSocial = () => {
                         <div className="d-flex gap-2">
                             <Button type="submit" disabled={isSubmitting}>
                                 {isSubmitting ? (
-                                    <>
-                                        <Spinner animation="border" size="sm" /> Guardando...
-                                    </>
-                                ) : obraSocialEditando ? (
-                                    "Actualizar"
-                                ) : (
-                                    "Crear"
-                                )}
+                                    <> <Spinner animation="border" size="sm" /> Guardando... </>
+                                ) : obraSocialEditando ? ( "Actualizar" ) : ("Crear")
+                                }
                             </Button>
 
                             {obraSocialEditando && (
@@ -127,15 +135,8 @@ const FormularioObraSocial = () => {
             </Card>
 
             <Card>
-                <Card.Header className="d-flex justify-content-between align-items-center">
+                <Card.Header>
                     <span>Obras Sociales Registradas</span>
-                    <Button
-                        variant="outline-secondary"
-                        onClick={() => void cargarObrasSociales()}
-                        disabled={cargandoLista}
-                    >
-                        Actualizar
-                    </Button>
                 </Card.Header>
                 <ListGroup variant="flush">
                     {cargandoLista ? (
@@ -146,7 +147,7 @@ const FormularioObraSocial = () => {
                         obrasSociales.map((obraSocial, index) => (
                             <ListGroup.Item
                                 key={obraSocial.id}
-                                className={`${styles.renglonCompacto}
+                                className={`d-flex justify-content-between align-items-center ${styles.renglonCompacto}
                                     ${index % 2 === 0 ? styles.renglonPar : styles.renglonImpar}`}
                             >
                                 <strong>{obraSocial.nombreObraSocial}</strong>
@@ -160,9 +161,10 @@ const FormularioObraSocial = () => {
                                         Editar
                                     </Button>
                                     <Button
+                                        type="button"
                                         variant="danger"
                                         size="sm"
-                                        onClick={() => void handleEliminar(obraSocial)}
+                                        onClick={() => setObraSocialAEliminar(obraSocial)}
                                     >
                                         Eliminar
                                     </Button>
@@ -172,6 +174,12 @@ const FormularioObraSocial = () => {
                     )}
                 </ListGroup>
             </Card>
+            <ModalEliminarObraSocial
+                obraSocial={obraSocialAEliminar}
+                eliminando={eliminando}
+                onCancelar={() => setObraSocialAEliminar(null)}
+                onConfirmar={() => void confirmarEliminacion()}
+            />
         </Container>
     );
 };

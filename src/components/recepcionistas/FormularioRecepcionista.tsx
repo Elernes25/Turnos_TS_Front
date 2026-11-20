@@ -95,7 +95,7 @@ const FormularioRecepcionista = () => {
 
     return (
         <div className={styles.contenedorFormulario}>
-            <h3>Ingreso de Nueva Recepcionista</h3>
+            <h3>Ingreso de Nuevo Recepcionista</h3>
             <form onSubmit={handleSubmit(onSubmit)} noValidate>
                 <fieldset>
                     <legend>Datos de Acceso al sistema</legend>

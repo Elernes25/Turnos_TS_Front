@@ -1,19 +1,23 @@
 import { useForm, useFieldArray } from 'react-hook-form';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { Form, Button, Card } from 'react-bootstrap';
+import { toast } from 'sonner';
 import { useFetch } from '../../hooks/useFetch';
 import { clientesAxios } from '../../config/axios';
 import { crearAgendaMedicoSchema, ICrearAgendaMedicoDTO, DiaSemana,} from '../../types/Agenda.types';
 
 import { IMedico } from '../../types/Medico.type';
 import DiaItem from '../administrador/components/DiaItem';
+import ModalCrearAgenda from './components/ModalCrearAgenda';
+import ModalEditarAgenda from './components/ModalEditarAgenda';
 import styles from './FormularioUsuario.module.scss';
 
 const FormularioAgendaMedico = () => {
     const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
 
     const { register, control, handleSubmit, setValue, reset, formState: { errors, isSubmitting },
     } = useForm<ICrearAgendaMedicoDTO>({ resolver: zodResolver(crearAgendaMedicoSchema),
@@ -29,6 +33,8 @@ const FormularioAgendaMedico = () => {
 
     const [esEdicion, setEsEdicion] = useState(false);
     const [cargandoAgenda, setCargandoAgenda] = useState(true);
+    const [mostrarModalCreacion, setMostrarModalCreacion] = useState(false);
+    const [mostrarModalEdicion, setMostrarModalEdicion] = useState(false);
 
     useEffect(() => {
     if (!id) return;
@@ -45,7 +51,7 @@ const FormularioAgendaMedico = () => {
                 // no tiene agenda: modo creación
                 setValue('medicoId', id, { shouldValidate: true });
             } else {
-                alert('No se pudo cargar la agenda del médico');
+                toast.error('No se pudo cargar la agenda del médico');
             }
         } finally {
             setCargandoAgenda(false);
@@ -60,17 +66,17 @@ const FormularioAgendaMedico = () => {
     try {
         if (esEdicion) {
             await clientesAxios.put(`/medicos/${id}/agenda`, datosValidados); //mando la Id del medico
-            alert('Agenda actualizada con éxito');
+            setMostrarModalEdicion(true);
         } else {
             await clientesAxios.post('/medicos/agenda', datosValidados);
-            alert('Agenda creada con éxito');
+            setMostrarModalCreacion(true);
             setEsEdicion(true); // si guarda de nuevo, ya sería PUT
         }
     } catch (error: unknown) {
         const mensaje = axios.isAxiosError(error)
             ? error.response?.data?.message ?? 'Error del servidor'
             : 'El servidor está apagado o no responde';
-        alert(mensaje);
+        toast.error(mensaje);
     }
     };
 
@@ -136,18 +142,31 @@ const FormularioAgendaMedico = () => {
                    
                     </div>
 
-                    <div className="d-grid">
+                    <div className="d-flex gap-2">
                         <Button
                             type="submit"
                             variant="primary"
+                            className="flex-grow-1"
                             disabled={ isSubmitting || !medicoSeleccionado }
                         >
                            {isSubmitting ? 'Guardando...'
                                 : esEdicion ? 'Guardar Cambios' : 'Guardar Agenda'}
                         </Button>
+                        <Link to="/medicos" className="btn btn-outline-secondary">
+                            Volver a Médicos
+                        </Link>
                     </div>
                 </Form>
             </Card.Body>
+            <ModalCrearAgenda
+                show={mostrarModalCreacion}
+                onVolverMedicos={() => navigate('/medicos')}
+            />
+            <ModalEditarAgenda
+                show={mostrarModalEdicion}
+                onVolverMedicos={() => navigate('/medicos')}
+                onVolverEditar={() => setMostrarModalEdicion(false)}
+            />
         </div>
     );
 };

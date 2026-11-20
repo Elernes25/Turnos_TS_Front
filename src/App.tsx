@@ -34,6 +34,7 @@ import FormularioTurno from "./components/turnos/FormularioTurno"
 import TurnosFuturos from "./components/turnos/TurnosFuturos"
 import FormularioRecepcionista from "./components/recepcionistas/FormularioRecepcionista"
 import { DashboardPorRol } from "./components/layout/DashboardPorRol"
+import MiPerfil from "./pages/MiPerfil"
 
 interface RutaPrivadaProps {
     roles: IRolUsuario[];
@@ -97,6 +98,7 @@ function App() {
                         <Route path="listado-medicos" element={<ListadoMedicos />} />
                         <Route path="especialidades" element={<FormularioEspecialidades />} />
                         <Route path="medico-detalle/:id" element={<DetalleMedico />} />
+                        <Route path="perfil" element={<MiPerfil />} />
                     </Route>
                     <Route element={<RutasProtegidas roles={[RolUsuario.ADMIN, RolUsuario.MEDICO]} />}>
                         <Route path="historia-clinica/:pacienteId" element={<HistoriaClinica />} />
@@ -109,7 +111,7 @@ function App() {
                         <Route path="administrador" element={<FormularioAdministrador />} />
                         
                     </Route>
-
+               
                     <Route path="cerrar-sesion" element={<LogoutButton />} />
                     <Route path="*" element={<NotFound />} />
                     

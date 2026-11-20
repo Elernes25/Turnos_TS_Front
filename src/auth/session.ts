@@ -1,6 +1,5 @@
 import type { SessionPayload } from '../types/Session';
 import { RolUsuario } from '../types/Usuario.type';
-import { Navigate} from "react-router-dom";
 
 //TODO usar jwtDecode 
 const SESSION_EVENT = 'session-changed';

@@ -60,7 +60,7 @@ const MENU_ITEMS: MenuItem[] = [
   },
   { 
     ruta: '/nuevo-medico', 
-    texto: 'Registrar Médico', 
+    texto: 'Nuevo Médico', 
     icono: HeartPulse, 
     roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR] 
   },
@@ -102,12 +102,12 @@ const MENU_ITEMS: MenuItem[] = [
     icono: ShieldLock, 
     roles: [RolUsuario.ADMIN] 
   },
-  { 
+ /* { 
     ruta: '/administrador-agenda', 
     texto: 'Agenda Médicos', 
     icono: CalendarWeek, 
     roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR] 
-  },
+  }, */
     { 
     ruta: '/obra-social', 
     texto: 'Obra Social', 
@@ -119,7 +119,7 @@ const MENU_ITEMS: MenuItem[] = [
     ruta: '/perfil', 
     texto: 'Mi Perfil', 
     icono: PersonCircle, 
-    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR, RolUsuario.MEDICO, RolUsuario.RECEPCIONISTA, RolUsuario.PACIENTE] 
+    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR, RolUsuario.MEDICO, RolUsuario.RECEPCIONISTA]
   }
 ];
 
@@ -177,7 +177,6 @@ const Sidebar = () => {
           return (
             <NavLink 
               key={item.ruta} 
-              
               to={item.ruta} 
               end={item.end} 
               className={estiloEnlace}

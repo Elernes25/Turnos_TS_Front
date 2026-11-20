@@ -25,8 +25,10 @@ const ListadoMedicos = () => {
 
   return (
     <Container>
-      <h1 className="mb-4">Médicos</h1>
-
+      <div className={styles.encabezado2}>
+        <h1 >Listado de Médicos</h1> 
+        <p>Listado de médicos cargados en el sistema.</p>
+     </div>
       {!isLoading && (
         <BuscadorMedicos valor={busqueda} alCambiar={setBusqueda} />
       )}

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Alert, Button, Form, Spinner, Table } from 'react-bootstrap';
+import { HeartPulse } from 'react-bootstrap-icons';
 import { toast } from 'sonner';
 import { clientesAxios } from '../../config/axios';
 import { medicosListadoSchema, type IMedicoListado} from '../../types/Medico.type';
@@ -124,7 +125,8 @@ const ListadoMedicosMain = () => {
           variant="primary"
           onClick={() => navigate('/nuevo-medico',{state: {from: location.pathname}})}
         >
-          + Nuevo médico
+          <HeartPulse aria-hidden="true" className="me-1" />
+          Nuevo Médico
         </Button>
       </div>
 

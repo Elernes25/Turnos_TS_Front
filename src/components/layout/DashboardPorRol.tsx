@@ -15,8 +15,8 @@ export const DashboardPorRol = () => {
     case "SUPERVISOR":
       return <Navigate to="/supervisor" replace />;
 
- //   case RolUsuario.ADMIN:
- //     return <Navigate to="/supervisor" replace />;
+    case "ADMIN":
+      return <Navigate to="/supervisor" replace />;
 
     default:
       return <Navigate to="/403" replace />;

@@ -2,7 +2,7 @@
 .contenedor {
   max-width: 75rem;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 1rem 1rem;
 }
 
 .encabezado {
@@ -13,6 +13,12 @@
   gap: 1rem;
   margin-bottom: 1.25rem;
 
+  h1 { font-size: 1.75rem; margin: 0; }
+  p  { margin: 0.25rem 0 0; color: #475569; }
+}
+
+.encabezado2 {
+  margin-bottom: 1.25rem;
   h1 { font-size: 1.75rem; margin: 0; }
   p  { margin: 0.25rem 0 0; color: #475569; }
 }
