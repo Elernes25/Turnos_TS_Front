@@ -24,7 +24,7 @@ const TelefonoPaciente = ({ register, errores, styles }:Props)=> (
                 </select>
             </div>
             <div className={styles.grupoCampo}>
-                <small className={styles.ayudaCampo}>Código de País (Argentina: 54).</small>
+                <small className={styles.ayudaCampo}>Cód. de País (Arg.: 54).</small>
                 <input
                     type="text"
                     className={styles.campoInput}
@@ -34,7 +34,7 @@ const TelefonoPaciente = ({ register, errores, styles }:Props)=> (
                 {errores.telefono?.codigoPais && <span className={styles.error}>{errores.telefono.codigoPais.message}</span>}
             </div>
             <div className={styles.grupoCampo}>
-                <small className={styles.ayudaCampo}>Código de área, sin el 0.</small>
+                <small className={styles.ayudaCampo}>Cód. de área, sin el 0.</small>
                 <input
                     type="text"
                     className={styles.campoInput}

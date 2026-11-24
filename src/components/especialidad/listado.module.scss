@@ -1,11 +1,14 @@
+@use "../../styles/variables" as *;
+
 .botonChico {
-  padding: 2px 8px;   // menos espacio interno
-  font-size: 0.8rem;  // letra más chica
-  line-height: 1;     // altura de línea más compacta
+  padding: $sp-1 $sp-2;
+  font-size: $fs-xs;
+  line-height: 1;
+  border-radius: $radius-sm;
 }
 
 .renglonCompacto {
-  padding: 4px 8px;   // menos espacio arriba/abajo
+  padding: $sp-1 $sp-2;
 }
 
 .renglonCompacto2 {
@@ -15,9 +18,9 @@
 }
 
 .renglonPar {
-  background-color: #f8f9fa;
+  background-color: $suave;
 }
 
 .renglonImpar {
-  background-color: #ffffff;
+  background-color: $campo;
 }

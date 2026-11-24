@@ -1,15 +1,28 @@
-.sidebar-link.active {
-  background-color: var(--bs-primary) !important;
+@use "../../styles/variables" as *;
+
+.sidebar {
+  background: linear-gradient(180deg, $sector-a, $sector-b);
+  border-right: 1px solid $sector-borde;
+}
+
+.nav-link.activo {
+  color: #06130d !important;
+  font-weight: 600;
+}
+
+.nav-link:not(.activo) {
+  color: #ffffff !important;
 }
 
 .sidebar-link:not(.active):hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: $suave;
 }
-hoverEffect {
-  transition: background-color 0.2s ease-in-out;
+
+.hoverEffect {
+  transition: background-color $transition-fast;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: $suave;
   }
 }
 
@@ -18,17 +31,13 @@ hoverEffect {
   overflow-x: hidden;
   min-height: 0;
 
-  scrollbar-width: thin;                          // Firefox
-  scrollbar-color: #495057 transparent;           // Firefox
+  scrollbar-width: thin;
+  scrollbar-color: $label transparent;
 
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
+  &::-webkit-scrollbar { width: 6px; }
   &::-webkit-scrollbar-thumb {
-    background: #495057;
-    border-radius: 3px;
+    background: $label;
+    border-radius: $radius-sm;
   }
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
+  &::-webkit-scrollbar-track { background: transparent; }
 }

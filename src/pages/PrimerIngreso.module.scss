@@ -1,6 +1,7 @@
+@use "../styles/variables" as *;
+
 .error {
-        color: red;
-        font-size: 0.85rem;
-        margin-top: 1px;   
-        
-    }
+  color: $error;
+  font-size: $fs-sm;
+  margin-top: $sp-1;
+}

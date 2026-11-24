@@ -1,124 +1,136 @@
-// DashboardRecepcion — SCSS con variables por Rol
-// En el futuro: el DashboardLayout puede poner data-rol="RECEPCIONISTA" / "ADMIN" / "MEDICO"
-// y este archivo cambia el tema sin tocar los .tsx.
+@use "../../styles/variables" as *;
 
 .dashboard {
-  --primario: #0d6efd;
-  --primario-oscuro: #0a58ca;
-  --acento: #198754;
-  --aviso: #ffc107;
-  --peligro: #dc3545;
-  --fondo-card: #ffffff;
-  --borde: #dee2e6;
-  --texto-suave: #6c757d;
-}
-
-.dashboard[data-rol="ADMIN"] {
-  --primario: #6610f2;
-  --primario-oscuro: #520dc2;
-  --acento: #0dcaf0;
-}
-
-.dashboard[data-rol="MEDICO"] {
-  --primario: #0dcaf0;
-  --primario-oscuro: #0aa2c0;
-  --acento: #20c997;
-}
-
-.dashboard[data-rol="SUPERVISOR"] {
-  --primario: #fd7e14;
-  --primario-oscuro: #dc6502;
-  --acento: #198754;
+  --primario: #{$acento};
+  --primario-oscuro: #{$acento-hover};
+  --acento: #{$acento};
+  --aviso: #{$titulo-sec};
+  --peligro: #{$error};
+  --fondo-card: #{$campo};
+  --borde: #{$sector-borde};
+  --texto-suave: #{$label};
 }
 
 .encabezado {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  gap: 1rem;
+  gap: $sp-4;
   flex-wrap: wrap;
-  margin-bottom: 1.5rem;
+  margin-bottom: $sp-5;
 
   .titulo {
     margin: 0;
-    font-size: 1.75rem;
+    font-size: $fs-2xl;
     font-weight: 700;
+    color: $texto;
   }
 
   .subtitulo {
-    color: var(--texto-suave);
-    margin: 0.25rem 0 0;
+    color: $label;
+    margin: $sp-1 0 0;
   }
 
   .acciones {
     display: flex;
-    gap: 0.5rem;
+    gap: $sp-2;
     flex-wrap: wrap;
   }
 }
 
 .metricaCard {
-  border: 1px solid var(--borde);
-  border-radius: 0.75rem;
+  border: 1px solid $sector-borde;
+  border-radius: $radius-lg;
   height: 100%;
-  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  background: $campo;
+  color: $campo-texto;
+  transition: box-shadow $transition-fast, transform $transition-fast;
 
   &:hover {
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
+    box-shadow: $shadow-md;
     transform: translateY(-2px);
   }
 
   .icono {
-    font-size: 1.5rem;
-    color: var(--primario);
-    margin-bottom: 0.5rem;
+    font-size: $fs-xl;
+    color: $acento;
+    margin-bottom: $sp-2;
   }
 
   .valor {
-    font-size: 1.75rem;
+    font-size: $fs-2xl;
     font-weight: 700;
     margin: 0;
     line-height: 1;
+    color: $texto;
   }
 
   .etiqueta {
-    color: var(--texto-suave);
-    font-size: 0.875rem;
+    color: $label;
+    font-size: $fs-sm;
   }
 
-  .variante-total { border-top: 4px solid var(--primario); }
-  .variante-pendiente { border-top: 4px solid var(--aviso); }
-  .variante-atendido { border-top: 4px solid var(--acento); }
-  .variante-cancelado { border-top: 4px solid var(--peligro); }
-  .variante-faltan { border-top: 4px solid #6c757d; }
+  .variante-total { border-top: 4px solid $acento; }
+  .variante-pendiente { border-top: 4px solid $titulo-sec; }
+  .variante-atendido { border-top: 4px solid $acento-hover; }
+  .variante-cancelado { border-top: 4px solid $error; }
+  .variante-faltan { border-top: 4px solid $label; }
 }
 
 .seccion {
-  background: var(--fondo-card);
-  border: 1px solid var(--borde);
-  border-radius: 0.75rem;
-  padding: 1rem;
-  margin-bottom: 1rem;
+  background: linear-gradient(180deg, $sector-a, $sector-b);
+  border: 1px solid $sector-borde;
+  border-radius: $radius-lg;
+  padding: $sp-4;
+  margin-bottom: $sp-4;
 
   .seccionTitulo {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    color: var(--primario-oscuro);
+    gap: $sp-2;
+    font-weight: 500;
+    margin-bottom: $sp-3;
+    color: $titulo-sec;
   }
 }
 
+.encabezadoHistoria {
+  margin-bottom: $sp-2;
+}
+
+.seccionHistoria {
+  background: linear-gradient(180deg, $sector-a, $sector-b);
+  padding: $sp-2 $sp-2;
+  margin-bottom: $sp-2;
+
+  .tituloSeccionHistoria {
+    font-size: $fs-base;
+    margin-bottom: $sp-1;
+    color: $titulo-sec;
+  }
+
+  :global(.list-group-item) {
+    padding-top: $sp-1;
+    padding-bottom: $sp-1;
+    background: $campo;
+    color: $campo-texto;
+    border-color: $sector-borde;
+  }
+
+  :global(.card) { margin-bottom: $sp-2 !important; }
+  :global(.card-body) { padding: $sp-1; }
+}
+
 .respuesta {
-  background: #f8f9fa;
-  border-left: 4px solid var(--primario);
-  border-radius: 0.5rem;
-  padding: 0.75rem 1rem;
+  background: $suave;
+  border-left: 4px solid $acento;
+  border-radius: $radius-sm;
+  padding: $sp-3 $sp-4;
 
   .respuestaTitulo {
     font-weight: 600;
-    margin: 0 0 0.25rem;
+    margin: 0 0 $sp-1;
+    color: $texto;
   }
 }
 
@@ -130,14 +142,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid var(--borde);
+    gap: $sp-3;
+    padding: $sp-2 0;
+    border-bottom: 1px solid $sector-borde;
 
     &:last-child { border-bottom: 0; }
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $bp-md) {
   .encabezado { align-items: flex-start; }
 }

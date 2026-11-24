@@ -10,7 +10,7 @@ import {
   ClipboardCheck, 
   Clipboard2Check,
   ShieldLock, 
-  CalendarWeek, 
+  //CalendarWeek, 
   PersonCircle, 
   BoxArrowRight,
   ShieldPlus,
@@ -52,18 +52,29 @@ const MENU_ITEMS: MenuItem[] = [
     icono: ShieldLock, 
     roles: [RolUsuario.ADMIN,RolUsuario.MEDICO ] 
   },
+/*    ingresa desde dashboard
   { 
     ruta: '/nuevo-paciente', 
-    texto: 'Registrar Paciente', 
+    texto: 'Nuevo Paciente', 
     icono: PersonPlus, 
     roles: [RolUsuario.ADMIN, RolUsuario.RECEPCIONISTA] 
   },
+  */
+/*  ingresa desde dashboard
   { 
+    ruta: '/nuevo-ingreso',
+    texto: 'Ingreso Paciente y Turno',
+    icono: PersonPlus,
+    roles: [RolUsuario.ADMIN, RolUsuario.RECEPCIONISTA]
+  },*/
+  /*
+  { ingresa desde Medicos
     ruta: '/nuevo-medico', 
     texto: 'Nuevo Médico', 
     icono: HeartPulse, 
     roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR] 
   },
+  */
   { 
     ruta: '/medicos', 
     texto: 'Médicos', 
@@ -72,23 +83,38 @@ const MENU_ITEMS: MenuItem[] = [
   },
   { 
     ruta: '/listado-medicos', 
-    texto: 'Listado Médicos', 
+    texto: 'Médicos Detalles', 
     icono: People, 
     roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR, RolUsuario.RECEPCIONISTA, RolUsuario.MEDICO] 
   },
-   { 
+  /* accede desde Recepcionistas
+  { 
     ruta: '/nuevo-recepcionista', 
-    texto: 'Registrar Recepcionista', 
-    icono: People, 
+    texto: 'Nuevo Recepcionista', 
+    icono: PersonPlus, 
     roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR] 
-  },
+  },*/
+   {
+     ruta: '/recepcionistas',
+     texto: 'Recepcionistas',
+     icono: People,
+     roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR]
+   },
+ 
    {
     ruta: '/turnos',
     texto: 'Listado de Turnos',
     icono: Clipboard2Check,
     roles: [RolUsuario.ADMIN, RolUsuario.RECEPCIONISTA]
   },
-  
+   {
+     ruta: '/editar-paciente',
+     texto: 'Actualizar Paciente',
+     icono: PersonPlus,
+     roles: [RolUsuario.ADMIN, RolUsuario.RECEPCIONISTA]
+   },
+ 
+
   { 
     ruta: '/especialidades',     // para crear especialidades
     texto: 'Especialidades', 
@@ -110,10 +136,16 @@ const MENU_ITEMS: MenuItem[] = [
   }, */
     { 
     ruta: '/obra-social', 
-    texto: 'Obra Social', 
+    texto: 'Obras Sociales', 
     icono: ShieldPlus, 
     roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR, RolUsuario.RECEPCIONISTA] 
   },
+    {
+      ruta: '/mis-consultasl',
+      texto: 'Mis Consultas',
+      icono: ShieldPlus,
+      roles: [RolUsuario.ADMIN, RolUsuario.MEDICO]
+    },
  
   { 
     ruta: '/perfil', 
@@ -141,8 +173,8 @@ const Sidebar = () => {
   };
 
  const estiloEnlace = ({ isActive }: { isActive: boolean }) =>
-    `nav-link text-white rounded p-2 d-flex align-items-center gap-2 ${
-      isActive ? 'bg-primary' : styles.hoverEffect
+    `nav-link rounded p-2 d-flex align-items-center gap-2 ${
+      isActive ? 'bg-primary' : 'text-white ' + styles.hoverEffect
     }`;
 
   // Si no hay sesión válida, no renderizamos el sidebar (o podrías redirigir)
@@ -155,7 +187,7 @@ const Sidebar = () => {
 
   return (
     <div 
-      className="bg-dark text-white p-3 d-flex flex-column vh-100 position-sticky top-0"
+      className={`${styles.sidebar} text-white p-3 d-flex flex-column vh-100 position-sticky top-0`}
       style={{ minWidth: '220px', maxWidth: '220px' }}
     >
     <div className="text-center my-2 flex-shrink-0">
@@ -180,6 +212,7 @@ const Sidebar = () => {
               to={item.ruta} 
               end={item.end} 
               className={estiloEnlace}
+            style={({ isActive }) => (isActive ? { color: '#06130d', fontWeight: 600 } : undefined)}
             >
               <IconoComponente size={18} />
               <span>{item.texto}</span>

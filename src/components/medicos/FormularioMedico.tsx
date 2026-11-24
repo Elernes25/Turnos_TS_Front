@@ -28,7 +28,6 @@ interface IRespuestaCrearMedico {
     };
 }
 
-
 const FormularioMedico = ({ medicoId, valoresIniciales }: FormularioMedicoProps) => {
     const navigate = useNavigate();
     const location = useLocation();

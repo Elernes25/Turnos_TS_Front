@@ -17,19 +17,9 @@ export enum GrupoSanguineo {
   NO_SABE = 'NO SABE',
 }
 
-export interface IConsultaClinica {
-  fecha: string;
-  medicoID: string;
-  motivoConsulta: string;
-  diagnostico: string;
-  tratamiento: string;
-  indicaciones: string;
-  observaciones?: string;
-}
-
 export interface IHistoriaClinica {
   id?: string;
-  pacienteID: string;
+  pacienteId: string;
   datosClinicos: {
     sexo: Sexo;
     grupoSanguineo?: GrupoSanguineo;
@@ -40,24 +30,18 @@ export interface IHistoriaClinica {
     enfermedadesCronicas: string[];
     historiaGeneral: string;
   };
-  consultas: IConsultaClinica[];
+  modificacion: {
+    medicoId: string;
+    fecha: string;
+  };
   createdAt?: string;
   updatedAt?: string;
 }
 
-export const consultaClinicaSchema = z.object({
-  fecha: z.string(),
-  medicoID: z.string(),
-  motivoConsulta: z.string(),
-  diagnostico: z.string(),
-  tratamiento: z.string(),
-  indicaciones: z.string(),
-  observaciones: z.string().optional(),
-});
 
 export const historiaClinicaSchema = z.object({
   id: z.string().optional(),
-  pacienteID: z.string(),
+  pacienteId: z.string(),
   datosClinicos: z.object({
     sexo: z.enum(Sexo),
     grupoSanguineo: z.enum(GrupoSanguineo).optional(),
@@ -68,13 +52,12 @@ export const historiaClinicaSchema = z.object({
     enfermedadesCronicas: z.array(z.string()),
     historiaGeneral: z.string(),
   }),
-  consultas: z.array(consultaClinicaSchema),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
 });
 
 export const crearHistoriaClinicaSchema = z.object({
-  pacienteID: z.string().min(1),
+  pacienteId: z.string().min(1),
   datosClinicos: z.object({
     sexo: z.enum(Sexo),
     grupoSanguineo: z.enum(GrupoSanguineo).optional(),
@@ -85,7 +68,12 @@ export const crearHistoriaClinicaSchema = z.object({
     enfermedadesCronicas: z.array(z.string()),
     historiaGeneral: z.string(),
   }),
-  consultas: z.array(consultaClinicaSchema),
+  modificacion: z.object({ 
+    medicoId:z.string().min(1),
+    fecha: z.coerce.date()
+  })
+
+  //consultas: z.array(consultaClinicaSchema),
 });
 
 export type ICrearHistoriaClinicaDTO = z.input<typeof crearHistoriaClinicaSchema>;

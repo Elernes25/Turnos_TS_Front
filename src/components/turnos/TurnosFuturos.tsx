@@ -97,7 +97,8 @@ const TurnosFuturos = () => {
                     </td>
                     <td>
                       <div className={styles.acciones}>
-                        {pendiente ? (
+                        {/*  el turno se cancela y se crea
+                        pendiente ? (
                           <Link
                             to={`/nuevo-turno?editar=${turno.id}`}
                             className="btn btn-sm btn-outline-secondary"
@@ -108,7 +109,7 @@ const TurnosFuturos = () => {
                           <Button size="sm" variant="outline-secondary" disabled>
                             Editar
                           </Button>
-                        )}
+                        )*/}
                         <Button
                           size="sm"
                           variant="outline-danger"

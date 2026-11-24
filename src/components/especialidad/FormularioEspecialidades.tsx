@@ -9,6 +9,46 @@ import { crearEspecialidadSchema} from "../../types/Especialidad.type";
 import type{ IcrearEspecialidadDTO, IEspecialidad, IRespuestaEspecialidades} from "../../types/Especialidad.type";
 import ListadoEspecialidad from "./components/ListadoEspecialidad";
 import ModalEliminarEspecialidad from "./components/ModalEliminarEspecialidad";
+/*
+import { FileEarmarkExcel } from "react-bootstrap-icons";
+import ModalImportarExcel from "./ModalImportarExcel";
+
+// estado
+const [mostrarImportar, setMostrarImportar] = useState<boolean>(false);
+
+Reemplazá el Card.Header del formulario por:
+
+<Card.Header className="d-flex justify-content-between align-items-center">
+    <h5 className="mb-0">{especialidadEditando ? "Editar Especialidad" : "Nueva Especialidad"}</h5>
+    <Button
+        variant="outline-success"
+        size="sm"
+        title="Importar desde Excel"
+        onClick={() => setMostrarImportar(true)}
+    >
+        <FileEarmarkExcel size={20} />
+    </Button>
+</Card.Header>
+
+
+Y antes del </Container> de cierre:
+<ModalImportarExcel
+    show={mostrarImportar}
+    onHide={() => setMostrarImportar(false)}
+    nombresExistentes={especialidades.map((e) => e.nombre)}
+    onImportado={async () => {
+        setMensajeExito("Especialidades importadas correctamente.");
+        await cargarEspecialidades();
+    }}
+/>
+
+Backend: el modal hace POST /especialidad/batch con { especialidades: [{nombre, descripcion}] }. Si todavía no tenés ese endpoint, puedo escribirlo (Express + Mongoose con insertMany y validación Zod).
+
+ Conviene cambiarlo a catch (error: unknown); con axios.isAxiosError ya queda bien tipado.
+
+*/
+
+
 
 const obtenerValoresIniciales = (): IcrearEspecialidadDTO => ({ nombre: "", descripcion: ""});
 
@@ -26,9 +66,7 @@ const FormularioEspecialidades = () => {
     });
 
     useEffect(() => {
-        if (especialidadEditando) {
-            setFocus("nombre");
-        }
+        if (especialidadEditando) {setFocus("nombre"); }
     }, [especialidadEditando, setFocus]);
 
     const cargarEspecialidades = useCallback(async (): Promise<void> => {

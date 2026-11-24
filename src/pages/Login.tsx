@@ -1,14 +1,17 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import {clientesAxios} from "../config/axios";
-import { Button, Container, Card } from "react-bootstrap";
+import { Button, Container, Card, Form, InputGroup } from "react-bootstrap";
+import { Eye, EyeSlash } from "react-bootstrap-icons";
 import { LoginDTO,loginSchema } from "../types/Login.types";
 import { getSession, saveSession } from "../auth/session";
 
 const Login = () => {
     const navigate = useNavigate();
+    const [mostrarPassword, setMostrarPassword] = useState(false);
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginDTO>({
         resolver: zodResolver(loginSchema),
         defaultValues: { email: '', password: '' }
@@ -62,7 +65,23 @@ const Login = () => {
                     </div>
                     
                     <div className="mb-4">
-                        <input type="password" className="form-control" placeholder="Contraseña" {...register('password')} />
+                        <InputGroup>
+                            <Form.Control
+                                type={mostrarPassword ? "text" : "password"}
+                                placeholder="Contraseña"
+                                aria-label="Contraseña"
+                                {...register('password')}
+                            />
+                            <Button
+                                type="button"
+                                variant="outline-secondary"
+                                aria-label={mostrarPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                                aria-pressed={mostrarPassword}
+                                onClick={() => setMostrarPassword((visible) => !visible)}
+                            >
+                                {mostrarPassword ? <EyeSlash aria-hidden="true" /> : <Eye aria-hidden="true" />}
+                            </Button>
+                        </InputGroup>
                         {errors.password && <small className="text-danger">{errors.password.message}</small>}
                     </div>
                     <Button type="submit" className="w-100" disabled={isSubmitting}>

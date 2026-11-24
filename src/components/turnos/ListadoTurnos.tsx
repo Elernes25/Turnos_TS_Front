@@ -152,7 +152,8 @@ const ListadoTurnos = () => {
                           </Button>
                         )}
 
-                        {noPendiente ? (
+                        {/* lo suspendo el turno no se edita, se cancela y se saca otro
+                         noPendiente ? (
                           <Button size="sm" variant="outline-secondary" disabled>
                             Editar
                           </Button>
@@ -160,7 +161,7 @@ const ListadoTurnos = () => {
                           <Link to={`/nuevo-turno?editar=${turno.id}`} className="btn btn-sm btn-outline-secondary" >
                             Editar
                           </Link>
-                        )}
+                        )*/}
 
                         <Button size="sm" variant="outline-danger"disabled={noPendiente || estaEnProceso}
                           onClick={() => setTurnoACancelar(turno)}

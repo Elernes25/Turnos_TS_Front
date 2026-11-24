@@ -13,7 +13,7 @@ const DashboardLayout = () => {
       </div>
 
       {/* 2. Contenedor del Contenido Principal (Toma todo el espacio restante flex-grow-1) */}
-      <div className="flex-grow-1 vh-100 overflow-auto bg-light">
+      <div className="flex-grow-1 vh-100 overflow-auto" style={{ background: '#08100c' }}>
         
         {/* Navbar superior miniatura opcional para móviles (aparece solo en d-block d-md-none) */}
         <div className="bg-dark text-white p-3 d-block d-md-none text-center">

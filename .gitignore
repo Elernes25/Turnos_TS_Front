@@ -15,6 +15,7 @@ mock
 git help
 .env
 *.old
+*.suspendido
 
 # Editor directories and files
 .vscode/*

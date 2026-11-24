@@ -1,3 +1,4 @@
+import { getSession } from "../../auth/session";
 import { useCallback, useEffect, useState } from "react";
 import { Button, Card, Container, Form, ListGroup, Spinner } from "react-bootstrap";
 import { useForm } from "react-hook-form";
@@ -97,7 +98,8 @@ const FormularioObraSocial = () => {
             setEliminando(false);
         }
     };
-
+    const session = getSession();
+    const esRecepcionista: boolean = session?.rol === "RECEPCIONISTA";
     return (
         <Container>
             <Card className="mb-4">
@@ -151,24 +153,20 @@ const FormularioObraSocial = () => {
                                     ${index % 2 === 0 ? styles.renglonPar : styles.renglonImpar}`}
                             >
                                 <strong>{obraSocial.nombreObraSocial}</strong>
-
+                                {!esRecepcionista && (
                                 <div className="d-flex gap-2">
-                                    <Button
-                                        variant="secondary"
-                                        size="sm"
+                                    <Button  variant="secondary" size="sm"
                                         onClick={() => handleEditar(obraSocial)}
                                     >
                                         Editar
                                     </Button>
-                                    <Button
-                                        type="button"
-                                        variant="danger"
-                                        size="sm"
+                                    <Button  type="button" variant="danger" size="sm"
                                         onClick={() => setObraSocialAEliminar(obraSocial)}
                                     >
                                         Eliminar
                                     </Button>
                                 </div>
+                                )}
                             </ListGroup.Item>
                         ))
                     )}
