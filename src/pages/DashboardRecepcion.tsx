@@ -19,6 +19,7 @@ import { ITurno } from "../types/Turno.type";
 //import { IEspecialidad } from "../types/Especialidad.type";
 import { toast } from 'sonner';
 import {clientesAxios} from "../config/axios";
+import styles from "../components/recepcionistas/DashboardRecepcion.module.scss";
 
 const DashboardRecepcion = () => {
     const [busqueda, setBusqueda] = useState("");
@@ -56,19 +57,18 @@ const DashboardRecepcion = () => {
 
     return (
         <Container fluid className="py-1">
-            <div className="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
-                <h2 className="mb-0">Dashboard Recepción</h2>
+            <div className="d-flex justify-content-between align-items-center flex-wrap gap-1 mb-2">
+                <h1 className={`${styles.titulo} mb-0`}>Panel Recepción</h1>
                 <DashboardAcciones />
             </div>
 
             <div className="mb-2">
                 <DashboardMetricas turnos={turnos ?? []} />
             </div>
-            <BuscadorTurnos
-                        valor={busqueda}
-                        alCambiar={setBusqueda}
-            />
-            <div className="mt-2">
+            <div className="mb-0">
+                <BuscadorTurnos valor={busqueda} alCambiar={setBusqueda} />
+            </div>
+            <div className="mt-0">
                 <TurnosHoy
                     turnos={turnosFiltrados}
                     isLoading={isLoading}

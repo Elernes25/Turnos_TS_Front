@@ -1,0 +1,31 @@
+@use "../../styles/variables" as *;
+
+.ticket {
+  padding: $sp-3;
+  border: 1px dashed $sector-borde;
+  border-radius: $radius-lg;
+  background: $campo;
+  color: $campo-texto;
+
+  p {
+    margin-bottom: $sp-2;
+  }
+}
+
+.passwordTicket {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $sp-1;
+  margin-top: $sp-4;
+  padding: $sp-3;
+  border-radius: $radius-md;
+  background: $sector-a;
+  color: $texto;
+
+  strong {
+    font-size: $fs-xl;
+    overflow-wrap: anywhere;
+    text-align: center;
+  }
+}

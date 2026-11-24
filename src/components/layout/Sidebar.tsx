@@ -14,6 +14,7 @@ import {
   PersonCircle, 
   BoxArrowRight,
   ShieldPlus,
+  PersonLinesFill,
   type Icon
 } from 'react-bootstrap-icons';
 import logo1 from '../../assets/logo1.png';
@@ -35,7 +36,7 @@ interface MenuItem {
 const MENU_ITEMS: MenuItem[] = [
   { 
     ruta: '/recepcion', 
-    texto: 'Dashboard', 
+    texto: 'Panel Recepción', 
     icono: HouseDoor, 
     end: true, 
     roles: [RolUsuario.ADMIN, RolUsuario.RECEPCIONISTA] 
@@ -127,6 +128,12 @@ const MENU_ITEMS: MenuItem[] = [
     texto: 'Administrador', 
     icono: ShieldLock, 
     roles: [RolUsuario.ADMIN] 
+  },
+  {
+    ruta: '/usuarios',
+    texto: 'Usuarios',
+    icono: PersonLinesFill,
+    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR]
   },
  /* { 
     ruta: '/administrador-agenda', 

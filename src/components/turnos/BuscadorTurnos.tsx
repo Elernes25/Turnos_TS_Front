@@ -8,7 +8,7 @@ const BuscadorTurnos = ({valor, alCambiar}:BuscadorTurnosProps) =>{
     }
 
     return (
-    <Row className="mb-4">
+    <Row className="mb-2">
         <Col md={6}>
             <Form.Control
                 type="text"

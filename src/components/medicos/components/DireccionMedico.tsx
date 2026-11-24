@@ -32,7 +32,7 @@ const DireccionMedico = ({ register, errores, styles }:Props) =>  (
                 {errores.direccion?.numero && <span className={styles.error}>{errores.direccion.numero.message}</span>}
             </div>
             <div className={styles.grupoCampo}>
-                <small className={styles.ayudaCampo}>Piso si corresponde.</small>
+                <small className={styles.ayudaCampo}>Piso.</small>
                 <input
                     type="text"
                     {...register("direccion.piso") }   
@@ -42,7 +42,7 @@ const DireccionMedico = ({ register, errores, styles }:Props) =>  (
                 {errores.direccion?.piso && <span className={styles.error}>{errores.direccion.piso.message}</span>}
             </div>
             <div className={styles.grupoCampo}>
-                <small className={styles.ayudaCampo}>Departamento si corresponde.</small>
+                <small className={styles.ayudaCampo}>Departamento.</small>
                 <input
                     type="text"
                     {...register("direccion.departamento")}

@@ -44,6 +44,7 @@ import DetalleRecepcionista from "./components/recepcionistas/DetalleRecepcionis
 import Paciente from "./components/recepcionistas/Paciente"
 import { DashboardPorRol } from "./components/layout/DashboardPorRol"
 import MiPerfil from "./pages/MiPerfil"
+import Usuarios from "./components/administrador/Usuarios"
 
 interface RutaPrivadaProps {
     roles: IRolUsuario[];
@@ -99,6 +100,7 @@ function App() {
                         
                     </Route>
                     <Route element={<RutasProtegidas roles={[RolUsuario.ADMIN,RolUsuario.SUPERVISOR]} />}>
+                        <Route path="usuarios" element={<Usuarios />} />
                         <Route path="nuevo-medico" element={<FormularioMedico />} />
                         <Route path="supervisor" element={<DashboardSupervisor />} />
                         <Route path="medicos" element={<ListadoMedicosMain/>} />
