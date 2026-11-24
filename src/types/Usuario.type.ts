@@ -18,6 +18,15 @@ export interface ITokenPayload {
     exp?: number;
 }
 
+export interface IUsuarioSistema {
+    _id?: string;
+    id?: string;
+    user: string;
+    dni: string;
+    email: string;
+    rol: RolUsuario;
+}
+
 // Schema de Zod para validar roles 
 export const userRolSchema = z.enum(RolUsuario);
 

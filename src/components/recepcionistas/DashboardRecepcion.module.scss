@@ -11,6 +11,13 @@
   --texto-suave: #{$label};
 }
 
+.titulo {
+  margin: 0;
+  font-size: $fs-2xl;
+  font-weight: 500;
+  color: $texto;
+}
+
 .encabezado {
   display: flex;
   justify-content: space-between;

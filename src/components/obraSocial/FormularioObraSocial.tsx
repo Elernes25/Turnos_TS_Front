@@ -32,9 +32,7 @@ const FormularioObraSocial = () => {
     });
 
     useEffect(() => {
-        if (obraSocialEditando) {
-            setFocus("nombreObraSocial");
-        }
+        if (obraSocialEditando) { setFocus("nombreObraSocial");}
     }, [obraSocialEditando, setFocus]);
 
     const cargarObrasSociales = useCallback(async (): Promise<void> => {
@@ -102,39 +100,41 @@ const FormularioObraSocial = () => {
     const esRecepcionista: boolean = session?.rol === "RECEPCIONISTA";
     return (
         <Container>
-            <Card className="mb-4">
-                <Card.Header>
-                    <h5 className="mb-0">
-                        {obraSocialEditando ? "Editar Obra Social" : "Nueva Obra Social"}
-                    </h5>
-                </Card.Header>
-                <Card.Body>
-                    <Form onSubmit={handleSubmit(onSubmit)} noValidate>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Nombre de la Obra Social</Form.Label>
-                            <Form.Control type="text" placeholder="Ej: PAMI" {...register("nombreObraSocial")} />
-                            {errors.nombreObraSocial && (
-                                <div className="text-danger mt-1">{errors.nombreObraSocial.message}</div>
-                            )}
-                        </Form.Group>
+            {!esRecepcionista && (
+                <Card className="mb-4">
+                    <Card.Header>
+                        <h5 className="mb-0">
+                            {obraSocialEditando ? "Editar Obra Social" : "Nueva Obra Social"}
+                        </h5>
+                    </Card.Header>
+                    <Card.Body>
+                        <Form onSubmit={handleSubmit(onSubmit)} noValidate>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Nombre de la Obra Social</Form.Label>
+                                <Form.Control type="text" placeholder="Ej: PAMI" {...register("nombreObraSocial")} />
+                                {errors.nombreObraSocial && (
+                                    <div className="text-danger mt-1">{errors.nombreObraSocial.message}</div>
+                                )}
+                            </Form.Group>
 
-                        <div className="d-flex gap-2">
-                            <Button type="submit" disabled={isSubmitting}>
-                                {isSubmitting ? (
-                                    <> <Spinner animation="border" size="sm" /> Guardando... </>
-                                ) : obraSocialEditando ? ( "Actualizar" ) : ("Crear")
-                                }
-                            </Button>
-
-                            {obraSocialEditando && (
-                                <Button variant="secondary" onClick={handleCancelarEdicion}>
-                                    Cancelar edición
+                            <div className="d-flex gap-2">
+                                <Button type="submit" disabled={isSubmitting}>
+                                    {isSubmitting ? (
+                                        <> <Spinner animation="border" size="sm" /> Guardando... </>
+                                    ) : obraSocialEditando ? ( "Actualizar" ) : ("Crear")
+                                    }
                                 </Button>
-                            )}
-                        </div>
-                    </Form>
-                </Card.Body>
-            </Card>
+
+                                {obraSocialEditando && (
+                                    <Button variant="secondary" onClick={handleCancelarEdicion}>
+                                        Cancelar edición
+                                    </Button>
+                                )}
+                            </div>
+                        </Form>
+                    </Card.Body>
+                </Card>
+            )}
 
             <Card>
                 <Card.Header>

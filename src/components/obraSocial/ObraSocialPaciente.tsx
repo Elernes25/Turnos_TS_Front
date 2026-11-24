@@ -73,14 +73,9 @@ const ObraSocialPaciente = ({
                         value={seleccionada}
                         onChange={(e) => {
                             const valor = e.target.value;
-
                             field.onChange(valor);
-
                             if (valor === "") {
-                                setValue(
-                                    "obraSocial.numeroAfiliado",
-                                    ""
-                                );
+                                setValue( "obraSocial.numeroAfiliado", "");
                             }
                         }}
                         onBlur={field.onBlur}
