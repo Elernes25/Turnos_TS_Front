@@ -4,6 +4,7 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { toast } from "sonner";
+import { useParams } from "react-router-dom";
 import { clientesAxios } from "../../config/axios";
 import { useFetch } from "../../hooks/useFetch";
 import type { IEspecialidad } from "../../types/Especialidad.type";
@@ -18,15 +19,22 @@ import type { HorarioDisponible } from "../../types/Agenda.types";
 import TicketTurno from "./components/TicketTurno";
 import type { ITicketTurno } from "../../types/TicketTurno.types";
 
+const normalizarTexto = (texto: string): string =>
+    texto.normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .replace(/\s+/g, " ")
+        .toLowerCase();
 
 const FormularioTurno = () => {
+    const { id: pacienteIdParam } = useParams<{ id: string }>();
     const { data: pacientesData, isLoading: cargandoPacientes } = useFetch<IPaciente[]>("/pacientes");
     const { data: especialidadesData, isLoading: cargandoEspecialidades } = useFetch<IEspecialidad[]>("/especialidad");
     const { data: medicosData, isLoading: cargandoMedicos } = useFetch<IMedico[]>("/medicos");
     const { register, handleSubmit, reset,setValue, watch, formState: { errors, isSubmitting },
     } = useForm<ICrearTurnoDTO>({ resolver: zodResolver(crearTurnoSchema), mode: "onChange",
         defaultValues: {
-            pacienteId: "",
+            pacienteId: pacienteIdParam ?? "",
             especialidadId: "",
             medicoId: "",
             fechaTurno: "",
@@ -35,6 +43,10 @@ const FormularioTurno = () => {
     });
 
     const pacientes = pacientesData ?? [];
+    const pacienteFijado = pacientes.find((paciente) => paciente.id === pacienteIdParam);
+    const pacienteDeRutaNoEncontrado = Boolean(pacienteIdParam)
+        && !cargandoPacientes
+        && !pacienteFijado;
     const especialidades = especialidadesData ?? [];
     const medicos = medicosData ?? [];
     const pacienteId = watch("pacienteId");
@@ -47,6 +59,7 @@ const FormularioTurno = () => {
 
     const [fechaSeleccionada, setFechaSeleccionada] = useState("");
     const [turnoRegistrado, setTurnoRegistrado] = useState<ITicketTurno | null>(null);
+    const [busquedaPaciente, setBusquedaPaciente] = useState("");
     const [ahora, setAhora] = useState(() => new Date());
     const [mesVisible, setMesVisible] = useState(() => {
         const hoy = new Date();
@@ -57,6 +70,34 @@ const FormularioTurno = () => {
         const intervalo = window.setInterval(() => setAhora(new Date()), 30_000);
         return () => window.clearInterval(intervalo);
     }, []);
+
+    useEffect(() => {
+        if (pacienteIdParam) {
+            setValue("pacienteId", pacienteIdParam, { shouldValidate: true });
+        }
+    }, [pacienteIdParam, setValue]);
+
+    const resultadosPacientes = useMemo(() => {
+        const termino = normalizarTexto(busquedaPaciente);
+        if (!termino) return [];
+
+        return pacientes
+            .filter((paciente) =>
+                normalizarTexto(paciente.nombre).includes(termino)
+                || normalizarTexto(paciente.dni).includes(termino),
+            )
+            .slice(0, 8);
+    }, [busquedaPaciente, pacientes]);
+
+    const seleccionarPaciente = (paciente: IPaciente): void => {
+        setBusquedaPaciente(`${paciente.nombre} · DNI ${paciente.dni}`);
+        setValue("pacienteId", paciente.id, { shouldDirty: true, shouldValidate: true });
+    };
+
+    const buscarPaciente = (valor: string): void => {
+        setBusquedaPaciente(valor);
+        setValue("pacienteId", "", { shouldDirty: true, shouldValidate: true });
+    };
 
     const especialidadesDisponibles = useMemo(() => {
         if (!medicoId) return especialidades;
@@ -123,6 +164,10 @@ const FormularioTurno = () => {
     };
 
     const onSubmit = async (datos: ICrearTurnoDTO): Promise<void> => {
+        if (pacienteDeRutaNoEncontrado) {
+            toast.error("No se encontró el paciente seleccionado.");
+            return;
+        }
         if (!datos.medicoId) {
             toast.error("Seleccioná un médico para el turno.");
             return;
@@ -161,6 +206,7 @@ const FormularioTurno = () => {
                 }).format(fecha),
             });
             reset();
+            setBusquedaPaciente("");
             setFechaSeleccionada("");
         } catch (error: unknown) {
             const mensaje = axios.isAxiosError(error)
@@ -172,7 +218,7 @@ const FormularioTurno = () => {
 
     return (
         <div className={`${styles.contenedorFormulario} mx-auto my-4`}>
-            <h3>Ingreso de Nuevo Turno</h3>
+            <h3>Nuevo Turno</h3>
             <p className="text-center text-body-secondary mb-4">
                 Completá los datos del paciente y elegí un horario disponible para reservar el turno.
             </p>
@@ -182,25 +228,80 @@ const FormularioTurno = () => {
                     <Col md={12}>
                         <Form.Group controlId="pacienteId">
                             <Form.Label>Paciente</Form.Label>
-                            <Form.Select
-                                isInvalid={!!errors.pacienteId}
-                                disabled={cargandoPacientes}
-                                {...register("pacienteId")}
-                            >
-                                <option value="">
-                                    {cargandoPacientes ? "Cargando pacientes..." : "Seleccioná un paciente"}
-                                </option>
-                                {pacientes.map((paciente) => (
-                                    <option key={paciente.id} value={paciente.id}>
-                                        {paciente.nombre} · DNI {paciente.dni}
-                                    </option>
-                                ))}
-                            </Form.Select>
+                            {pacienteIdParam ? (
+                                <>
+                                    <input
+                                        type="hidden"
+                                        value={pacienteIdParam}
+                                        {...register("pacienteId")}
+                                    />
+                                    <Form.Control
+                                        readOnly
+                                        value={
+                                            cargandoPacientes
+                                                ? "Cargando paciente..."
+                                                : pacienteFijado
+                                                    ? `${pacienteFijado.nombre} · DNI ${pacienteFijado.dni}`
+                                                    : "Paciente no encontrado"
+                                        }
+                                        isInvalid={pacienteDeRutaNoEncontrado}
+                                    />
+                                </>
+                            ) : (
+                                <div className="position-relative">
+                                    <Form.Control
+                                        type="search"
+                                        value={busquedaPaciente}
+                                        onChange={(evento) => buscarPaciente(evento.target.value)}
+                                        placeholder="Buscá por nombre o DNI"
+                                        disabled={cargandoPacientes}
+                                        isInvalid={!!errors.pacienteId}
+                                        aria-label="Buscar paciente por nombre o DNI"
+                                    />
+                                    {busquedaPaciente.trim() && !pacienteId && resultadosPacientes.length > 0 && (
+                                        <div
+                                            className="position-absolute start-0 end-0 border rounded-bottom bg-white shadow-sm"
+                                            style={{ zIndex: 1000, maxHeight: "260px", overflowY: "auto" }}
+                                            role="listbox"
+                                            aria-label="Resultados de pacientes"
+                                        >
+                                            {resultadosPacientes.map((paciente) => (
+                                                <button
+                                                    key={paciente.id}
+                                                    type="button"
+                                                    className="btn btn-light w-100 text-start rounded-0 border-0 px-3 py-2"
+                                                    role="option"
+                                                    aria-selected="false"
+                                                    onClick={() => seleccionarPaciente(paciente)}
+                                                >
+                                                    <strong>{paciente.nombre}</strong>
+                                                    <span className="ms-2 text-body-secondary">DNI {paciente.dni}</span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                    {busquedaPaciente.trim()
+                                        && !pacienteId
+                                        && !cargandoPacientes
+                                        && resultadosPacientes.length === 0 && (
+                                            <div className="small text-body-secondary mt-2">
+                                                No se encontraron pacientes con esos datos.
+                                            </div>
+                                        )}
+                                </div>
+                            )}
                             <Form.Control.Feedback type="invalid">
                                 {errors.pacienteId?.message}
                             </Form.Control.Feedback>
+                            {pacienteDeRutaNoEncontrado && (
+                                <Form.Text className="text-danger">
+                                    No se pudo cargar el paciente indicado en la ruta.
+                                </Form.Text>
+                            )}
                             <Form.Text className="text-body-secondary">
-                                Elegí el paciente para quien se reservará el turno.
+                                {pacienteIdParam
+                                    ? "El turno se reservará para este paciente."
+                                    : "Elegí el paciente para quien se reservará el turno."}
                             </Form.Text>
                         </Form.Group>
                     </Col>
@@ -297,6 +398,8 @@ const FormularioTurno = () => {
                             || !pacienteId
                             || !especialidadId
                             || !medicoId
+                            || pacienteDeRutaNoEncontrado
+                            || cargandoPacientes
                             || !fechaTurno
                             || cargandoDisponibilidad
                             || !!errorDisponibilidad

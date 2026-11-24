@@ -28,14 +28,13 @@ const MedicoFila = ({ medico, onEditar, onAgenda, onEliminar }: MedicoFilaProps)
       </td>
       <td>
         <div className={styles.acciones}>
-          <Button
-            variant={tieneAgenda ? 'outline-secondary' : 'primary'}
+          <Button size="sm" variant={tieneAgenda ? 'outline-secondary' : 'primary'}
             onClick={() => onAgenda(id)}
           >
             {tieneAgenda ? 'Agenda' : 'Cargar agenda'}
           </Button>
-          <Button variant="outline-secondary" onClick={() => onEditar(id)}>Editar</Button>
-          <Button variant="outline-danger" onClick={() => onEliminar(medico)}>Eliminar</Button>
+          <Button size="sm" variant="outline-secondary" onClick={() => onEditar(id)}>Editar</Button>
+          <Button size="sm" variant="outline-danger" onClick={() => onEliminar(medico)}>Eliminar</Button>
         </div>
       </td>
     </tr>

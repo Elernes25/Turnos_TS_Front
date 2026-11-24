@@ -1,62 +1,71 @@
-.modalHeader {
-    border-bottom: 0;
-    padding-bottom: 0;
+@use "../../styles/variables" as *;
 
-    :global(.modal-title) {
-        color: #1d58ee;
-        font-weight: 700;
-    }
+.modalHeader {
+  border-bottom: 0;
+  padding-bottom: 0;
+
+  :global(.modal-title) {
+    color: $acento;
+    font-weight: 700;
+  }
+
+  :global(.modal-content) {
+    background: $bg;
+    color: $texto;
+    border: 1px solid $sector-borde;
+  }
 }
 
 .ticket {
-    position: relative;
-    overflow: hidden;
-    padding: 1.25rem;
-    border: 1px solid #dce3ee;
-    border-radius: 0.75rem;
-    background:
-        repeating-linear-gradient(
-            to bottom,
-            transparent,
-            transparent 34px,
-            #edf0f5 35px
-        ),
-        #fff;
-    box-shadow: 0 4px 12px rgba(20, 40, 80, 0.08);
+  position: relative;
+  overflow: hidden;
+  padding: $sp-5;
+  border: 1px solid $sector-borde;
+  border-radius: $radius-lg;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 34px,
+      $suave 35px
+    ),
+    $campo;
+  box-shadow: $shadow-md;
+  color: $texto;
 }
 
 .confirmacion {
-    margin: 0 0 1rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px dashed #b9c5d6;
-    color: #188452;
-    font-weight: 600;
-    text-align: center;
+  margin: 0 0 $sp-4;
+  padding-bottom: $sp-3;
+  border-bottom: 1px dashed $sector-borde;
+  color: $acento;
+  font-weight: 600;
+  text-align: center;
 }
 
 .detalles {
-    display: grid;
-    gap: 0.85rem;
-    margin: 0;
+  display: grid;
+  gap: $sp-3;
+  margin: 0;
 
-    dt {
-        color: #64748b;
-        font-size: 0.8rem;
-        font-weight: 600;
-        text-transform: uppercase;
-    }
+  dt {
+    color: $label;
+    font-size: $fs-xs;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
 
-    dd {
-        margin: 0.15rem 0 0;
-        color: #172033;
-        font-weight: 500;
-    }
+  dd {
+    margin: $sp-1 0 0;
+    color: $texto;
+    font-weight: 500;
+  }
 }
 
 .fechaHora {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    padding-top: 0.75rem;
-    border-top: 1px dashed #b9c5d6;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $sp-4;
+  padding-top: $sp-3;
+  border-top: 1px dashed $sector-borde;
 }

@@ -8,8 +8,8 @@ const BuscadorMedicos = ({valor, alCambiar}:BuscadorMedicosProps) =>{
     }
 
     return (
-    <Row className="mb-4">
-        <Col md={6}>
+    <Row className="mb-3">
+        <Col md={8}>
             <Form.Control
                 type="search"
                 aria-label="Buscar médico por nombre o especialidad"

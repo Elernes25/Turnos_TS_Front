@@ -11,12 +11,11 @@ import { ITurno } from '../../types/Turno.type';
 
 const DetalleTurno = () => {
     const { id } = useParams();
-    const { data: turnos, isLoading } = useFetch<ITurno[]>(`/turnos/?id${id}`);
+    const { data: turnos, isLoading } = useFetch<ITurno[]>(
+        `/turnos?id=${encodeURIComponent(id ?? '')}`,
+    );
     
-    const turno = turnos?.[0]; // tomar el primero
-    
-    console.log(`turnoID :${id}`);
-    console.log(`turno :${turno}`);
+    const turno = turnos?.find((turnoActual) => turnoActual.id === id);
 
     if (isLoading) {  //si esta cargando muestra esto //
         return (

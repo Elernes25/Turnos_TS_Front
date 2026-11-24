@@ -1,8 +1,9 @@
-// medicos/ListadoMedicos.module.scss
+@use "../../styles/variables" as *;
+
 .contenedor {
   max-width: 75rem;
   margin: 0 auto;
-  padding: 1rem 1rem;
+  padding: $sp-4 $sp-4;
 }
 
 .encabezado {
@@ -10,33 +11,51 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1.25rem;
+  gap: $sp-4;
+  margin-bottom: $sp-5;
 
-  h1 { font-size: 1.75rem; margin: 0; }
-  p  { margin: 0.25rem 0 0; color: #475569; }
+  h1 { font-size: $fs-2xl; margin: 0; color: $texto; }
+  p  { margin: $sp-1 0 0; color: $label; }
 }
 
 .encabezado2 {
-  margin-bottom: 1.25rem;
-  h1 { font-size: 1.75rem; margin: 0; }
-  p  { margin: 0.25rem 0 0; color: #475569; }
+  margin-bottom: $sp-5;
+  h1 { font-size: $fs-2xl; margin: 0; color: $texto; }
+  p  { margin: $sp-1 0 0; color: $label; }
 }
 
 .filtros {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  gap: $sp-3;
+  margin-bottom: $sp-4;
 }
 
 .buscador { flex: 1; min-width: 15rem; }
 .selector { width: auto; }
 
-.tabla { background: #fff; vertical-align: middle; }
+.tabla {
+  background: $campo;
+  color: $campo-texto;
+  vertical-align: middle;
+  border-color: $sector-borde;
+  border: 1px solid $sector-borde;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: $radius-lg;
+  overflow: hidden;
+}
+
+.tabla thead th {
+  --bs-table-bg: #{$suave};
+  --bs-table-color: #{$titulo-sec};
+  --bs-table-accent-bg: transparent;
+  background: $suave !important;
+  color: $titulo-sec !important;
+}
 
 .acciones {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: $sp-2;
 }

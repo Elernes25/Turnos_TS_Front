@@ -26,16 +26,16 @@ const DatosPersonales =({register, errores, styles}:Props) => (
             />
             {errores.nombre && <span className={styles.error}>{errores.nombre.message}</span>}
         </div>
-        <div className={styles.grupoCampo}>
-            <small className={styles.ayudaCampo}>Número de documento sin puntos.</small>
-            <input
-                type="text" 
-                className={styles.campoInput} 	placeholder="DNI"
-                {...register('dni')}
-            />
-            {errores.dni && <span className={styles.error}>{errores.dni.message}</span>}
-        </div>
-        <div className={styles.filaInput} >
+        <div className={styles.filaInput}>
+            <div className={styles.grupoCampo}>
+                <small className={styles.ayudaCampo}>Número de documento sin puntos.</small>
+                <input
+                    type="text"
+                    className={styles.campoInput} placeholder="DNI"
+                    {...register('dni')}
+                />
+                {errores.dni && <span className={styles.error}>{errores.dni.message}</span>}
+            </div>
             <div className={styles.grupoCampo}>
                 <small className={styles.ayudaCampo}>Indica la fecha de nacimiento.</small>
                 <input

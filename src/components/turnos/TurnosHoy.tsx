@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { Badge, Button, Card, Modal, Spinner, Table } from 'react-bootstrap';
+import { Badge, Button, Card, Spinner, Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { toast } from 'sonner';
-import { clientesAxios } from '../../config/axios';
 import type { ITurno } from '../../types/Turno.type';
 import styles from './listadoTurnos.module.scss';
+import ModalCancelarTurno from './ModalCancelarTurno';
 
 interface TurnosHoyProps {
   turnos: ITurno[];
@@ -15,7 +14,6 @@ interface TurnosHoyProps {
 
 const TurnosHoy = ({ turnos, isLoading, onAtender, onTurnoCancelado }: TurnosHoyProps) => {
   const [turnoACancelar, setTurnoACancelar] = useState<ITurno | null>(null);
-  const [turnoEnProceso, setTurnoEnProceso] = useState<string | null>(null);
   const inicioHoy = new Date();
   inicioHoy.setHours(0, 0, 0, 0);
   const inicioManana = new Date(inicioHoy);
@@ -27,23 +25,6 @@ const TurnosHoy = ({ turnos, isLoading, onAtender, onTurnoCancelado }: TurnosHoy
       return fecha >= inicioHoy && fecha < inicioManana;
     })
     .sort((a, b) => new Date(a.fechaTurno).getTime() - new Date(b.fechaTurno).getTime());
-
-  const cancelarTurno = async (): Promise<void> => {
-    if (!turnoACancelar) return;
-
-    try {
-      setTurnoEnProceso(turnoACancelar.id);
-      await clientesAxios.patch(`/turnos/cancelar/${turnoACancelar.id}`, { estado: 'cancelado' });
-      onTurnoCancelado(turnoACancelar.id);
-      toast.success('Turno cancelado');
-      setTurnoACancelar(null);
-    } catch (error) {
-      console.error(error);
-      toast.error('No se pudo cancelar el turno. Intentá nuevamente.');
-    } finally {
-      setTurnoEnProceso(null);
-    }
-  };
 
   return (
     <Card className="border-1 shadow-sm">
@@ -83,11 +64,7 @@ const TurnosHoy = ({ turnos, isLoading, onAtender, onTurnoCancelado }: TurnosHoy
                       <td>{turno.especialidadId?.nombre ?? 'Sin especialidad'}</td>
                       <td>{turno.medicoId?.nombre ?? 'Sin médico asignado'}</td>
                       <td>
-                        {fecha.toLocaleTimeString('es-AR', {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                          hour12: false,
-                        })}
+                        {fecha.toLocaleTimeString('es-AR', {hour: '2-digit', minute: '2-digit', hour12: false,})}
                       </td>
                       <td>
                         <Badge
@@ -96,9 +73,7 @@ const TurnosHoy = ({ turnos, isLoading, onAtender, onTurnoCancelado }: TurnosHoy
                         >
                           {turno.estado === 'pendiente'
                             ? 'Pendiente'
-                            : turno.estado === 'atendido'
-                              ? 'Atendido'
-                              : 'Cancelado'}
+                            : turno.estado === 'atendido' ? 'Atendido' : 'Cancelado'}
                         </Badge>
                       </td>
                       <td>
@@ -110,7 +85,8 @@ const TurnosHoy = ({ turnos, isLoading, onAtender, onTurnoCancelado }: TurnosHoy
                           >
                             Llamar
                           </Button>
-                          {pendiente ? (
+                          {/*   suspendo el boton editar, el turno no se edita se cancela y se crea otro
+                          pendiente ? (
                             <Link
                               to={`/nuevo-turno?editar=${turno.id}`}
                               className="btn btn-sm btn-outline-secondary"
@@ -121,11 +97,11 @@ const TurnosHoy = ({ turnos, isLoading, onAtender, onTurnoCancelado }: TurnosHoy
                             <Button size="sm" variant="outline-secondary" disabled>
                               Editar
                             </Button>
-                          )}
+                          ) */}
                           <Button
                             size="sm"
                             variant="outline-danger"
-                            disabled={!pendiente || turnoEnProceso === turno.id}
+                            disabled={!pendiente}
                             onClick={() => setTurnoACancelar(turno)}
                           >
                             Cancelar
@@ -147,31 +123,11 @@ const TurnosHoy = ({ turnos, isLoading, onAtender, onTurnoCancelado }: TurnosHoy
         )}
       </Card.Body>
 
-      <Modal show={turnoACancelar !== null} onHide={() => setTurnoACancelar(null)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Cancelar turno</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          ¿Confirmás la cancelación del turno de{' '}
-          <strong>{turnoACancelar?.pacienteId?.nombre ?? 'la persona'}</strong>?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="secondary"
-            disabled={turnoEnProceso !== null}
-            onClick={() => setTurnoACancelar(null)}
-          >
-            Volver
-          </Button>
-          <Button
-            variant="danger"
-            disabled={turnoEnProceso !== null}
-            onClick={() => void cancelarTurno()}
-          >
-            {turnoEnProceso === turnoACancelar?.id ? 'Cancelando...' : 'Confirmar cancelación'}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <ModalCancelarTurno
+        turno={turnoACancelar}
+        onClose={() => setTurnoACancelar(null)}
+        onTurnoCancelado={onTurnoCancelado}
+      />
     </Card>
   );
 };

@@ -32,7 +32,7 @@ const FormularioPaciente = () => {
     en el formato de errores que React Hook Form espera (formState.errors).
      */
 
-    const { register, handleSubmit, setValue, control, reset, formState: { errors, isSubmitting  }} 
+    const { register, handleSubmit, setValue, control, reset, setFocus, formState: { errors, isSubmitting  }} 
             = useForm<IcrearPacienteDTO>({ resolver: zodResolver(crearPacienteSchema), 
                 mode: "onChange",            // valida mientras se escribe
                 reValidateMode: "onChange", //revalida mientras se escribe tras un submit fallido
@@ -66,6 +66,7 @@ const FormularioPaciente = () => {
             //alert("Paciente guardado en base de datos");
              toast.success("Paciente guardado correctamente");
              reset(); // vuelve a los defaultValues de useForm
+             setFocus('nombre');
         }catch (error:any) {
             const mensaje = axios.isAxiosError(error)
                 ? error.response?.data?.message ?? "Error del servidor"

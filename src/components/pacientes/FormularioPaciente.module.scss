@@ -1,74 +1,134 @@
-$color-primario: #1d58ee;
-$color-fondo: #c9c9c9;
-$color-borde: #acaaaa;
-
-/*Nesting-anidamiento */
+@use "../../styles/variables" as *;
 
 .contenedorFormulario {
-    background-color: $color-fondo;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    max-width: 800px;
-    margin: 20px auto;
+  @include card-base;
+  padding: $sp-6;
+  max-width: 800px;
+  margin: $sp-5 auto;
 
-    h3 {
-        color: $color-primario;
-        margin-bottom: 20px;
-        text-align: center;
+  h3 {
+    color: $acento;
+    margin-bottom: $sp-5;
+    text-align: center;
+    font-size: $fs-xl;
+  }
+
+  legend {
+    font-size: $fs-lg;
+    color: $titulo-sec;
+  }
+
+  .filaInput {
+    display: flex;
+    gap: $sp-2;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin-bottom: $sp-4;
+  }
+
+  .grupoCampo {
+    flex: 1 1 140px;
+    min-width: 0;
+  }
+
+  .ayudaCampo {
+    display: block;
+    margin-bottom: $sp-1;
+    color: $label;
+    font-size: $fs-xs;
+    line-height: 1.3;
+  }
+
+  .campoInput {
+    @include input-base;
+    margin-bottom: $sp-4;
+
+    &[type="radio"] {
+      margin-right: $sp-2;
+      width: 18px;
+      height: 18px;
+      accent-color: $acento;
+    }
+  }
+
+  label {
+    display: inline-flex;
+    align-items: top;
+    margin-right: $sp-3;
+    color: $label;
+    font-size: $fs-sm;
+  }
+
+  .inputArea {
+    flex: 0 0 120px;
+    margin-bottom: 0;
+  }
+
+  &.contenedorIngreso {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    background-color: transparent;
+    box-shadow: none;
+
+    h2, h3 {
+      color: $texto;
+      text-align: left;
     }
 
-    legend {
-        font-size: 20px;
-        /*font-weight: bold;*/
+    h2 { margin: 0; font-size: $fs-xl; }
+    h3 { font-size: $fs-xl; }
+  }
+
+  .resultadosPacientes {
+    display: grid;
+    gap: $sp-2;
+    margin-bottom: $sp-5;
+  }
+
+  .resultadoPaciente,
+  .pacienteSeleccionado {
+    padding: $sp-3 $sp-4;
+    border: 2px solid $acento;
+    border-radius: $radius-sm;
+    background-color: $resultado-bg;
+    color: $texto;
+  }
+
+  .resultadoPaciente {
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color $transition-fast;
+
+    &:hover, &:focus-visible {
+      background-color: $suave;
+      border-color: $acento-hover;
     }
 
-    .filaInput {
-        display: flex;
-        gap: 10px;
-        align-items: flex-start;
-        flex-wrap: wrap;
-        margin-bottom: 15px;
+    &:focus-visible {
+      outline: 2px solid $acento;
+      outline-offset: 2px;
     }
 
-    .grupoCampo {
-        flex: 1 1 140px;
-        min-width: 0;
+    &:disabled {
+      cursor: wait;
+      opacity: 0.7;
     }
+  }
 
-    .ayudaCampo {
-        display: block;
-        margin-bottom: 4px;
-        color: #00705e;
-        font-size: 0.75rem;
-        line-height: 1.3;
-    }
+  .pacienteSeleccionado {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $sp-4;
+    margin-bottom: $sp-5;
+  }
 
-    .campoInput {
-        vertical-align: middle; /*para los radiobutton*/
-        width: 100%;
-        padding: 10px;
-        margin-right: 6px;   /*para los radiobutton*/
-        margin-bottom: 15px;
-        border: 1px solid $color-borde;
-        border-radius: 5px;
-
-        &:focus {
-            outline: none;
-            border-color: $color-primario;
-            box-shadow: 0 0 5px rgba(0, 86, 179, 0.3);
-        }
-    }
-    .inputArea {
-        flex: 0 0 120px;
-        margin-bottom: 0;
-    }
-
-   
-    .error {
-        color: red;
-        font-size: 0.85rem;
-        margin-top: 1px;   
-        
-    }
+  .error {
+    color: $error;
+    font-size: $fs-sm;
+    margin-top: $sp-1;
+  }
 }

@@ -23,8 +23,7 @@ const ListadoMedicosMain = () => {
   const [busqueda, setBusqueda] = useState('');
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [medicoAEliminar, setMedicoAEliminar] =
-    useState<IMedicoListado | null>(null);
+  const [medicoAEliminar, setMedicoAEliminar] =  useState<IMedicoListado | null>(null);
 
   const [eliminando, setEliminando] = useState(false);
 
@@ -129,14 +128,15 @@ const ListadoMedicosMain = () => {
           Nuevo Médico
         </Button>
       </div>
-
-      <Form.Control
+    
+      <Form.Control 
+        className="mb-3"
         type="search"
         placeholder="Buscar por nombre o matrícula"
         value={busqueda}
         onChange={(e) => setBusqueda(e.target.value)}
       />
-
+    
       <Table responsive hover className={styles.tabla}>
         <thead>
           <tr>

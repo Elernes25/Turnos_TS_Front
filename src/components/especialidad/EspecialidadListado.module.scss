@@ -1,28 +1,32 @@
+@use "../../styles/variables" as *;
+
 .botonChico {
-  padding: 2px 8px;   // menos espacio interno
-  font-size: 0.8rem;  // letra más chica
-  line-height: 1;     // altura de línea más compacta
+  padding: $sp-1 $sp-2;
+  font-size: $fs-xs;
+  line-height: 1;
+  border-radius: $radius-sm;
 }
 
 .renglonCompacto {
-  padding: 4px 8px;   // menos espacio arriba/abajo
+  padding: $sp-1 $sp-2;
 }
 
 .renglonPar {
-  background-color: #f8f9fa;
+  background-color: $suave;
 }
 
 .renglonImpar {
-  background-color: #ffffff;
+  background-color: $campo;
 }
 
 .tagEspecialidad {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 16px;
-  background: #e7f1ff;
-  color: #0b5ed7;
-  font-size: 14px;
+  gap: $sp-2;
+  padding: $sp-1 $sp-3;
+  border-radius: $radius-xl;
+  background: $resultado-bg;
+  color: $acento;
+  font-size: $fs-sm;
+  border: 1px solid $sector-borde;
 }

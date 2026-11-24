@@ -1,42 +1,48 @@
+@use "../../styles/variables" as *;
+
 .contenedor {
   max-width: 90rem;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: $sp-6 $sp-4;
 }
 
 .encabezado {
-  margin-bottom: 1.25rem;
+  margin-bottom: $sp-5;
 
   h1 {
-    font-size: 1.75rem;
+    font-size: $fs-2xl;
     margin: 0;
+    color: $texto;
   }
 
   p {
-    color: #475569;
-    margin: 0.25rem 0 0;
+    color: $label;
+    margin: $sp-1 0 0;
   }
 }
 
 .filtros {
   max-width: 20rem;
-  margin-bottom: 1rem;
+  margin-bottom: $sp-4;
 }
 
 .tabla {
-  background: #fff;
+  background: $campo;
+  color: $campo-texto;
   vertical-align: middle;
+  border-color: $sector-borde;
 }
 
 .tablaTurnosHoy {
   thead th {
-    padding-top: 0.35rem;
-    padding-bottom: 0.35rem;
+    padding-top: $sp-1;
+    padding-bottom: $sp-1;
+    color: $titulo-sec;
   }
 }
 
 .acciones {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: $sp-2;
 }

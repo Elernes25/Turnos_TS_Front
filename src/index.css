@@ -52,18 +52,22 @@
 
 body {
   margin: 0;
+  background: #08100c !important;
+  color: #eafff5 !important;
 }
 
 #root {
-  width: 1126px;
+  width: 100%;
   max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
+  margin: 0;
+  text-align: left;
+  border-inline: none;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  background: #08100c;
+  color: #eafff5;
 }
 
 h1,
@@ -103,9 +107,231 @@ code,
   color: var(--text-h);
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+/* ============================================================
+   TEMA MÉDICO (oscuro) — override de Bootstrap
+   Aplica a toda la app (rol único por ahora: médico)
+   ============================================================ */
+:root[data-bs-theme="dark"] {
+  --bs-body-bg: #08100c;
+  --bs-body-color: #eafff5;
+  --bs-emphasis-color: #eafff5;
+  --bs-secondary-color: #bfeedb;
+  --bs-tertiary-color: #7fb89f;
+  --bs-border-color: rgba(80, 220, 160, 0.22);
+  --bs-border-color-translucent: rgba(80, 220, 160, 0.22);
+
+  --bs-primary: #2ecc8c;
+  --bs-primary-rgb: 46, 204, 140;
+  --bs-primary-text-emphasis: #4be0a4;
+  --bs-primary-bg-subtle: rgba(46, 204, 140, 0.15);
+  --bs-primary-border-subtle: rgba(46, 204, 140, 0.3);
+
+  --bs-secondary: #1f4a3a;
+  --bs-secondary-rgb: 31, 74, 58;
+  --bs-success: #2ecc8c;
+  --bs-success-rgb: 46, 204, 140;
+  --bs-info: #4be0a4;
+  --bs-info-rgb: 75, 224, 164;
+  --bs-warning: #6fe0b0;
+  --bs-warning-rgb: 111, 224, 176;
+  --bs-danger: #ffb4b4;
+  --bs-danger-rgb: 255, 180, 180;
+
+  --bs-link-color: #2ecc8c;
+  --bs-link-color-rgb: 46, 204, 140;
+  --bs-link-hover-color: #4be0a4;
+
+  --bs-card-bg: #1f4a3a;
+  --bs-card-border-color: rgba(80, 220, 160, 0.22);
+  --bs-modal-bg: #08100c;
+  --bs-modal-border-color: rgba(80, 220, 160, 0.22);
+
+  --bs-form-control-bg: #1f4a3a;
+  --bs-form-control-color: #eafff5;
+  --bs-form-control-border-color: rgba(110, 230, 180, 0.35);
+  --bs-form-control-focus-border-color: #4be0a4;
+  --bs-form-control-focus-box-shadow: 0 0 0 0.25rem rgba(75, 224, 164, 0.45);
+
+  --bs-table-bg: #1f4a3a;
+  --bs-table-color: #eafff5;
+  --bs-table-border-color: rgba(80, 220, 160, 0.22);
+  --bs-table-striped-bg: rgba(46, 204, 140, 0.05);
+  --bs-table-hover-bg: rgba(46, 204, 140, 0.1);
+  --bs-table-active-bg: rgba(46, 204, 140, 0.15);
+
+  --bs-dropdown-bg: #1f4a3a;
+  --bs-dropdown-color: #eafff5;
+  --bs-dropdown-border-color: rgba(80, 220, 160, 0.22);
+  --bs-dropdown-link-color: #eafff5;
+  --bs-dropdown-link-hover-bg: rgba(46, 204, 140, 0.15);
+  --bs-dropdown-link-active-bg: rgba(46, 204, 140, 0.25);
+
+  --bs-list-group-bg: #1f4a3a;
+  --bs-list-group-color: #eafff5;
+  --bs-list-group-border-color: rgba(80, 220, 160, 0.22);
+  --bs-list-group-action-hover-bg: rgba(46, 204, 140, 0.1);
+  --bs-list-group-action-active-bg: rgba(46, 204, 140, 0.2);
+
+  --bs-nav-link-color: #bfeedb;
+  --bs-nav-link-hover-color: #eafff5;
+  --bs-navbar-color: #bfeedb;
+  --bs-navbar-active-color: #2ecc8c;
+  --bs-navbar-brand-color: #eafff5;
+}
+
+body {
+  background: #08100c !important;
+  color: #eafff5 !important;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+#root {
+  background: #08100c;
+  color: #eafff5;
+  border-inline-color: rgba(80, 220, 160, 0.22);
+  text-align: left;
+}
+
+/* Botones primary con acento verde */
+.btn-primary {
+  color: #06130d !important;
+  background-color: #2ecc8c !important;
+  border-color: #2ecc8c !important;
+}
+.btn-primary:hover, .btn-primary:focus {
+  color: #06130d !important;
+  background-color: #4be0a4 !important;
+  border-color: #4be0a4 !important;
+}
+.btn-outline-primary {
+  color: #2ecc8c;
+  border-color: #2ecc8c;
+}
+.btn-outline-primary:hover {
+  background-color: #2ecc8c;
+  color: #06130d;
+}
+
+/* Modales - backdrop más opaco (solo 5% transparencia) */
+.modal-backdrop {
+  opacity: 0.95 !important;
+  background-color: #08100c !important;
+}
+.modal-content {
+  background: linear-gradient(180deg, rgba(46,204,140,.2), rgba(46,204,140,.03)) !important;
+  border-color: rgba(80, 220, 160, 0.22) !important;
+  color: #eafff5 !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Botones hollow (outline) - borde verde claro que resalta sobre negro */
+.btn-outline-secondary {
+  color: #bfeedb !important;
+  border-color: rgba(110, 230, 180, 0.35) !important;
+  background: transparent !important;
+}
+.btn-outline-secondary:hover, .btn-outline-secondary:focus, .btn-outline-secondary:active {
+  color: #06130d !important;
+  background-color: #2ecc8c !important;
+  border-color: #2ecc8c !important;
+}
+
+/* Inputs disabled/readonly - fondo verde oscuro, no negro */
+.form-control:disabled, .form-control[readonly],
+.form-select:disabled, .form-select[readonly] {
+  background-color: #1f4a3a !important;
+  color: #bfeedb !important;
+  opacity: 0.85;
+  border-color: rgba(110, 230, 180, 0.35) !important;
+}
+.card {
+  color: #eafff5 !important;
+  background: linear-gradient(180deg, rgba(46,204,140,.2), rgba(46,204,140,.03)) !important;
+  border-color: rgba(80, 220, 160, 0.22) !important;
+}
+.card-body {
+  background: transparent !important;
+  color: #eafff5;
+}
+.card-header {
+  background: rgba(46,204,140,.1) !important;
+  border-color: rgba(80, 220, 160, 0.22) !important;
+  color: #6fe0b0;
+}
+.modal-content {
+  background: linear-gradient(180deg, rgba(46,204,140,.2), rgba(46,204,140,.03)) !important;
+  border-color: rgba(80, 220, 160, 0.22) !important;
+  color: #eafff5 !important;
+}
+
+/* Form controls */
+.form-control, .form-select {
+  background-color: #1f4a3a;
+  color: #eafff5;
+  border-color: rgba(110, 230, 180, 0.35);
+}
+.form-control:focus, .form-select:focus {
+  background-color: #2a6650;
+  color: #eafff5;
+  border-color: #4be0a4;
+  box-shadow: 0 0 0 0.25rem rgba(75, 224, 164, 0.45);
+}
+.form-control::placeholder { color: #7fb89f; }
+
+/* Tablas */
+.table { color: #eafff5; background: linear-gradient(180deg, rgba(46,204,140,.2), rgba(46,204,140,.03)) !important; }
+.table td, .table th {
+  background: transparent !important;
+  border-color: rgba(80, 220, 160, 0.22);
+  color: #eafff5;
+}
+.table-hover > tbody > tr:hover > * {
+  background-color: rgba(46, 204, 140, 0.1);
+}
+
+/* Dropdowns */
+.dropdown-menu {
+  background: linear-gradient(180deg, rgba(46,204,140,.2), rgba(46,204,140,.03)) !important;
+  border-color: rgba(80, 220, 160, 0.22) !important;
+  color: #eafff5 !important;
+}
+.dropdown-item {
+  color: #eafff5 !important;
+}
+.dropdown-item:hover, .dropdown-item:focus {
+  background: rgba(46,204,140,.15) !important;
+  color: #eafff5 !important;
+}
+
+/* Badges */
+.badge.bg-light { background-color: #1f4a3a !important; color: #eafff5 !important; border: 1px solid rgba(80,220,160,.22); }
+
+/* Sidebar dark */
+.bg-light {
+  background-color: #1f4a3a !important;
+  color: #eafff5 !important;
+}
+
+/* Text muted */
+.text-muted { color: #7fb89f !important; }
+.text-body-secondary { color: #bfeedb !important; }
+
+/* Spinner */
+.spinner-border { color: #2ecc8c; }
+
+/* Alert */
+.alert-info {
+  background-color: rgba(46,204,140,.08);
+  border-color: rgba(80,220,160,.22);
+  color: #eafff5;
+}
+.alert-warning {
+  background-color: rgba(111,224,176,.1);
+  border-color: rgba(111,224,176,.3);
+  color: #eafff5;
+}
+.alert-danger {
+  background-color: rgba(255,180,180,.1);
+  border-color: rgba(255,180,180,.3);
+  color: #ffb4b4;
 }

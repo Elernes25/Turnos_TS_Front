@@ -15,7 +15,14 @@ export interface TelefonoPaciente {
 }
 
 export interface ObraSocialPaciente {
-  nombreObraSocial: string;
+  obraSocialID?: string | {
+    id?: string;
+    _id?: string;
+    nombreObraSocial?: string;
+    nombre?: string;
+  };
+  nombreObraSocial?: string;
+  nombre?: string;
   numeroAfiliado: string;
 }
 

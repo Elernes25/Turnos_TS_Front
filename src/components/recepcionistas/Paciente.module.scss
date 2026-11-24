@@ -1,0 +1,65 @@
+@use "../../styles/variables" as *;
+
+.contenedor {
+  max-width: 75rem;
+  margin: 0 auto;
+  padding: $sp-5;
+}
+
+.encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $sp-4;
+  margin-bottom: $sp-5;
+
+  h1 {
+    margin: 0;
+    color: $texto;
+    font-size: $fs-2xl;
+  }
+}
+
+.bloqueBusqueda {
+  padding: $sp-5;
+  border: 1px solid $sector-borde;
+  border-radius: $radius-md;
+  background: linear-gradient(180deg, $sector-a, $sector-b);
+}
+
+.resultados {
+  display: grid;
+  gap: $sp-2;
+  margin-top: $sp-4;
+}
+
+.resultado {
+  width: 100%;
+  padding: $sp-3 $sp-4;
+  border: 2px solid $acento;
+  border-radius: $radius-sm;
+  background-color: $resultado-bg;
+  color: $texto;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color $transition-fast;
+
+  &:hover, &:focus-visible {
+    border-color: $acento-hover;
+    background-color: $suave;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $acento;
+    outline-offset: 2px;
+  }
+}
+
+@media (max-width: $bp-sm) {
+  .contenedor { padding: $sp-4; }
+
+  .encabezado {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

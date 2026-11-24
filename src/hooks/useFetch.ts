@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { clientesAxios} from '../config/axios';
 import { toast } from 'sonner';
 
@@ -7,23 +7,27 @@ export const useFetch = <T>(endpoint:string) => {
     const [data, setData] = useState <T | null> (null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const respuesta = await clientesAxios.get<{datos: T}>(endpoint);
-                setResponse(respuesta.data);
-                setData(respuesta.data.datos);
+    const fetchData = useCallback(async () => {
+        setIsLoading(true);
+        try {
+            const respuesta = await clientesAxios.get<{datos: T}>(endpoint);
+            setResponse(respuesta.data);
+            setData(respuesta.data.datos);
 
-            } catch (error:any) {
-                toast.error(`Error al cargar datos o No hay datos almacenados`);
-                console.log(`ERROR: ${error.message}`);
+        } catch (error:any) {
+            setResponse(null);
+            setData(null);
+            toast.error(`Error al cargar datos o No hay datos almacenados`);
+            console.log(`ERROR: ${error.message}`);
 
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchData();
+        } finally {
+            setIsLoading(false);
+        }
     }, [endpoint]);
 
-    return { response, data, setData, isLoading };
+    useEffect(() => {
+        void fetchData();
+    }, [fetchData]);
+
+    return { response, data, setData, isLoading, refetch: fetchData };
 }

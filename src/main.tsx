@@ -6,6 +6,8 @@ import App from './App.tsx'
 import 'bootstrap/dist/css/bootstrap.min.css';
 //*quiere decir que todavia eso no tiene una declaracion en typescript
 
+import './index.css';
+
 import { BrowserRouter } from 'react-router-dom';
 
 /*el signo de admiracion ! le obliga a no ser null */
