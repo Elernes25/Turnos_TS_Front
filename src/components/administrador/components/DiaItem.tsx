@@ -1,4 +1,4 @@
-import { useFieldArray, UseFieldArrayAppend, UseFieldArrayRemove, Control, UseFormRegister } from "react-hook-form";
+import { useFieldArray, UseFieldArrayAppend, UseFieldArrayRemove, FieldErrors, Control, UseFormRegister } from "react-hook-form";
 import { Form, Card, Button, InputGroup } from 'react-bootstrap';
 import { DiaSemana } from "../../../types/Agenda.types";
 import type { ICrearAgendaMedicoDTO } from "../../../types/Agenda.types";
@@ -10,10 +10,13 @@ interface DiaItemProps {
   appendDia: UseFieldArrayAppend<ICrearAgendaMedicoDTO, "dias">;
   removeDia: UseFieldArrayRemove;
   control: Control<ICrearAgendaMedicoDTO>;
+  errors: FieldErrors<ICrearAgendaMedicoDTO>;
   register: UseFormRegister<ICrearAgendaMedicoDTO>;
+  styles:any;
+
 }
 
-const DiaItem = ({  nombreDia,  isActivo,  indexEnArray,  appendDia,  removeDia,  control,  register }: DiaItemProps) => {
+const DiaItem = ({  nombreDia,  isActivo,  indexEnArray,  appendDia,  removeDia,  control, errors,  register, styles }: DiaItemProps) => {
 
 
   const rutaRangos = (isActivo && indexEnArray >= 0) 
@@ -67,6 +70,11 @@ const DiaItem = ({  nombreDia,  isActivo,  indexEnArray,  appendDia,  removeDia,
               type="button"
               variant="outline-primary"
               size="sm"
+              disabled={fields.length >= 3}
+              title={ fields.length >= 3
+                  ? 'Máximo 3 rangos horarios por día'
+                  : undefined
+              }
               onClick={() => append({ horaInicio: '08:00', horaFin: '12:00' })}
             >
               + Agregar Rango Horario
@@ -88,13 +96,30 @@ const DiaItem = ({  nombreDia,  isActivo,  indexEnArray,  appendDia,  removeDia,
                     aria-label={`Hora de inicio del rango ${rIndex + 1}`}
                     {...register(`dias.${indexEnArray}.rangos.${rIndex}.horaInicio`)}
                   />
+                  
                   <InputGroup.Text>a</InputGroup.Text>
                   <Form.Control
                     type="time"
                     aria-label={`Hora de fin del rango ${rIndex + 1}`}
                     {...register(`dias.${indexEnArray}.rangos.${rIndex}.horaFin`)}
                   />
+                  
+                 
                 </InputGroup>
+                  {/**********/}
+                  {errors.dias?.[indexEnArray]?.rangos?.[rIndex]?.horaInicio?.message && (
+                    <span className={styles.error}>
+                      {errors.dias[indexEnArray]?.rangos?.[rIndex]?.horaInicio?.message}
+                    </span>
+                  )}
+                  {/**********/}
+                  {errors.dias?.[indexEnArray]?.rangos?.[rIndex]?.horaFin?.message && (
+                    <span className={styles.error}>
+                        {errors.dias[indexEnArray]?.rangos?.[rIndex]?.horaFin?.message}
+                    </span>
+                  )}
+
+
 
                 {/* No dejamos vaciar por completo el array para evitar el error 'too_small' */}
                 {fields.length > 1 && (
@@ -111,11 +136,21 @@ const DiaItem = ({  nombreDia,  isActivo,  indexEnArray,  appendDia,  removeDia,
                 )}
               </div>
             ))}
+
+                 
+
+
           </div>
         )}
+        
       </Card.Body>
     </Card>
   );
 };
 
 export default DiaItem;
+
+/*
+
+
+*/

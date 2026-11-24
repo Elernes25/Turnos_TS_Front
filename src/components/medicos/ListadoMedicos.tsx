@@ -1,64 +1,84 @@
-//import { useState } from "react";
+import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button, Container, Spinner, Table } from 'react-bootstrap';
 import { useFetch } from '../../hooks/useFetch';
-import { Button, ListGroup, Container} from "react-bootstrap";
-import styles from './listado.module.scss'
-import ListadoSkeleton from "./ListadoSkeleton";
-import type { IMedico } from "../../types/Medico.type";
+import type { IMedico } from '../../types/Medico.type';
+import BuscadorMedicos from './components/BuscadorMedicos';
+import styles from './ListadoMedicos.module.scss';
+
+const normalizar = (texto: string): string =>
+  texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
 const ListadoMedicos = () => {
-    
-    //const { response: response, data: medicos, isLoading } = useFetch<IMedico[]>('/medicos'); /*DEBE COINCIDIR CON LA RUTA DEL BACKEND */
-    const { data: medicos, isLoading } = useFetch<IMedico[]>('/medicos'); /*DEBE COINCIDIR CON LA RUTA DEL BACKEND */
-    console.log("Medicos:", medicos);
-    //console.log("Response en medicos:", response);
-       
-    return (
-        <Container>
-           
-             <ListGroup>
-                {isLoading ? ([1, 2, 3].map(item => <ListadoSkeleton key={item} />)) : !medicos || medicos.length === 0 ? 
-                    (
-                    <p>No se encontraron Médicos</p>
-                    ) : 
-                    medicos.map((each, index) => (
-                        <ListGroup.Item
-                        key={index}
-                        className={styles.renglonCompacto}
-                        style={{
-                            backgroundColor: index % 2 === 0 ? "#f8f9fa" : "#ffffff",
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center"
-                        }}
-                        >
-                        {each.nombre}
-                        <div style={{ display: "flex", gap: "0.5rem" }}>
-                            <Button
-                            variant="secondary"
-                            size="sm"
-                            className={styles.botonChico}
-                            
-                        // onClick={() => handleEditar(each)}
-                            >
-                            Ver Detalles
-                            </Button>
-                            <Button
-                                variant="danger"
-                                size="sm"
-                                className={styles.botonChico}
+  const navigate = useNavigate();
+  const { data: medicos, isLoading } = useFetch<IMedico[]>('/medicos');
+  const [busqueda, setBusqueda] = useState('');
+  const medicosFiltrados = useMemo(() => {
+    const termino = normalizar(busqueda.trim());
+    if (!termino) return medicos ?? [];
 
-                            >
-                                Eliminar
-                            </Button>
-                        </div>
-                        </ListGroup.Item>
-                    ))}
-                
-                </ListGroup>
-
-        </Container>
-       
+    return (medicos ?? []).filter((medico) =>
+      normalizar(medico.nombre).includes(termino)
+      || medico.especialidad.some((especialidad) => normalizar(especialidad.nombre).includes(termino))
     );
+  }, [busqueda, medicos]);
+
+  return (
+    <Container>
+      <div className={styles.encabezado2}>
+        <h1 >Listado de Médicos</h1> 
+        <p>Listado de médicos cargados en el sistema.</p>
+     </div>
+      {!isLoading && (
+        <BuscadorMedicos valor={busqueda} alCambiar={setBusqueda} />
+      )}
+
+      {isLoading ? (
+        <div className="text-center py-5">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Cargando médicos...</span>
+          </Spinner>
+        </div>
+      ) : (
+        <Table responsive hover className={styles.tabla}>
+          <thead>
+            <tr>
+              <th>Médico</th>
+              <th>Especialidades</th>
+              <th>Matrícula</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {medicosFiltrados.length === 0 ? (
+              <tr>
+                <td colSpan={4} className="text-center text-muted py-4">
+                  No se encontraron médicos.
+                </td>
+              </tr>
+            ) : (
+              medicosFiltrados.map((medico) => (
+                <tr key={medico.id}>
+                  <td><strong>{medico.nombre}</strong></td>
+                  <td>{medico.especialidad.map((especialidad) => especialidad.nombre).join(', ') || 'Sin especialidades'}</td>
+                  <td>MP {medico.numeroMatricula}</td>
+                  <td>
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      onClick={() => navigate(`/medico-detalle/${medico.id}`)}
+                    >
+                      Detalle
+                    </Button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </Table>
+      )}
+    </Container>
+  );
 };
 
 export default ListadoMedicos;

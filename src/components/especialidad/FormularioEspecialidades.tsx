@@ -1,27 +1,35 @@
 import { useCallback, useEffect, useState } from "react";
-import { Alert,Button, Card, Container,  Form, ListGroup, Spinner} from "react-bootstrap";
+import { Button, Card, Container, Form, Spinner } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { toast } from "sonner";
 import { clientesAxios } from "../../config/axios";
 import { crearEspecialidadSchema} from "../../types/Especialidad.type";
 import type{ IcrearEspecialidadDTO, IEspecialidad, IRespuestaEspecialidades} from "../../types/Especialidad.type";
-import styles from "./listado.module.scss";
+import ListadoEspecialidad from "./components/ListadoEspecialidad";
+import ModalEliminarEspecialidad from "./components/ModalEliminarEspecialidad";
 
 const obtenerValoresIniciales = (): IcrearEspecialidadDTO => ({ nombre: "", descripcion: ""});
 
 const FormularioEspecialidades = () => {
     const [especialidades, setEspecialidades] = useState<IEspecialidad[]>([]);
     const [especialidadEditando, setEspecialidadEditando] = useState<IEspecialidad | null>(null);
+    const [especialidadAEliminar, setEspecialidadAEliminar] = useState<IEspecialidad | null>(null);
     const [cargandoEspecialidades, setCargandoEspecialidades] = useState<boolean>(true);
     const [guardando, setGuardando] = useState<boolean>(false);
-    const [mensajeError, setMensajeError] = useState<string>("");
-    const [mensajeExito, setMensajeExito] = useState<string>("");
+    const [eliminandoEspecialidad, setEliminandoEspecialidad] = useState<boolean>(false);
 
-    const {register, handleSubmit, reset, formState: { errors }} = useForm<IcrearEspecialidadDTO>({
+    const {register, handleSubmit, reset, setFocus, formState: { errors }} = useForm<IcrearEspecialidadDTO>({
         resolver: zodResolver(crearEspecialidadSchema),
         defaultValues: obtenerValoresIniciales(),
     });
+
+    useEffect(() => {
+        if (especialidadEditando) {
+            setFocus("nombre");
+        }
+    }, [especialidadEditando, setFocus]);
 
     const cargarEspecialidades = useCallback(async (): Promise<void> => {
             try {
@@ -35,7 +43,7 @@ const FormularioEspecialidades = () => {
 
             } catch (error:any) {
                 console.error(error);
-                setMensajeError("No fue posible cargar las especialidades.");
+                toast.error("No fue posible cargar las especialidades.");
             } finally {
                 setCargandoEspecialidades(false);
             }
@@ -48,14 +56,12 @@ const FormularioEspecialidades = () => {
     const onSubmit = async ( datos: IcrearEspecialidadDTO): Promise<void> => {
         try {
             setGuardando(true);
-            setMensajeError("");
-            setMensajeExito("");
             if (especialidadEditando) {
                 await clientesAxios.put(`/especialidad/${especialidadEditando.id}`, datos);
-                setMensajeExito("Especialidad actualizada correctamente.");
+                toast.success("Especialidad actualizada correctamente.");
             } else {
                 await clientesAxios.post("/especialidad",datos);
-                setMensajeExito("Especialidad creada correctamente.");
+                toast.success("Especialidad creada correctamente.");
             }
             reset(obtenerValoresIniciales());
             setEspecialidadEditando(null);
@@ -63,9 +69,9 @@ const FormularioEspecialidades = () => {
         } catch (error:any) {
             console.error(error);
             if (axios.isAxiosError(error)) {
-                setMensajeError(error.response?.data?.message ?? "Error al guardar la especialidad." );
+                toast.error(error.response?.data?.message ?? "Error al guardar la especialidad.");
             } else {
-                setMensajeError("Error inesperado.");
+                toast.error("Error inesperado.");
             }
         } finally {
             setGuardando(false);
@@ -83,16 +89,20 @@ const FormularioEspecialidades = () => {
 
     const handleCancelarEdicion = (): void => {setEspecialidadEditando(null); reset(obtenerValoresIniciales()); };
 
-    const handleEliminar = async (id: string): Promise<void> => {
-        const confirmar = window.confirm( "¿Desea eliminar esta especialidad?" );
-        if (!confirmar) return;
+    const confirmarEliminacion = async (): Promise<void> => {
+        if (!especialidadAEliminar) return;
+
         try {
-            await clientesAxios.delete(`/especialidad/${id}`);
-            setMensajeExito("Especialidad eliminada correctamente.");
+            setEliminandoEspecialidad(true);
+            await clientesAxios.delete(`/especialidad/${especialidadAEliminar.id}`);
+            toast.success("Especialidad eliminada correctamente.");
+            setEspecialidadAEliminar(null);
             await cargarEspecialidades();
         } catch (error:any) {
             console.error(error);
-            setMensajeError("No fue posible eliminar la especialidad.");
+            toast.error("No fue posible eliminar la especialidad.");
+        } finally {
+            setEliminandoEspecialidad(false);
         }
 
     };
@@ -104,25 +114,6 @@ const FormularioEspecialidades = () => {
                     <h5 className="mb-0"> {especialidadEditando ? "Editar Especialidad" : "Nueva Especialidad"} </h5>
                 </Card.Header>
                 <Card.Body>
-                    {mensajeExito && (
-                        <Alert
-                            variant="success"
-                            dismissible
-                            onClose={() => setMensajeExito("")}
-                        >
-                            {mensajeExito}
-                        </Alert>
-                    )}
-                    {mensajeError && (
-                        <Alert
-                            variant="danger"
-                            dismissible
-                            onClose={() => setMensajeError("")}
-                        >
-                            {mensajeError}
-                        </Alert>
-                    )}
-
                     <Form
                         onSubmit={handleSubmit(onSubmit)}
                         noValidate
@@ -180,68 +171,22 @@ const FormularioEspecialidades = () => {
                 </Card.Body>
             </Card>
             <Card>
-                <Card.Header  className="d-flex justify-content-between align-items-center">
+                <Card.Header>
                     <span> Especialidades Registradas </span>
-                    <Button
-                        variant="outline-secondary"
-                        onClick={() => void cargarEspecialidades() }
-                        disabled={cargandoEspecialidades}
-                    >
-                        Actualizar
-                    </Button>
-
                 </Card.Header>
-                <ListGroup variant="flush">
-                    {cargandoEspecialidades ? (
-                        <ListGroup.Item>
-                            Cargando...
-                        </ListGroup.Item>
-                    ) : especialidades.length === 0 ? (
-                        <ListGroup.Item> No existen especialidades registradas. </ListGroup.Item>
-                    ) : (
-                        especialidades.map(
-                            (especialidad, index) => (
-                                <ListGroup.Item
-                                    key={especialidad.id}
-                                    className={ `${styles.renglonCompacto}
-                                    ${index % 2 === 0 ? styles.renglonPar : styles.renglonImpar}`}
-                                >
-                                    <div>
-                                        <strong>
-                                            {especialidad.nombre}
-                                        </strong>
-                                        {especialidad.descripcion && (
-                                            <div className="text-muted small">
-                                                {
-                                                    especialidad.descripcion
-                                                }
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    <div className="d-flex gap-2">
-                                        <Button
-                                            variant="secondary"
-                                            size="sm"
-                                            onClick={() => handleEditar(especialidad)}
-                                        >
-                                            Editar
-                                        </Button>
-
-                                        <Button
-                                            variant="danger"
-                                            size="sm"
-                                            onClick={ () => void handleEliminar( especialidad.id) }
-                                        >
-                                            Eliminar
-                                        </Button>
-                                    </div>
-                                </ListGroup.Item>
-                            )
-                        )
-                    )}
-                </ListGroup>
+                <ListadoEspecialidad
+                    especialidades={especialidades}
+                    cargando={cargandoEspecialidades}
+                    onEditar={handleEditar}
+                    onSolicitarEliminacion={setEspecialidadAEliminar}
+                />
             </Card>
+            <ModalEliminarEspecialidad
+                especialidad={especialidadAEliminar}
+                eliminando={eliminandoEspecialidad}
+                onCancelar={() => setEspecialidadAEliminar(null)}
+                onConfirmar={() => void confirmarEliminacion()}
+            />
         </Container>
     );
 };

@@ -11,8 +11,9 @@ const BuscadorMedicos = ({valor, alCambiar}:BuscadorMedicosProps) =>{
     <Row className="mb-4">
         <Col md={6}>
             <Form.Control
-                type="text"
-                placeholder="Buscar Medico..."
+                type="search"
+                aria-label="Buscar médico por nombre o especialidad"
+                placeholder="Buscar por nombre o especialidad..."
                 value={valor}
                 onChange={handleChange}
             />

@@ -15,7 +15,7 @@ export const useFetch = <T>(endpoint:string) => {
                 setData(respuesta.data.datos);
 
             } catch (error:any) {
-                toast.error(`Error al cargar datos`);
+                toast.error(`Error al cargar datos o No hay datos almacenados`);
                 console.log(`ERROR: ${error.message}`);
 
             } finally {

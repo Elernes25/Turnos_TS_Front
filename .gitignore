@@ -12,7 +12,9 @@ dist
 dist-ssr
 *.local
 mock
+git help
 .env
+*.old
 
 # Editor directories and files
 .vscode/*

@@ -1,0 +1,143 @@
+// DashboardRecepcion — SCSS con variables por Rol
+// En el futuro: el DashboardLayout puede poner data-rol="RECEPCIONISTA" / "ADMIN" / "MEDICO"
+// y este archivo cambia el tema sin tocar los .tsx.
+
+.dashboard {
+  --primario: #0d6efd;
+  --primario-oscuro: #0a58ca;
+  --acento: #198754;
+  --aviso: #ffc107;
+  --peligro: #dc3545;
+  --fondo-card: #ffffff;
+  --borde: #dee2e6;
+  --texto-suave: #6c757d;
+}
+
+.dashboard[data-rol="ADMIN"] {
+  --primario: #6610f2;
+  --primario-oscuro: #520dc2;
+  --acento: #0dcaf0;
+}
+
+.dashboard[data-rol="MEDICO"] {
+  --primario: #0dcaf0;
+  --primario-oscuro: #0aa2c0;
+  --acento: #20c997;
+}
+
+.dashboard[data-rol="SUPERVISOR"] {
+  --primario: #fd7e14;
+  --primario-oscuro: #dc6502;
+  --acento: #198754;
+}
+
+.encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+
+  .titulo {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+
+  .subtitulo {
+    color: var(--texto-suave);
+    margin: 0.25rem 0 0;
+  }
+
+  .acciones {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+}
+
+.metricaCard {
+  border: 1px solid var(--borde);
+  border-radius: 0.75rem;
+  height: 100%;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+
+  &:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+  }
+
+  .icono {
+    font-size: 1.5rem;
+    color: var(--primario);
+    margin-bottom: 0.5rem;
+  }
+
+  .valor {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .etiqueta {
+    color: var(--texto-suave);
+    font-size: 0.875rem;
+  }
+
+  .variante-total { border-top: 4px solid var(--primario); }
+  .variante-pendiente { border-top: 4px solid var(--aviso); }
+  .variante-atendido { border-top: 4px solid var(--acento); }
+  .variante-cancelado { border-top: 4px solid var(--peligro); }
+  .variante-faltan { border-top: 4px solid #6c757d; }
+}
+
+.seccion {
+  background: var(--fondo-card);
+  border: 1px solid var(--borde);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+
+  .seccionTitulo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--primario-oscuro);
+  }
+}
+
+.respuesta {
+  background: #f8f9fa;
+  border-left: 4px solid var(--primario);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+
+  .respuestaTitulo {
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+  }
+}
+
+.listaTurnosResumen {
+  max-height: 260px;
+  overflow-y: auto;
+
+  .fila {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--borde);
+
+    &:last-child { border-bottom: 0; }
+  }
+}
+
+@media (max-width: 768px) {
+  .encabezado { align-items: flex-start; }
+}

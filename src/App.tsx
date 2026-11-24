@@ -7,7 +7,6 @@ import ListadoMedicos from "./components/medicos/ListadoMedicos"
 import DetalleTurno from "./components/turnos/DetalleTurno"
 import NotFound from "./components/utils/notfound"
 import LoginPage from  './pages/Login'
-//import PrivateRoute from "./components/utils/privateRoute"
 import LogoutButton from "./components/logoutButton"
 
 import { Routes, Route, Navigate, Outlet} from "react-router-dom";
@@ -15,15 +14,27 @@ import { Routes, Route, Navigate, Outlet} from "react-router-dom";
 import DashboardLayout from "./components/layout/DashboardLayout"
 import FormularioAdministrador from "./components/administrador/FormularioAdministrador"
 import FormularioAgendaMedico from "./components/administrador/FormularioAgenda"
+import FormularioObraSocial from "./components/obraSocial/FormularioObraSocial"
 import ForbiddenPage from "./pages/ForbiddenPage"
+import EditarMedico from "./components/medicos/components/EditarMedico"
+import DetalleMedico from "./components/medicos/DetalleMedico"
 
 //import { jwtDecode } from "jwt-decode";
 //import type {ITokenPayload} from "./types/Usuario.type";
 import { IRolUsuario, RolUsuario } from "./types/Usuario.type"
 import { getSession } from "./auth/session"
 import DashboardSupervisor from "./components/supervisor/DashboardSupervisor"
+import DashboardMedicos from "./pages/DashboardMedicos"
+import HistoriaClinica from "./pages/HistoriaClinica"
 import PrimerIngreso from "./pages/PrimerIngreso"
 import { useLocation } from "react-router-dom";
+import ListadoMedicosMain from "./components/medicos/ListadoMedicosMain"
+import ListadoTurnos from "./components/turnos/ListadoTurnos"
+import FormularioTurno from "./components/turnos/FormularioTurno"
+import TurnosFuturos from "./components/turnos/TurnosFuturos"
+import FormularioRecepcionista from "./components/recepcionistas/FormularioRecepcionista"
+import { DashboardPorRol } from "./components/layout/DashboardPorRol"
+import MiPerfil from "./pages/MiPerfil"
 
 interface RutaPrivadaProps {
     roles: IRolUsuario[];
@@ -65,26 +76,42 @@ function App() {
                         roles={[RolUsuario.ADMIN, RolUsuario.SUPERVISOR, RolUsuario.MEDICO,
                                 RolUsuario.RECEPCIONISTA, RolUsuario.PACIENTE]} />}>  {/* devuelve Outlet o Navigate */}
                 <Route path="/" element={<DashboardLayout />}>      {/*element={<LayoutPrincipal />}>*/}
-                    <Route index element={<DashboardRecepcion />} />
-                    
+                    <Route index element={<DashboardPorRol/>} />                    
                     <Route element={<RutasProtegidas roles={[RolUsuario.ADMIN,RolUsuario.RECEPCIONISTA]} />}>
+                        <Route path="recepcion"  element={<DashboardRecepcion />} />
                         <Route path="nuevo-paciente" element={<FormularioPaciente />} />
+                        <Route path="nuevo-turno" element={<FormularioTurno />} />
+                        <Route path="turnos" element={<ListadoTurnos />} />
+                        <Route path="turnos-futuros" element={<TurnosFuturos />} />
                         <Route path="turno-detalle/:id" element={<DetalleTurno />} />
+                        
                     </Route>
                     <Route element={<RutasProtegidas roles={[RolUsuario.ADMIN,RolUsuario.SUPERVISOR]} />}>
                         <Route path="nuevo-medico" element={<FormularioMedico />} />
                         <Route path="supervisor" element={<DashboardSupervisor />} />
+                        <Route path="medicos" element={<ListadoMedicosMain/>} />
+                        <Route path="medicos/:id/editar" element={<EditarMedico />} />
+                        <Route path="medicos/:id/agenda" element={<FormularioAgendaMedico/>} />
+                        <Route path="nuevo-recepcionista" element={<FormularioRecepcionista/>} />
                     </Route>
                     <Route element={<RutasProtegidas roles={[RolUsuario.ADMIN,RolUsuario.SUPERVISOR,RolUsuario.MEDICO,RolUsuario.RECEPCIONISTA]} />}>
                         <Route path="listado-medicos" element={<ListadoMedicos />} />
                         <Route path="especialidades" element={<FormularioEspecialidades />} />
+                        <Route path="medico-detalle/:id" element={<DetalleMedico />} />
+                        <Route path="perfil" element={<MiPerfil />} />
                     </Route>
-                    
+                    <Route element={<RutasProtegidas roles={[RolUsuario.ADMIN, RolUsuario.MEDICO]} />}>
+                        <Route path="historia-clinica/:pacienteId" element={<HistoriaClinica />} />
+                        <Route path="medico" element={<DashboardMedicos />}/>
+                    </Route>
+                     <Route element={<RutasProtegidas roles={[RolUsuario.ADMIN,RolUsuario.SUPERVISOR,RolUsuario.RECEPCIONISTA]} />}>
+                        <Route path="obra-social" element={<FormularioObraSocial />} />
+                    </Route>
                     <Route element={<RutasProtegidas roles={[RolUsuario.ADMIN]} />}>
                         <Route path="administrador" element={<FormularioAdministrador />} />
-                        <Route path="administrador-agenda" element={<FormularioAgendaMedico/>} />
+                        
                     </Route>
-
+               
                     <Route path="cerrar-sesion" element={<LogoutButton />} />
                     <Route path="*" element={<NotFound />} />
                     
@@ -97,4 +124,3 @@ function App() {
 }
 
 export default App
-
