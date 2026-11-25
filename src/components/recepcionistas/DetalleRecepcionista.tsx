@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert, Card, Col, Container, ListGroup, Row, Spinner } from 'react-bootstrap';
+import { Alert, Card, Container, ListGroup, Spinner } from 'react-bootstrap';
 import { Link, useParams } from 'react-router-dom';
 import { clientesAxios } from '../../config/axios';
 import {

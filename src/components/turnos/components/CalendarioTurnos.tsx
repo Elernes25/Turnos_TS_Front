@@ -154,6 +154,11 @@ interface CalendarioTurnosProps {
                             ))}
                             {diasDelCalendario.map((dia) => {
                                 const fueraDelMes = dia.getMonth() !== mesVisible.getMonth();
+                                const claveFecha = obtenerClaveFecha(dia);
+                                if (fueraDelMes) {
+                                    return <div key={claveFecha} aria-hidden="true" />;
+                                }
+
                                 const hoy = new Date();
                                 hoy.setHours(0, 0, 0, 0);
                                 const fechaPasada = dia < hoy;
@@ -161,8 +166,7 @@ interface CalendarioTurnosProps {
                                 const sinDisponibilidad = !horarios.some(
                                     (horario) => !horario.ocupado && !horario.pasado,
                                 );
-                                const deshabilitado = fueraDelMes || fechaPasada || sinDisponibilidad;
-                                const claveFecha = obtenerClaveFecha(dia);
+                                const deshabilitado = fechaPasada || sinDisponibilidad;
                                 const seleccionado = fechaSeleccionada === claveFecha;
 
                                 return (

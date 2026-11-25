@@ -5,13 +5,15 @@ import type { ITicketTurno } from "../../../types/TicketTurno.types";
 interface TicketTurnoProps {
     turnoRegistrado: ITicketTurno | null;
     onClose: () => void;
+    onClosed: () => void;
 };
 
-const TicketTurno = ({ turnoRegistrado, onClose}: TicketTurnoProps) => {
+const TicketTurno = ({ turnoRegistrado, onClose, onClosed}: TicketTurnoProps) => {
 return(
     <Modal
         show={turnoRegistrado !== null}
         onHide={() => onClose()}
+        onExited={onClosed}
         centered
         aria-labelledby="turno-registrado-titulo"
     >

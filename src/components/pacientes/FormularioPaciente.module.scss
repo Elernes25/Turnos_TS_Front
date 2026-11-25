@@ -67,8 +67,8 @@
   &.contenedorIngreso {
     max-width: none;
     margin: 0;
-    padding: 0;
-    border-radius: 0;
+    padding: $sp-4;
+    border-radius: $radius-lg;
     background-color: transparent;
     box-shadow: none;
 

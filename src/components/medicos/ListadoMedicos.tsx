@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Container, Spinner, Table } from 'react-bootstrap';
+import {Container, Spinner, Table } from 'react-bootstrap';
 import { useFetch } from '../../hooks/useFetch';
 import type { IMedico } from '../../types/Medico.type';
 import BuscadorMedicos from './components/BuscadorMedicos';
