@@ -109,19 +109,35 @@ const ListadoRecepcionistaMain = () => {
             </tr>
           ) : (
             recepcionistasFiltrados.map((recepcionista) => (
-              <tr key={recepcionista.id}>
+              <tr
+                key={recepcionista.id}
+                className={styles.filaClickeable}
+                role="link"
+                tabIndex={0}
+                aria-label={`Ver detalle de ${recepcionista.nombre}`}
+                onClick={() => navigate(`/recepcionista-detalle/${recepcionista.id}`)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    navigate(`/recepcionista-detalle/${recepcionista.id}`);
+                  }
+                }}
+              >
                 <td><strong>{recepcionista.nombre}</strong></td>
                 <td>{recepcionista.dni}</td>
                 <td>{formatearTelefono(recepcionista.telefono)}</td>
                 <td>
-                  <div className={styles.acciones}>
-                    <Button
+                  <div
+                    className={styles.acciones}
+                    onClick={(event) => event.stopPropagation()}
+                    onKeyDown={(event) => event.stopPropagation()}
+                  >
+                    {/*<Button
                       size="sm"
                       variant="outline-primary"
                       onClick={() => navigate(`/recepcionista-detalle/${recepcionista.id}`)}
                     >
                       Detalles
-                    </Button>
+                    </Button>*/}
                     <Button
                       size="sm"
                       variant="outline-secondary"

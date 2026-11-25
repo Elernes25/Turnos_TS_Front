@@ -4,7 +4,7 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { toast } from "sonner";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { clientesAxios } from "../../config/axios";
 import { useFetch } from "../../hooks/useFetch";
 import type { IEspecialidad } from "../../types/Especialidad.type";
@@ -27,11 +27,12 @@ const normalizarTexto = (texto: string): string =>
         .toLowerCase();
 
 const FormularioTurno = () => {
+    const navigate = useNavigate();
     const { id: pacienteIdParam } = useParams<{ id: string }>();
     const { data: pacientesData, isLoading: cargandoPacientes } = useFetch<IPaciente[]>("/pacientes");
     const { data: especialidadesData, isLoading: cargandoEspecialidades } = useFetch<IEspecialidad[]>("/especialidad");
     const { data: medicosData, isLoading: cargandoMedicos } = useFetch<IMedico[]>("/medicos");
-    const { register, handleSubmit, reset,setValue, watch, formState: { errors, isSubmitting },
+    const { register, handleSubmit, setValue, watch, formState: { errors, isSubmitting },
     } = useForm<ICrearTurnoDTO>({ resolver: zodResolver(crearTurnoSchema), mode: "onChange",
         defaultValues: {
             pacienteId: pacienteIdParam ?? "",
@@ -205,9 +206,6 @@ const FormularioTurno = () => {
                     timeZone: "America/Argentina/Buenos_Aires",
                 }).format(fecha),
             });
-            reset();
-            setBusquedaPaciente("");
-            setFechaSeleccionada("");
         } catch (error: unknown) {
             const mensaje = axios.isAxiosError(error)
                 ? error.response?.data?.message ?? "Error del servidor al crear el turno."
@@ -413,6 +411,7 @@ const FormularioTurno = () => {
             <TicketTurno
                 turnoRegistrado={turnoRegistrado}
                 onClose={() => setTurnoRegistrado(null)}
+                onClosed={() => navigate("/recepcion")}
             />
 
         </div>

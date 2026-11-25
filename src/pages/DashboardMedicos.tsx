@@ -22,7 +22,7 @@ const DashboardMedicos = () => {
     <Container fluid className={styles.dashboard} data-rol="MEDICO">
       <header className={styles.encabezado}>
         <div>
-          <h1 className={styles.titulo}>Dashboard Médico</h1>
+          <h1 className={styles.titulo}>Panel Médico</h1>
           <p className={styles.subtitulo}>Turnos de pacientes del día</p>
         </div>
       </header>
@@ -75,7 +75,7 @@ const DashboardMedicos = () => {
                           </Link>
                         ) : (
                           <Button size="sm" variant="outline-primary" disabled>
-                            Historia Clínica
+                            Atender...
                           </Button>
                         )}
                       </td>

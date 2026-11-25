@@ -52,7 +52,7 @@ export const telefonoSchema = z.object({
 });
 
 export const crearMedicoSchema = z.object({
-    nombre: z.string().min(2, "el nombre es obligatorio"),
+    nombre: z.string().min(2, "El nombre es obligatorio"),
     dni: z.string({ error: "El DNI es obligatorio" }).trim().regex(/^\d{7,8}$/, { error: "El DNI debe tener entre 7 y 8 dígitos, sin puntos" }),
     direccion: direccionSchema,
     email: z.email('Email invalido'),

@@ -1,10 +1,11 @@
+
 import { useEffect, useState } from 'react';
 import { Nav } from 'react-bootstrap';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   HouseDoor, 
   PersonPlus, 
-  HeartPulse, 
+  //HeartPulse, 
   People, 
   Hospital, 
   ClipboardCheck, 
@@ -43,13 +44,13 @@ const MENU_ITEMS: MenuItem[] = [
   },
    { 
     ruta: '/supervisor', 
-    texto: 'Dashboard Supervisor', 
+    texto: 'Panel Supervisor', 
     icono: ClipboardCheck, 
     roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR] 
   },
    { 
     ruta: '/medico', 
-    texto: 'Dashboard Medico', 
+    texto: 'Panel Médico', 
     icono: ShieldLock, 
     roles: [RolUsuario.ADMIN,RolUsuario.MEDICO ] 
   },
@@ -86,7 +87,7 @@ const MENU_ITEMS: MenuItem[] = [
     ruta: '/listado-medicos', 
     texto: 'Médicos Detalles', 
     icono: People, 
-    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR, RolUsuario.RECEPCIONISTA, RolUsuario.MEDICO] 
+    roles: [RolUsuario.ADMIN,RolUsuario.RECEPCIONISTA] 
   },
   /* accede desde Recepcionistas
   { 
@@ -165,10 +166,10 @@ const MENU_ITEMS: MenuItem[] = [
 const Sidebar = () => {
   const navigate = useNavigate();
   
-  // 2. Estado reactivo conectado a getSession()
+  // Estado reactivo conectado a getSession()
   const [session, setSession] = useState(() => getSession());
 
-  // 3. Escuchamos cambios en la sesión (login, logout o cambios en otra pestaña)
+  // Escuchamos cambios en la sesión (login, logout o cambios en otra pestaña)
   useEffect(() => {
     const actualizarSesion = () => setSession(getSession());
     return subscribeSession(actualizarSesion);
@@ -184,10 +185,10 @@ const Sidebar = () => {
       isActive ? 'bg-primary' : 'text-white ' + styles.hoverEffect
     }`;
 
-  // Si no hay sesión válida, no renderizamos el sidebar (o podrías redirigir)
+  // Si no hay sesión válida, no renderizamos el sidebar 
   if (!session) return null;
 
-  // 4. Filtramos según el rol decodificado del JWT
+  // Filtramos según el rol decodificado del JWT
   const enlacesPermitidos = MENU_ITEMS.filter((item) => 
     item.roles.includes(session.rol)
   );
@@ -219,7 +220,7 @@ const Sidebar = () => {
               to={item.ruta} 
               end={item.end} 
               className={estiloEnlace}
-            style={({ isActive }) => (isActive ? { color: '#06130d', fontWeight: 600 } : undefined)}
+            style={({ isActive }) => (isActive ? { color: '#081a11', fontWeight: 600 } : undefined)}
             >
               <IconoComponente size={18} />
               <span>{item.texto}</span>

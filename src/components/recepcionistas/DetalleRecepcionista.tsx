@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert, Card, Col, Container, ListGroup, Row, Spinner } from 'react-bootstrap';
+import { Alert, Card, Container, ListGroup, Spinner } from 'react-bootstrap';
 import { Link, useParams } from 'react-router-dom';
 import { clientesAxios } from '../../config/axios';
 import {
@@ -78,9 +78,9 @@ const DetalleRecepcionista = () => {
 
   return (
     <Container className="pb-5">
-      <p className="text-body-secondary mb-1">Detalle de la recepcionista</p>
+      <p className="text-body-secondary mb-1">Detalle del Recepcionista</p>
       <h1 className="h2 mb-4">{recepcionista.nombre}</h1>
-
+ {/*
       <Card className="border-0 shadow-sm mb-4">
         <Card.Body>
           <Row className="g-4">
@@ -92,6 +92,7 @@ const DetalleRecepcionista = () => {
               <div className="small text-body-secondary">Teléfono</div>
               <div className="fw-semibold">{telefono}</div>
             </Col>
+            
             <Col xs={12} md={4}>
               <div className="small text-body-secondary">Identificador</div>
               <div className="fw-semibold text-break">{recepcionista.id}</div>
@@ -99,14 +100,26 @@ const DetalleRecepcionista = () => {
           </Row>
         </Card.Body>
       </Card>
-
+*/}
       <Card className="border-0 shadow-sm">
         <Card.Header className="bg-white fw-semibold">Datos personales</Card.Header>
         <ListGroup variant="flush">
           <ListGroup.Item>
+            <span className="text-body-secondary">DNI</span>
+            <br />
+            {recepcionista.dni}
+          </ListGroup.Item>
+          <ListGroup.Item>
+            <span className="text-body-secondary">Teléfono</span>
+            <br />
+            {telefono}
+          </ListGroup.Item>
+
+          <ListGroup.Item>
             <span className="text-body-secondary">Email</span>
             <br />
             {recepcionista.email}
+            
           </ListGroup.Item>
           <ListGroup.Item>
             <span className="text-body-secondary">Dirección</span>
