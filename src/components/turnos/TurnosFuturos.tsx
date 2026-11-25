@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Badge, Button, Modal, Spinner, Table } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { clientesAxios } from '../../config/axios';
 import { useFetch } from '../../hooks/useFetch';
@@ -8,6 +8,7 @@ import type { ITurno } from '../../types/Turno.type';
 import styles from '../turnos/listadoTurnos.module.scss';
 
 const TurnosFuturos = () => {
+  const navigate = useNavigate();
   const { data: turnos, setData: setTurnos, isLoading } = useFetch<ITurno[]>('/turnos');
   const [turnoACancelar, setTurnoACancelar] = useState<ITurno | null>(null);
   const [turnoEnProceso, setTurnoEnProceso] = useState<string | null>(null);
@@ -79,7 +80,17 @@ const TurnosFuturos = () => {
                 const estaEnProceso = turnoEnProceso === turno.id;
 
                 return (
-                  <tr key={turno.id}>
+                  <tr
+                    key={turno.id}
+                    className={styles.filaClickeable}
+                    role="link"
+                    tabIndex={0}
+                    aria-label={`Ver detalle del turno de ${turno.pacienteId?.nombre ?? 'Paciente sin asignar'}`}
+                    onClick={() => navigate(`/turno-detalle/${turno.id}`)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter') navigate(`/turno-detalle/${turno.id}`);
+                    }}
+                  >
                     <td>{turno.pacienteId?.nombre ?? 'Paciente sin asignar'}</td>
                     <td>{turno.especialidadId?.nombre ?? 'Sin especialidad'}</td>
                     <td>{turno.medicoId?.nombre ?? 'Sin médico asignado'}</td>
@@ -96,7 +107,11 @@ const TurnosFuturos = () => {
                       </Badge>
                     </td>
                     <td>
-                      <div className={styles.acciones}>
+                      <div
+                        className={styles.acciones}
+                        onClick={(event) => event.stopPropagation()}
+                        onKeyDown={(event) => event.stopPropagation()}
+                      >
                         {/*  el turno se cancela y se crea
                         pendiente ? (
                           <Link
@@ -118,12 +133,14 @@ const TurnosFuturos = () => {
                         >
                           Cancelar
                         </Button>
+                       {/*
                         <Link
                           to={`/turno-detalle/${turno.id}`}
                           className="btn btn-sm btn-outline-secondary"
                         >
                           Detalle
                         </Link>
+                        */}
                       </div>
                     </td>
                   </tr>

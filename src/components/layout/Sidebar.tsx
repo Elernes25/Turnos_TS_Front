@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   HouseDoor, 
   PersonPlus, 
-  HeartPulse, 
+  //HeartPulse, 
   People, 
   Hospital, 
   ClipboardCheck, 
@@ -86,7 +86,7 @@ const MENU_ITEMS: MenuItem[] = [
     ruta: '/listado-medicos', 
     texto: 'Médicos Detalles', 
     icono: People, 
-    roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR, RolUsuario.RECEPCIONISTA, RolUsuario.MEDICO] 
+    roles: [RolUsuario.ADMIN,RolUsuario.RECEPCIONISTA] 
   },
   /* accede desde Recepcionistas
   { 

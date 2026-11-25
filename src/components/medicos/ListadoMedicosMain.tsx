@@ -160,6 +160,7 @@ const ListadoMedicosMain = () => {
               <MedicoFila
                 key={medico.id}
                 medico={medico}
+                onDetalle={(id) => navigate(`/medico-detalle/${id}`)}
                 onEditar={(id) => {console.log(`/medicos/${id}/editar`); navigate(`/medicos/${id}/editar`)}}
                 onAgenda={(id) => navigate(`/medicos/${id}/agenda`)} //supervisor-agenda
                 onEliminar={setMedicoAEliminar}

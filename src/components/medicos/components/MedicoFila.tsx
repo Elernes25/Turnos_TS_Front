@@ -5,17 +5,27 @@ import styles from '../ListadoMedicos.module.scss';
 
 interface MedicoFilaProps {
   medico: IMedicoListado;
+  onDetalle: (id: string) => void;
   onEditar: (id: string) => void;
   onAgenda: (id: string) => void;
   onEliminar: (medico: IMedicoListado) => void;
 }
 
-const MedicoFila = ({ medico, onEditar, onAgenda, onEliminar }: MedicoFilaProps) => {
+const MedicoFila = ({ medico, onDetalle, onEditar, onAgenda, onEliminar }: MedicoFilaProps) => {
   const { id, nombre, numeroMatricula, especialidad, agenda } = medico;
   const tieneAgenda = agenda !== null;
 
   return (
-    <tr>
+    <tr
+      className={styles.filaClickeable}
+      role="link"
+      tabIndex={0}
+      aria-label={`Ver detalle del médico ${nombre}`}
+      onClick={() => onDetalle(id)}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter') onDetalle(id);
+      }}
+    >
       <td><strong>{nombre}</strong></td>
       <td>{especialidad.map((e) => e.nombre).join(', ')}</td>
       <td>MP {numeroMatricula}</td>
@@ -27,7 +37,11 @@ const MedicoFila = ({ medico, onEditar, onAgenda, onEliminar }: MedicoFilaProps)
         )}
       </td>
       <td>
-        <div className={styles.acciones}>
+        <div
+          className={styles.acciones}
+          onClick={(event) => event.stopPropagation()}
+          onKeyDown={(event) => event.stopPropagation()}
+        >
           <Button size="sm" variant={tieneAgenda ? 'outline-secondary' : 'primary'}
             onClick={() => onAgenda(id)}
           >

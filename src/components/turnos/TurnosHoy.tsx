@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Badge, Button, Card, Spinner, Table } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import type { ITurno } from '../../types/Turno.type';
 import styles from './listadoTurnos.module.scss';
 import ModalCancelarTurno from './ModalCancelarTurno';
@@ -13,6 +13,7 @@ interface TurnosHoyProps {
 }
 
 const TurnosHoy = ({ turnos, isLoading, onAtender, onTurnoCancelado }: TurnosHoyProps) => {
+  const navigate = useNavigate();
   const [turnoACancelar, setTurnoACancelar] = useState<ITurno | null>(null);
   const inicioHoy = new Date();
   inicioHoy.setHours(0, 0, 0, 0);
@@ -59,7 +60,17 @@ const TurnosHoy = ({ turnos, isLoading, onAtender, onTurnoCancelado }: TurnosHoy
                   const pendiente = turno.estado === 'pendiente';
 
                   return (
-                    <tr key={turno.id}>
+                    <tr
+                      key={turno.id}
+                      className={styles.filaClickeable}
+                      role="link"
+                      tabIndex={0}
+                      aria-label={`Ver detalle del turno de ${turno.pacienteId?.nombre ?? 'Paciente sin asignar'}`}
+                      onClick={() => navigate(`/turno-detalle/${turno.id}`)}
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter') navigate(`/turno-detalle/${turno.id}`);
+                      }}
+                    >
                       <td>{turno.pacienteId?.nombre ?? 'Paciente sin asignar'}</td>
                       <td>{turno.especialidadId?.nombre ?? 'Sin especialidad'}</td>
                       <td>{turno.medicoId?.nombre ?? 'Sin médico asignado'}</td>
@@ -71,13 +82,15 @@ const TurnosHoy = ({ turnos, isLoading, onAtender, onTurnoCancelado }: TurnosHoy
                           bg={turno.estado === 'atendido' ? 'success' : turno.estado === 'cancelado' ? 'secondary' : 'warning'}
                           text={pendiente ? 'dark' : undefined}
                         >
-                          {turno.estado === 'pendiente'
-                            ? 'Pendiente'
-                            : turno.estado === 'atendido' ? 'Atendido' : 'Cancelado'}
+                          {turno.estado === 'pendiente' ? 'Pendiente' : turno.estado === 'atendido' ? 'Atendido' : 'Cancelado'}
                         </Badge>
                       </td>
                       <td>
-                        <div className={styles.acciones}>
+                        <div
+                          className={styles.acciones}
+                          onClick={(event) => event.stopPropagation()}
+                          onKeyDown={(event) => event.stopPropagation()}
+                        >
                           <Button
                             size="sm"
                             disabled={!pendiente}
@@ -106,12 +119,14 @@ const TurnosHoy = ({ turnos, isLoading, onAtender, onTurnoCancelado }: TurnosHoy
                           >
                             Cancelar
                           </Button>
+                         {/*
                           <Link
                             to={`/turno-detalle/${turno.id}`}
                             className="btn btn-sm btn-outline-secondary"
                           >
                             Detalle
                           </Link>
+                          */}
                         </div>
                       </td>
                     </tr>

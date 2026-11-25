@@ -97,10 +97,11 @@ const DetalleMedico = () => {
               <div className="small text-body-secondary">Matrícula</div>
               <div className="fw-semibold">MP {medico.numeroMatricula}</div>
             </Col>
+          {/*}
             <Col xs={12} md={4}>
               <div className="small text-body-secondary">Identificador</div>
               <div className="fw-semibold text-break">{medico.id}</div>
-            </Col>
+            </Col> */}
           </Row>
         </Card.Body>
       </Card>
@@ -131,7 +132,7 @@ const DetalleMedico = () => {
         </ListGroup>
       </Card>
 
-      <Link to="/listado-medicos" className="btn btn-outline-secondary mt-4">
+      <Link to="/medicos" className="btn btn-outline-secondary mt-4">
         Volver al listado
       </Link>
     </Container>

@@ -46,7 +46,7 @@ const ListadoMedicos = () => {
               <th>Médico</th>
               <th>Especialidades</th>
               <th>Matrícula</th>
-              <th>Acciones</th>
+              {/* <th>Acciones</th> */}
             </tr>
           </thead>
           <tbody>
@@ -58,19 +58,34 @@ const ListadoMedicos = () => {
               </tr>
             ) : (
               medicosFiltrados.map((medico) => (
-                <tr key={medico.id}>
+                <tr
+                  key={medico.id}
+                  className={styles.filaClickeable}
+                  role="link"
+                  tabIndex={0}
+                  aria-label={`Ver detalle del médico ${medico.nombre}`}
+                  onClick={() => navigate(`/medico-detalle/${medico.id}`)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') navigate(`/medico-detalle/${medico.id}`);
+                  }}
+                >
                   <td><strong>{medico.nombre}</strong></td>
                   <td>{medico.especialidad.map((especialidad) => especialidad.nombre).join(', ') || 'Sin especialidades'}</td>
                   <td>MP {medico.numeroMatricula}</td>
-                  <td>
+                 {/* <td>
+                    
                     <Button
                       variant="outline-primary"
                       size="sm"
-                      onClick={() => navigate(`/medico-detalle/${medico.id}`)}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        navigate(`/medico-detalle/${medico.id}`);
+                      }}
                     >
                       Detalle
                     </Button>
-                  </td>
+                    
+                  </td> */}
                 </tr>
               ))
             )}
