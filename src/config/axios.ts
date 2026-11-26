@@ -28,7 +28,9 @@ clientesAxios.interceptors.response.use(  //funciona despues de que se ejecuta l
         if (error.response && error.response.status === 401) {
             console.warn('Token invalido o expirado. Cerrando sesión...');
             localStorage.removeItem('token');
-            window.location.href = '/login';
+            if (!error.config?.url?.endsWith('/auth/login')) {
+                window.location.href = '/login';
+            }
         }
 
         return Promise.reject(error);

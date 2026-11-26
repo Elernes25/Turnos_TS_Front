@@ -33,6 +33,11 @@ interface MenuItem {
   roles: RolUsuario[];
 }
 
+interface SidebarProps {
+  mobile?: boolean;
+  onNavigate?: () => void;
+}
+
 // 1. Definimos los enlaces usando tus tipos exactos de RolUsuario
 const MENU_ITEMS: MenuItem[] = [
   { 
@@ -163,7 +168,7 @@ const MENU_ITEMS: MenuItem[] = [
   }
 ];
 
-const Sidebar = () => {
+const Sidebar = ({ mobile = false, onNavigate }: SidebarProps) => {
   const navigate = useNavigate();
   
   // Estado reactivo conectado a getSession()
@@ -177,6 +182,7 @@ const Sidebar = () => {
 
   const cerrarSesion = () => {
     clearSession(); // Usa tu función para borrar el token y disparar el evento
+    onNavigate?.();
     navigate('/login');
   };
 
@@ -194,9 +200,11 @@ const Sidebar = () => {
   );
 
   return (
-    <div 
-      className={`${styles.sidebar} text-white p-3 d-flex flex-column vh-100 position-sticky top-0`}
-      style={{ minWidth: '220px', maxWidth: '220px' }}
+    <div
+      className={`${styles.sidebar} text-white p-3 d-flex flex-column ${mobile
+        ? styles.sidebarMobile
+        : 'vh-100 position-sticky top-0'}`}
+      style={mobile ? undefined : { minWidth: '220px', maxWidth: '220px' }}
     >
     <div className="text-center my-2 flex-shrink-0">
         <img src={logo1} alt="Salud Municipal" className="rounded-circle mb-1" style={{ width: '36px', height: '36px', objectFit: 'cover' }}
@@ -220,7 +228,8 @@ const Sidebar = () => {
               to={item.ruta} 
               end={item.end} 
               className={estiloEnlace}
-            style={({ isActive }) => (isActive ? { color: '#081a11', fontWeight: 600 } : undefined)}
+              onClick={onNavigate}
+              style={({ isActive }) => (isActive ? { color: '#081a11', fontWeight: 600 } : undefined)}
             >
               <IconoComponente size={18} />
               <span>{item.texto}</span>
