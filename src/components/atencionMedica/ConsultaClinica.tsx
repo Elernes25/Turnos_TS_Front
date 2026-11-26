@@ -6,6 +6,7 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { getSession } from '../../auth/session';
 import { clientesAxios } from '../../config/axios';
+import { calcularEdad } from '../../utils/calcularEdad';
 import { consultaClinicaFormSchema, consultaClinicaSchema, type IConsultaClinicaFormData, type IConsultaClinicaFormOutput,} from '../../types/ConsultaClinica.types';
 import styles from '../recepcionistas/DashboardRecepcion.module.scss';
 import { obtenerMensajeError } from '../utils/obtenerMensajeError';
@@ -13,6 +14,7 @@ import ModalFinConsulta from './components/ModalFinConsulta';
 
 interface ConsultaClinicaLocationState {
   pacienteNombre?: string;
+  pacienteFechaNacimiento?: string;
   turnoId?: string;
 }
 
@@ -20,8 +22,9 @@ const ConsultaClinica = () => {
   const { pacienteId } = useParams<{ pacienteId: string }>();
   const location = useLocation();
   const navigate = useNavigate();
-  const { pacienteNombre, turnoId } =
+  const { pacienteNombre, pacienteFechaNacimiento, turnoId } =
     (location.state as ConsultaClinicaLocationState | null) ?? {};
+  const edadPaciente = calcularEdad(pacienteFechaNacimiento);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [guardando, setGuardando] = useState(false);
   const [consultaCreada, setConsultaCreada] = useState(false);
@@ -50,7 +53,7 @@ const ConsultaClinica = () => {
     toast.success('Consulta guardada y turno marcado como atendido.');
     setMostrarModal(false);
     navigate(`/historia-clinica/${pacienteId}`, {
-      state: { pacienteNombre, turnoId },
+      state: { pacienteNombre, pacienteFechaNacimiento, turnoId },
     });
   };
 
@@ -119,12 +122,13 @@ const ConsultaClinica = () => {
           <h1 className={styles.titulo}>Consulta Nueva</h1>
           <p className={styles.subtitulo}>
             {pacienteNombre ? `Paciente: ${pacienteNombre}` : `Paciente: ${pacienteId}`}
+            {edadPaciente !== null && ` - Edad: ${edadPaciente} ${edadPaciente === 1 ? 'año' : 'años'}`}
             {` - Fecha: ${new Date().toLocaleDateString("es-AR")}`}
           </p>
         </div>
         <Link
           to={`/historia-clinica/${pacienteId}`}
-          state={{ pacienteNombre, turnoId }}
+          state={{ pacienteNombre, pacienteFechaNacimiento, turnoId }}
           className="btn btn-outline-secondary"
         >
           Volver a la historia clínica

@@ -51,6 +51,22 @@
     }
   }
 
+  .campoPassword {
+    display: flex;
+    gap: $sp-2;
+    align-items: flex-start;
+
+    .campoInput {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
+  .togglePassword {
+    height: 42px;
+    margin-bottom: $sp-4;
+  }
+
   label {
     display: inline-flex;
     align-items: top;

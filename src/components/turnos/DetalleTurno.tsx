@@ -32,7 +32,7 @@ const DetalleTurno = () => {
                 <Alert variant="warning">
                     No se encontró el turno solicitado.
                 </Alert>
-                <Link to="/" className="btn btn-outline-primary">Volver al dashboard</Link>
+                <Link to="/" className="btn btn-outline-primary">Volver al Panel</Link>
             </Container>
         );
     }
@@ -104,7 +104,7 @@ const DetalleTurno = () => {
                 </Row>
             )}
 
-            <Link to="/" className="btn btn-outline-secondary mt-4">Volver al dashboard</Link>
+            <Link to="/" className="btn btn-outline-secondary mt-4">Volver al Panel</Link>
         </Container>
     );
 };

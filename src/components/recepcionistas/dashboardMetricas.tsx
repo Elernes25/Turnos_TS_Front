@@ -21,6 +21,10 @@ const GrupoMetricas = ({ titulo, turnos }: GrupoMetricasProps) => {
             cantidad: turnos.filter((turno) => turno.estado === "pendiente").length,
         },
         {
+            titulo: "En atención",
+            cantidad: turnos.filter((turno) => turno.estado === "en atencion").length,
+        },
+        {
             titulo: "Cancelados",
             cantidad: turnos.filter((turno) => turno.estado === "cancelado").length,
         },
@@ -38,7 +42,7 @@ const GrupoMetricas = ({ titulo, turnos }: GrupoMetricasProps) => {
             {/* g-3 por g-2 para acercar las 3 cards entre sí */}
             <Row className="g-2">
                 {metricas.map((metrica) => (
-                <Col key={metrica.titulo} xs={12} sm={4}>
+                <Col key={metrica.titulo} xs={12} sm={3}>
                     <Card className="h-100 text-center">
                     {/* py-1 px-2 para quitar el padding vertical por defecto */}
                     <Card.Body className="py-1 px-2">

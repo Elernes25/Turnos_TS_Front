@@ -8,13 +8,14 @@ import styles from '../../components/recepcionistas/DashboardRecepcion.module.sc
 
 interface HistoriaClinicaLocationState {
   pacienteNombre?: string;
+  pacienteFechaNacimiento?: string;
   turnoId?: string;
 }
 
 const HistoriaClinica = () => {
   const { pacienteId } = useParams<{ pacienteId: string }>();
   const location = useLocation();
-  const { pacienteNombre, turnoId } =
+  const { pacienteNombre, pacienteFechaNacimiento, turnoId } =
     (location.state as HistoriaClinicaLocationState | null) ?? {};
   const { data: historiaRespuesta, isLoading, refetch } =
     useFetch<IHistoriaClinica | IHistoriaClinica[]>(
@@ -51,7 +52,7 @@ const HistoriaClinica = () => {
               Editar
             </Link>
           )}
-          <Link to="/" className="btn btn-outline-secondary">Volver al dashboard</Link>
+          <Link to="/" className="btn btn-outline-secondary">Volver al Panel</Link>
         </div>
       </header>
 
@@ -65,7 +66,7 @@ const HistoriaClinica = () => {
           <div className="d-flex flex-wrap gap-2 mt-3">
             <Link
               to={`/consulta-nueva/${pacienteId}`}
-              state={{ pacienteNombre, turnoId }}
+              state={{ pacienteNombre, pacienteFechaNacimiento, turnoId }}
               className="btn btn-primary"
             >
               Continuar con la consulta

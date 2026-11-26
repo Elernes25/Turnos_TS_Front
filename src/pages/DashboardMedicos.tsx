@@ -68,14 +68,18 @@ const DashboardMedicos = () => {
                         {paciente && turno.estado !== 'atendido' ? (
                           <Link
                             to={`/historia-clinica/${paciente.id}`}
-                            state={{ pacienteNombre: paciente.nombre, turnoId: turno.id }}
+                            state={{
+                              pacienteNombre: paciente.nombre,
+                              pacienteFechaNacimiento: paciente.fechaDeNacimiento,
+                              turnoId: turno.id,
+                            }}
                             className="btn btn-sm btn-outline-primary"
                           >
-                            Historia Clínica
+                            Atender...
                           </Link>
                         ) : (
                           <Button size="sm" variant="outline-primary" disabled>
-                            Atender...
+                            Atendido
                           </Button>
                         )}
                       </td>
