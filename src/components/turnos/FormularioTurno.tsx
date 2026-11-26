@@ -135,6 +135,11 @@ const FormularioTurno = () => {
     }, [agenda, cargandoDisponibilidad, especialidadId, medicoId, pacienteId, setValue, turnosOcupados]);
 
     const tieneSelecciones = Boolean(pacienteId && especialidadId && medicoId);
+    const seleccionesFaltantes = [
+        !pacienteId && "paciente",
+        !especialidadId && "especialidad",
+        !medicoId && "médico",
+    ].filter((seleccion): seleccion is string => Boolean(seleccion));
 
     const cambiarEspecialidad = (idEspecialidad: string): void => {
         setValue("especialidadId", idEspecialidad, { shouldDirty: true, shouldValidate: true });
@@ -222,17 +227,15 @@ const FormularioTurno = () => {
             </p>
 
             <Form onSubmit={handleSubmit(onSubmit)} noValidate>
+                <input type="hidden" {...register("pacienteId")} />
+                <input type="hidden" {...register("especialidadId")} />
+                <input type="hidden" {...register("medicoId")} />
                 <Row className="g-3">
                     <Col md={12}>
                         <Form.Group controlId="pacienteId">
                             <Form.Label>Paciente</Form.Label>
                             {pacienteIdParam ? (
                                 <>
-                                    <input
-                                        type="hidden"
-                                        value={pacienteIdParam}
-                                        {...register("pacienteId")}
-                                    />
                                     <Form.Control
                                         readOnly
                                         value={
@@ -386,6 +389,7 @@ const FormularioTurno = () => {
                     onSeleccionarFecha={seleccionarFecha}
                     onSeleccionarHorario={seleccionarHorario}
                     errorFechaTurno={errors.fechaTurno?.message}
+                    seleccionesFaltantes={seleccionesFaltantes}
                 />
 
                 <div className="d-flex justify-content-end mt-4">

@@ -7,6 +7,7 @@ import type { TurnoOcupado, HorarioDisponible} from "../../../types/Agenda.types
 
 interface CalendarioTurnosProps {
     tieneSelecciones: boolean;
+    seleccionesFaltantes: string[];
     cargandoDisponibilidad: boolean;
     errorDisponibilidad: string;
     agenda: IAgenda | null;
@@ -24,6 +25,7 @@ interface CalendarioTurnosProps {
 }
  const CalendarioTurnos = ({
     tieneSelecciones,
+    seleccionesFaltantes,
     cargandoDisponibilidad,
     errorDisponibilidad,
     agenda,
@@ -102,7 +104,7 @@ interface CalendarioTurnosProps {
         <h4 id="seleccion-fecha">Fecha y horario</h4>
         {!tieneSelecciones && (
             <Alert variant="info">
-                Seleccioná paciente, especialidad y médico para consultar la disponibilidad.
+                Seleccioná {seleccionesFaltantes.join(", ")} para consultar la disponibilidad.
             </Alert>
         )}
         {tieneSelecciones && cargandoDisponibilidad && (
