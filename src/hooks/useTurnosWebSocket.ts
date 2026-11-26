@@ -6,14 +6,6 @@ export interface EstadoTurnoActualizado {
   estado: ITurno['estado'];
 }
 
-interface MensajeWebSocket {
-  type: string;
-  data?: {
-    turnoId?: unknown;
-    estado?: unknown;
-  };
-}
-
 const estadosTurno: ITurno['estado'][] = [
   'pendiente',
   'en atencion',
@@ -21,44 +13,69 @@ const estadosTurno: ITurno['estado'][] = [
   'cancelado',
 ];
 
+const esObjeto = (valor: unknown): valor is Record<string, unknown> =>
+  typeof valor === 'object' && valor !== null;
+
+const normalizarUrlWebSocket = (url: URL): string => {
+  url.protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  return url.toString();
+};
+
 const obtenerUrlWebSocket = (): string | null => {
   const env = (import.meta as ImportMeta & {
     env?: { VITE_API_URL?: string; VITE_WS_URL?: string };
   }).env;
-  if (env?.VITE_WS_URL) return env.VITE_WS_URL;
+  if (env?.VITE_WS_URL) {
+    return normalizarUrlWebSocket(new URL(env.VITE_WS_URL, window.location.origin));
+  }
   if (!env?.VITE_API_URL) return null;
 
   const url = new URL(env.VITE_API_URL, window.location.origin);
-  url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:';
   url.pathname = `${url.pathname.replace(/\/+$/, '')}/ws/turnos`;
   url.search = '';
   url.hash = '';
-  return url.toString();
+  return normalizarUrlWebSocket(url);
 };
 
 const leerActualizacion = (contenido: unknown): EstadoTurnoActualizado | null => {
   if (typeof contenido !== 'string') return null;
 
-  let mensaje: MensajeWebSocket;
+  let mensaje: unknown;
   try {
-    mensaje = JSON.parse(contenido) as MensajeWebSocket;
+    mensaje = JSON.parse(contenido) as unknown;
   } catch {
     console.warn('Se recibió un mensaje WebSocket de turnos con formato inválido.');
     return null;
   }
 
+  if (!esObjeto(mensaje)) return null;
+
+  const tipoEvento = mensaje.type ?? mensaje.event ?? mensaje.evento ?? mensaje.tipo;
+  if (tipoEvento !== 'turno.estado.actualizado' && tipoEvento !== 'turno_actualizado') {
+    return null;
+  }
+
+  const datos = esObjeto(mensaje.data)
+    ? mensaje.data
+    : esObjeto(mensaje.datos)
+      ? mensaje.datos
+      : esObjeto(mensaje.turno)
+        ? mensaje.turno
+        : mensaje;
+  const turnoId = datos.turnoId ?? datos.idTurno ?? datos.id ?? datos._id;
+  const estado = datos.estado;
+
   if (
-    mensaje.type !== 'turno.estado.actualizado'
-    || typeof mensaje.data?.turnoId !== 'string'
-    || typeof mensaje.data.estado !== 'string'
-    || !estadosTurno.includes(mensaje.data.estado as ITurno['estado'])
+    typeof turnoId !== 'string'
+    || typeof estado !== 'string'
+    || !estadosTurno.includes(estado as ITurno['estado'])
   ) {
     return null;
   }
 
   return {
-    turnoId: mensaje.data.turnoId,
-    estado: mensaje.data.estado as ITurno['estado'],
+    turnoId,
+    estado: estado as ITurno['estado'],
   };
 };
 
