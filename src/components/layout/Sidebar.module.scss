@@ -5,6 +5,14 @@
   border-right: 1px solid $sector-borde;
 }
 
+.sidebarMobile {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  height: 100%;
+  min-height: 0;
+}
+
 .nav-link.activo {
   color: #06130d !important;
   font-weight: 600;
