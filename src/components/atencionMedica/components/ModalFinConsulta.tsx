@@ -36,7 +36,7 @@ const ModalFinConsulta = ({
         disabled={guardando || !puedeGuardar}
         onClick={onGuardar}
       >
-        {guardando ? 'Guardando...' : 'Archivar o guardar consulta'}
+        {guardando ? 'Guardando...' : 'Guardar consulta'}
       </Button>
     </Modal.Footer>
   </Modal>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Badge, Button, Card, Spinner, Table } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import type { ITurno } from '../../types/Turno.type';
 import styles from './listadoTurnos.module.scss';
 import ModalCancelarTurno from './ModalCancelarTurno';
@@ -8,13 +8,14 @@ import ModalCancelarTurno from './ModalCancelarTurno';
 interface TurnosHoyProps {
   turnos: ITurno[];
   isLoading: boolean;
-  onAtender: (idTurno: string) => void;
+  onAtender: (idTurno: string) => Promise<void>;
   onTurnoCancelado: (idTurno: string) => void;
 }
 
 const TurnosHoy = ({ turnos, isLoading, onAtender, onTurnoCancelado }: TurnosHoyProps) => {
   const navigate = useNavigate();
   const [turnoACancelar, setTurnoACancelar] = useState<ITurno | null>(null);
+  const [turnoLlamando, setTurnoLlamando] = useState<string | null>(null);
   const inicioHoy = new Date();
   inicioHoy.setHours(0, 0, 0, 0);
   const inicioManana = new Date(inicioHoy);
@@ -26,6 +27,15 @@ const TurnosHoy = ({ turnos, isLoading, onAtender, onTurnoCancelado }: TurnosHoy
       return fecha >= inicioHoy && fecha < inicioManana;
     })
     .sort((a, b) => new Date(a.fechaTurno).getTime() - new Date(b.fechaTurno).getTime());
+
+  const llamarTurno = async (idTurno: string): Promise<void> => {
+    setTurnoLlamando(idTurno);
+    try {
+      await onAtender(idTurno);
+    } finally {
+      setTurnoLlamando(null);
+    }
+  };
 
   return (
     <Card className="border-1 shadow-sm">
@@ -58,6 +68,7 @@ const TurnosHoy = ({ turnos, isLoading, onAtender, onTurnoCancelado }: TurnosHoy
                 turnosDeHoy.map((turno) => {
                   const fecha = new Date(turno.fechaTurno);
                   const pendiente = turno.estado === 'pendiente';
+                  const enAtencion = turno.estado === 'en atencion';
 
                   return (
                     <tr
@@ -79,10 +90,24 @@ const TurnosHoy = ({ turnos, isLoading, onAtender, onTurnoCancelado }: TurnosHoy
                       </td>
                       <td>
                         <Badge
-                          bg={turno.estado === 'atendido' ? 'success' : turno.estado === 'cancelado' ? 'secondary' : 'warning'}
-                          text={pendiente ? 'dark' : undefined}
+                          bg={
+                            turno.estado === 'atendido'
+                              ? 'success'
+                              : turno.estado === 'cancelado'
+                                ? 'secondary'
+                                : enAtencion
+                                  ? 'info'
+                                  : 'warning'
+                          }
+                          text={pendiente || enAtencion ? 'dark' : undefined}
                         >
-                          {turno.estado === 'pendiente' ? 'Pendiente' : turno.estado === 'atendido' ? 'Atendido' : 'Cancelado'}
+                          {pendiente
+                            ? 'Pendiente'
+                            : turno.estado === 'atendido'
+                              ? 'Atendido'
+                              : turno.estado === 'cancelado'
+                                ? 'Cancelado'
+                                : 'En atención'}
                         </Badge>
                       </td>
                       <td>
@@ -93,10 +118,10 @@ const TurnosHoy = ({ turnos, isLoading, onAtender, onTurnoCancelado }: TurnosHoy
                         >
                           <Button
                             size="sm"
-                            disabled={!pendiente}
-                            onClick={() => onAtender(turno.id)}
+                            disabled={!pendiente || turnoLlamando === turno.id}
+                            onClick={() => void llamarTurno(turno.id)}
                           >
-                            Llamar
+                            {turnoLlamando === turno.id ? 'Llamando...' : 'Llamar'}
                           </Button>
                           {/*   suspendo el boton editar, el turno no se edita se cancela y se crea otro
                           pendiente ? (

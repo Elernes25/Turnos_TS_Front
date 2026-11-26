@@ -23,7 +23,7 @@ export const turnoSchema = z.object({
   // compat: medicoID / medicoId (CrearTurnoDTO del backend)
   //medicoId: z.string().optional(),
   fechaTurno: z.string(),
-  estado: z.enum(['pendiente', 'atendido', 'cancelado']),
+  estado: z.enum(['pendiente', 'atendido', 'cancelado', 'en atencion']),
   observaciones: z.string().optional(),
   createdAt: z.string(),
   updatedAt: z.string(),

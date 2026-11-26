@@ -45,9 +45,9 @@ const ListadoTurnos = () => {
   const llamarTurno = async (turno: ITurno): Promise<void> => {
     try {
       setTurnoEnProceso(turno.id);
-      await clientesAxios.patch(`/turnos/${turno.id}`);
+      await clientesAxios.patch(`/turnos/enatencion/${turno.id}`);
       setTurnos((turnos ?? []).map((actual) =>
-        actual.id === turno.id ? { ...actual, estado: 'atendido' } : actual
+        actual.id === turno.id ? { ...actual, estado: 'en atencion' } : actual
       ));
       toast.success(`Se llamó a ${turno.pacienteId?.nombre ?? 'la persona'}`);
     } catch (error) {
@@ -121,6 +121,7 @@ const ListadoTurnos = () => {
                 const fecha = new Date(turno.fechaTurno);
                 const estaEnProceso = turnoEnProceso === turno.id;
                 const noPendiente = turno.estado !== 'pendiente';
+                const enAtencion = turno.estado === 'en atencion';
 
                 return (
                   <tr key={turno.id}>
@@ -133,10 +134,24 @@ const ListadoTurnos = () => {
                     </td>
                     <td>
                       <Badge
-                        bg={turno.estado === 'atendido' ? 'success': turno.estado === 'cancelado'? 'secondary': 'warning' }
-                        text={turno.estado === 'pendiente' ? 'dark' : undefined}
+                        bg={
+                          turno.estado === 'atendido'
+                            ? 'success'
+                            : turno.estado === 'cancelado'
+                              ? 'secondary'
+                              : enAtencion
+                                ? 'info'
+                                : 'warning'
+                        }
+                        text={turno.estado === 'pendiente' || enAtencion ? 'dark' : undefined}
                       >
-                        {turno.estado === 'pendiente' ? 'Pendiente' : turno.estado === 'atendido' ? 'Atendido': 'Cancelado'}
+                        {turno.estado === 'pendiente'
+                          ? 'Pendiente'
+                          : turno.estado === 'atendido'
+                            ? 'Atendido'
+                            : turno.estado === 'cancelado'
+                              ? 'Cancelado'
+                              : 'En atención'}
                       </Badge>
                     </td>
                     <td>

@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'react-bootstrap';
+import { Eye, EyeSlash } from 'react-bootstrap-icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -53,6 +54,7 @@ const FormularioRecepcionista = ({
     const location = useLocation();
     const esEdicion = recepcionistaId !== undefined;
     const [mostrarModalSeguimiento, setMostrarModalSeguimiento] = useState(false);
+    const [mostrarPassword, setMostrarPassword] = useState(false);
     const emailInputRef = useRef<HTMLInputElement | null>(null);
     const formularioRef = useRef<HTMLFormElement | null>(null);
     const {
@@ -159,14 +161,26 @@ const FormularioRecepcionista = ({
                         {!esEdicion && (
                             <div className={styles.grupoCampo}>
                                 <label htmlFor="password">Contraseña</label>
-                                <input
-                                    id="password"
-                                    type="password"
-                                    autoComplete="new-password"
-                                    {...register('usuario.password')}
-                                    className={styles.campoInput}
-                                    placeholder="Contraseña"
-                                />
+                                <div className={styles.campoPassword}>
+                                    <input
+                                        id="password"
+                                        type={mostrarPassword ? 'text' : 'password'}
+                                        autoComplete="new-password"
+                                        {...register('usuario.password')}
+                                        className={styles.campoInput}
+                                        placeholder="Contraseña"
+                                    />
+                                    <Button
+                                        type="button"
+                                        variant="outline-secondary"
+                                        className={styles.togglePassword}
+                                        aria-label={mostrarPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                                        aria-pressed={mostrarPassword}
+                                        onClick={() => setMostrarPassword((visible) => !visible)}
+                                    >
+                                        {mostrarPassword ? <EyeSlash aria-hidden="true" /> : <Eye aria-hidden="true" />}
+                                    </Button>
+                                </div>
                                 {errors.usuario?.password && (
                                     <span className={styles.error}>{errors.usuario.password.message}</span>
                                 )}

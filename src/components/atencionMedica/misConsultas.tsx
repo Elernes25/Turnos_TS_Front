@@ -4,6 +4,8 @@ import { Link, useParams } from 'react-router-dom';
 import { getSession } from '../../auth/session';
 import { clientesAxios } from '../../config/axios';
 import type { IConsultaClinica } from '../../types/ConsultaClinica.types';
+import type { IPaciente } from '../../types/Paciente.type';
+import { calcularEdad } from '../../utils/calcularEdad';
 import { obtenerMensajeError } from '../utils/obtenerMensajeError';
 import styles from '../recepcionistas/DashboardRecepcion.module.scss';
 
@@ -130,6 +132,8 @@ export const DetalleMisConsulta = () => {
   const { consultaId } = useParams<{ consultaId: string }>();
   const session = getSession();
   const [consulta, setConsulta] = useState<IConsultaClinica | null>(null);
+  const [fechaNacimientoPaciente, setFechaNacimientoPaciente] = useState<string | null>(null);
+  const [errorFechaNacimiento, setErrorFechaNacimiento] = useState<string | null>(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -146,13 +150,44 @@ export const DetalleMisConsulta = () => {
       try {
         setCargando(true);
         setError(null);
+        setErrorFechaNacimiento(null);
         const consultas = await cargarConsultasDelMedico(session.id);
         const encontrada = consultas.find(
           (item) => obtenerIdConsulta(item) === consultaId,
         );
         if (!cancelado) {
-          if (encontrada) setConsulta(encontrada);
-          else setError('No se encontró la consulta solicitada.');
+          if (!encontrada) {
+            setError('No se encontró la consulta solicitada.');
+            return;
+          }
+
+          setConsulta(encontrada);
+          const paciente = encontrada.pacienteId;
+          let fechaNacimiento = typeof paciente === 'object' && paciente
+            ? paciente.fechaDeNacimiento
+            : undefined;
+          if (!fechaNacimiento) {
+            const pacienteId = typeof paciente === 'string'
+              ? paciente
+              : paciente?.id ?? paciente?._id;
+            if (pacienteId) {
+              try {
+                const respuestaPacientes = await clientesAxios.get<{
+                  datos: Array<Pick<IPaciente, 'id' | 'fechaDeNacimiento'> & { _id?: string }>;
+                }>('/pacientes');
+                const pacienteEncontrado = respuestaPacientes.data.datos.find(
+                  (item) => (item.id || item._id) === pacienteId,
+                );
+                fechaNacimiento = pacienteEncontrado?.fechaDeNacimiento;
+                if (!fechaNacimiento && !cancelado) {
+                  setErrorFechaNacimiento('No se encontró la fecha de nacimiento del paciente.');
+                }
+              } catch (error: unknown) {
+                if (!cancelado) setErrorFechaNacimiento(obtenerMensajeError(error));
+              }
+            }
+          }
+          if (!cancelado) setFechaNacimientoPaciente(fechaNacimiento ?? null);
         }
       } catch (error: unknown) {
         if (!cancelado) setError(obtenerMensajeError(error));
@@ -166,6 +201,10 @@ export const DetalleMisConsulta = () => {
       cancelado = true;
     };
   }, [consultaId, session?.id]);
+
+  const edadConsulta = consulta
+    ? calcularEdad(fechaNacimientoPaciente ?? undefined, consulta.fecha)
+    : null;
 
   return (
     <Container fluid className={styles.dashboard} data-rol="MEDICO">
@@ -191,6 +230,17 @@ export const DetalleMisConsulta = () => {
         <section className={styles.seccion}>
           <p><strong>Fecha:</strong> {formatearFecha(consulta.fecha)}</p>
           <p><strong>Paciente:</strong> {obtenerNombrePaciente(consulta)}</p>
+          <p>
+            <strong>Edad al momento de la consulta:</strong>{' '}
+            {edadConsulta === null
+              ? 'No disponible'
+              : `${edadConsulta} ${edadConsulta === 1 ? 'año' : 'años'}`}
+          </p>
+          {errorFechaNacimiento && (
+            <Alert variant="warning">
+              No se pudo cargar la fecha de nacimiento del paciente: {errorFechaNacimiento}
+            </Alert>
+          )}
           <p><strong>Motivo:</strong> {consulta.motivoConsulta}</p>
           <p><strong>Diagnóstico:</strong> {consulta.diagnostico}</p>
           <p><strong>Tratamiento:</strong> {consulta.tratamiento}</p>

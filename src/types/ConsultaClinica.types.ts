@@ -4,6 +4,7 @@ interface ConsultaClinicaReferencia {
   id?: string;
   _id?: string;
   nombre?: string;
+  fechaDeNacimiento?: string;
 }
 
 export interface IConsultaClinica {

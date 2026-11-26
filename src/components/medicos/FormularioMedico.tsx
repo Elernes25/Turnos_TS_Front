@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Button } from 'react-bootstrap';
+import { Eye, EyeSlash } from 'react-bootstrap-icons';
 import styles from './FormularioMedico.module.scss';
 //import { JsonDebugger } from '../utils/JsonDebugger';
 import { crearMedicoSchema, type ICrearMedicoRequest } from '../../types/Medico.type';
@@ -33,6 +34,7 @@ const FormularioMedico = ({ medicoId, valoresIniciales }: FormularioMedicoProps)
     const location = useLocation();
     const esEdicion = medicoId !== undefined;
     const [medicoCreadoId, setMedicoCreadoId] = useState<string | null>(null);
+    const [mostrarPassword, setMostrarPassword] = useState(false);
 
     const { register, handleSubmit, control, setError, formState: { errors, isSubmitting } } =
         useForm<IcrearMedicoDTO>({
@@ -119,14 +121,26 @@ const FormularioMedico = ({ medicoId, valoresIniciales }: FormularioMedicoProps)
                     {!esEdicion && (
                         <div className={styles.grupoCampo}>
                             <label htmlFor="password">Contraseña</label>
-                            <input
-                                id="password"
-                                type="password"
-                                autoComplete="new-password"
-                                {...register('usuario.password')}
-                                className={styles.campoInput}
-                                placeholder="Contraseña"
-                            />
+                            <div className={styles.campoPassword}>
+                                <input
+                                    id="password"
+                                    type={mostrarPassword ? 'text' : 'password'}
+                                    autoComplete="new-password"
+                                    {...register('usuario.password')}
+                                    className={styles.campoInput}
+                                    placeholder="Contraseña"
+                                />
+                                <Button
+                                    type="button"
+                                    variant="outline-secondary"
+                                    className={styles.togglePassword}
+                                    aria-label={mostrarPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                                    aria-pressed={mostrarPassword}
+                                    onClick={() => setMostrarPassword((visible) => !visible)}
+                                >
+                                    {mostrarPassword ? <EyeSlash aria-hidden="true" /> : <Eye aria-hidden="true" />}
+                                </Button>
+                            </div>
                             {errors.usuario?.password && (
                                 <span className={styles.error}>{errors.usuario.password.message}</span>
                             )}

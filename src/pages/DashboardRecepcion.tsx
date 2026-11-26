@@ -1,7 +1,7 @@
 
 
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { useFetch } from "../hooks/useFetch";
 
@@ -19,6 +19,7 @@ import { ITurno } from "../types/Turno.type";
 //import { IEspecialidad } from "../types/Especialidad.type";
 import { toast } from 'sonner';
 import {clientesAxios} from "../config/axios";
+import { useTurnosWebSocket, type EstadoTurnoActualizado } from "../hooks/useTurnosWebSocket";
 import styles from "../components/recepcionistas/DashboardRecepcion.module.scss";
 
 const DashboardRecepcion = () => {
@@ -34,18 +35,25 @@ const DashboardRecepcion = () => {
         (turno) =>(turno.pacienteId?.nombre ?? "Paciente sin asignar").toLowerCase().includes(busqueda.toLowerCase())
     );
 
-    const marcarComoAtendido = async (idTurno:string) => {
+    const aplicarEstadoRecibido = useCallback(({ turnoId, estado }: EstadoTurnoActualizado): void => {
+        setTurnos((actuales) => (actuales ?? []).map((turno) =>
+            turno.id === turnoId ? { ...turno, estado } : turno
+        ));
+    }, [setTurnos]);
+
+    useTurnosWebSocket(aplicarEstadoRecibido);
+
+    const llamarTurno = async (idTurno: string): Promise<void> => {
         try {
-            await clientesAxios.patch(`/turnos/${idTurno}`);
-            const turnosActualizados = turnos?.map(turno => {  // signo de pregunta porque puede ser nulo
-                if (turno.id === idTurno) return { ...turno, estado: "atendido" as const};
-                return turno;
-            });
-            setTurnos(turnosActualizados || []);
+            await clientesAxios.patch(`/turnos/enatencion/${idTurno}`);
+            setTurnos((actuales) => (actuales ?? []).map((turno) =>
+                turno.id === idTurno ? { ...turno, estado: "en atencion" as const } : turno
+            ));
+            toast.success("Turno marcado como en atención.");
 
         } catch (error) {
             console.error(error);
-            toast.error("Error de red.");
+            toast.error("No se pudo llamar al paciente. Intentá nuevamente.");
         }
     };
 
@@ -72,7 +80,7 @@ const DashboardRecepcion = () => {
                 <TurnosHoy
                     turnos={turnosFiltrados}
                     isLoading={isLoading}
-                    onAtender={marcarComoAtendido}
+                    onAtender={llamarTurno}
                     onTurnoCancelado={actualizarTurnoCancelado}
                 />
             </div>
