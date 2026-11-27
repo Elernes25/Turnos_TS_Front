@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Badge, Button, Modal, Spinner, Table } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { clientesAxios } from '../../config/axios';
 import { useFetch } from '../../hooks/useFetch';

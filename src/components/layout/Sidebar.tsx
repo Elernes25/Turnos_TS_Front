@@ -108,12 +108,14 @@ const MENU_ITEMS: MenuItem[] = [
      roles: [RolUsuario.ADMIN, RolUsuario.SUPERVISOR]
    },
  
-   {
+/*}  
     ruta: '/turnos',
     texto: 'Listado de Turnos',
     icono: Clipboard2Check,
     roles: [RolUsuario.ADMIN, RolUsuario.RECEPCIONISTA]
   },
+  */
+
    {
      ruta: '/editar-paciente',
      texto: 'Actualizar Paciente',
