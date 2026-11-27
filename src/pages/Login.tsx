@@ -8,6 +8,7 @@ import { Button, Container, Card, Form, InputGroup } from "react-bootstrap";
 import { Eye, EyeSlash } from "react-bootstrap-icons";
 import { LoginDTO,loginSchema } from "../types/Login.types";
 import { getSession, saveSession } from "../auth/session";
+import styles from "./Login.module.scss";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -55,7 +56,13 @@ const Login = () => {
     };
 
     return (
-        <Container className="d-flex justify-content-center align-items-center vh-100">
+        <Container className="d-flex flex-column justify-content-center align-items-center vh-100">
+            <header className={styles.brand}>
+                <h1 className={styles.title}>
+                    Salud Municipal - <span className={styles.slogan}>"Siempre Cerca"</span>
+                    <br/><br/>
+                </h1>
+            </header>
             <Card style={{ width: '400px' }} className="p-4 shadow">
                 <h3 className="text-center mb-4">Ingreso al Sistema</h3>
                 <form onSubmit={handleSubmit(onSubmit)}>
