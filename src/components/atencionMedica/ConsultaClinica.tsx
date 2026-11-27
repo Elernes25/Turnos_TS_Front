@@ -52,9 +52,7 @@ const ConsultaClinica = () => {
     await clientesAxios.patch(`/turnos/${turnoId}`);
     toast.success('Consulta guardada y turno marcado como atendido.');
     setMostrarModal(false);
-    navigate(`/historia-clinica/${pacienteId}`, {
-      state: { pacienteNombre, pacienteFechaNacimiento, turnoId },
-    });
+    navigate('/medico');
   };
 
   const crearConsulta = async (datos: IConsultaClinicaFormData): Promise<void> => {
