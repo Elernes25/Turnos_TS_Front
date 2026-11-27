@@ -32,6 +32,13 @@ const DashboardAcciones = () => {
                 <Calendar2Week size={18} aria-hidden="true" />
                 Turnos Futuros
             </Link>
+            <Link
+                to="/turnos-pasados"
+                className="btn btn-outline-primary btn-sm d-inline-flex align-items-center justify-content-center gap-2"
+            >
+                <Calendar2Week size={18} aria-hidden="true" />
+                Turnos Pasados
+            </Link>
         </div>
     );
 };

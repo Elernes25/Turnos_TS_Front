@@ -37,6 +37,7 @@ import ListadoMedicosMain from "./components/medicos/ListadoMedicosMain"
 import ListadoTurnos from "./components/turnos/ListadoTurnos"
 import FormularioTurno from "./components/turnos/FormularioTurno"
 import TurnosFuturos from "./components/turnos/TurnosFuturos"
+import TurnosPasados from "./components/turnos/TurnosPasados"
 import FormularioRecepcionista from "./components/recepcionistas/FormularioRecepcionista"
 import ListadoRecepcionistaMain from "./components/recepcionistas/ListadoRecepcionistaMain"
 import EditarRecepcionista from "./components/recepcionistas/EditarRecepcionista"
@@ -96,6 +97,7 @@ function App() {
                         <Route path="nuevo-turno/:id" element={<FormularioTurno />} />
                         <Route path="turnos" element={<ListadoTurnos />} />
                         <Route path="turnos-futuros" element={<TurnosFuturos />} />
+                        <Route path="turnos-pasados" element={<TurnosPasados />} />
                         <Route path="turno-detalle/:id" element={<DetalleTurno />} />
                         
                     </Route>
