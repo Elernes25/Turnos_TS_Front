@@ -13,6 +13,7 @@ import { obtenerHorarios, obtenerClaveFecha, horarioYaPaso } from '../../utils/a
 import type { HorarioDisponible } from '../../../types/Agenda.types';
 import CalendarioTurnos from '../../turnos/components/CalendarioTurnos';
 import styles from '../../pacientes/FormularioPaciente.module.scss';
+import { obtenerFeriadosDelAnio } from '../../../services/feriados';
 
 const formularioTurnoIngresoSchema = z.object({
     especialidadId: z.string().min(1, 'La especialidad es obligatoria'),
@@ -95,28 +96,53 @@ const FormularioTurnoIngreso = ({
     useEffect(() => {
         if (!especialidadId || !medicoId || !agenda || cargandoDisponibilidad) return;
 
-        const fechaInicial = new Date();
-        fechaInicial.setHours(0, 0, 0, 0);
+        let cancelado = false;
+        const buscarPrimerHorarioDisponible = async (): Promise<void> => {
+            const fechaInicial = new Date();
+            fechaInicial.setHours(0, 0, 0, 0);
+            const fechas = Array.from({ length: 366 }, (_, dias) => {
+                const fecha = new Date(fechaInicial);
+                fecha.setDate(fechaInicial.getDate() + dias);
+                return fecha;
+            });
+            const anios = [...new Set(fechas.map((fecha) => fecha.getFullYear()))];
 
-        for (let dias = 0; dias <= 365; dias += 1) {
-            const fecha = new Date(fechaInicial);
-            fecha.setDate(fechaInicial.getDate() + dias);
-            const horarioDisponible = obtenerHorarios(fecha, agenda, turnosOcupados, new Date())
-                .find((horario) => !horario.ocupado && !horario.pasado);
+            try {
+                const mapasFeriados = await Promise.all(anios.map(obtenerFeriadosDelAnio));
+                if (cancelado) return;
+                const fechasFeriados = new Set(mapasFeriados.flatMap((mapa) => [...mapa.keys()]));
 
-            if (horarioDisponible) {
-                setFechaSeleccionada(obtenerClaveFecha(fecha));
-                setMesVisible(new Date(fecha.getFullYear(), fecha.getMonth(), 1));
-                setValue('fechaTurno', horarioDisponible.fecha.toISOString(), {
-                    shouldDirty: true,
-                    shouldValidate: true,
-                });
-                return;
+                for (const fecha of fechas) {
+                    if (fechasFeriados.has(obtenerClaveFecha(fecha))) continue;
+                    const horarioDisponible = obtenerHorarios(fecha, agenda, turnosOcupados, new Date())
+                        .find((horario) => !horario.ocupado && !horario.pasado);
+
+                    if (horarioDisponible) {
+                        setFechaSeleccionada(obtenerClaveFecha(fecha));
+                        setMesVisible(new Date(fecha.getFullYear(), fecha.getMonth(), 1));
+                        setValue('fechaTurno', horarioDisponible.fecha.toISOString(), {
+                            shouldDirty: true,
+                            shouldValidate: true,
+                        });
+                        return;
+                    }
+                }
+
+                setFechaSeleccionada('');
+                setValue('fechaTurno', '', { shouldValidate: true });
+            } catch {
+                if (!cancelado) {
+                    toast.error('No se pudieron consultar los feriados para buscar un turno.');
+                    setFechaSeleccionada('');
+                    setValue('fechaTurno', '', { shouldValidate: true });
+                }
             }
-        }
+        };
 
-        setFechaSeleccionada('');
-        setValue('fechaTurno', '', { shouldValidate: true });
+        void buscarPrimerHorarioDisponible();
+        return () => {
+            cancelado = true;
+        };
     }, [
         agenda,
         cargandoDisponibilidad,

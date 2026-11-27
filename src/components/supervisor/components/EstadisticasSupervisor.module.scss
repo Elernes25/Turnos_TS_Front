@@ -1,0 +1,131 @@
+@use "../../../styles/variables" as *;
+
+.panel {
+  @include card-base;
+  height: 100%;
+  padding: $sp-4;
+}
+
+.titulo {
+  color: $texto;
+  font-size: $fs-lg;
+  font-weight: 700;
+  margin-bottom: $sp-1;
+}
+
+.descripcion {
+  color: $label;
+  font-size: $fs-sm;
+  margin-bottom: $sp-4;
+}
+
+.estado {
+  color: $label;
+  margin: 0;
+  padding: $sp-4 0;
+}
+
+.listaRanking {
+  display: grid;
+  gap: $sp-3;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.filaRanking {
+  min-width: 0;
+}
+
+.datosRanking {
+  align-items: baseline;
+  display: flex;
+  gap: $sp-3;
+  justify-content: space-between;
+  margin-bottom: $sp-1;
+}
+
+.nombreRanking {
+  color: $texto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cantidad {
+  color: $titulo-sec;
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.fondoBarra {
+  background: $suave;
+  border-radius: 999px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.barraRanking {
+  background: $acento;
+  border-radius: inherit;
+  height: 100%;
+  min-width: 3px;
+}
+
+.grafico {
+  align-items: stretch;
+  display: flex;
+  gap: $sp-2;
+  min-height: 220px;
+  overflow-x: auto;
+  padding: $sp-2 0;
+}
+
+.columnaMes {
+  align-items: center;
+  display: flex;
+  flex: 1 0 36px;
+  flex-direction: column;
+  gap: $sp-1;
+  justify-content: flex-end;
+  min-width: 32px;
+}
+
+.valorMes {
+  color: $label;
+  font-size: $fs-xs;
+  font-variant-numeric: tabular-nums;
+  min-height: 1rem;
+}
+
+.pistaBarra {
+  align-items: flex-end;
+  background: $suave;
+  border-radius: $radius-sm $radius-sm 0 0;
+  display: flex;
+  height: 150px;
+  justify-content: center;
+  overflow: hidden;
+  width: 100%;
+}
+
+.barraMes {
+  background: linear-gradient(180deg, $acento-hover, $acento);
+  border-radius: $radius-sm $radius-sm 0 0;
+  min-height: 0;
+  transition: height $transition-base;
+  width: min(28px, 100%);
+}
+
+.barraCancelados {
+  @extend .barraMes;
+  background: linear-gradient(180deg, #ffb4b4, #e25b5b);
+}
+
+.etiquetaMes {
+  color: $label;
+  font-size: $fs-xs;
+  text-transform: capitalize;
+}

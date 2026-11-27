@@ -1,0 +1,17 @@
+@use "../../styles/variables" as *;
+
+.encabezado {
+  margin-bottom: $sp-5;
+}
+
+.titulo {
+  color: $texto;
+  font-size: $fs-2xl;
+  font-weight: 700;
+  margin: 0;
+}
+
+.subtitulo {
+  color: $label;
+  margin: $sp-1 0 0;
+}

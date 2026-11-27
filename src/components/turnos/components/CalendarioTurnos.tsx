@@ -1,8 +1,9 @@
 import { Alert, Button, Card, Col, Form, Row, Spinner } from "react-bootstrap";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { IAgenda } from "../../../types/Agenda.types";
 import { obtenerHorarios, obtenerClaveFecha} from "../../utils/agendaUtils";
 import type { TurnoOcupado, HorarioDisponible} from "../../../types/Agenda.types";
+import { obtenerFeriadosDelAnio } from "../../../services/feriados";
 
 
 interface CalendarioTurnosProps {
@@ -39,6 +40,34 @@ interface CalendarioTurnosProps {
     onSeleccionarHorario,
     errorFechaTurno,
 }: CalendarioTurnosProps) => {
+    const [feriados, setFeriados] = useState<Map<string, string>>(new Map());
+    const [cargandoFeriados, setCargandoFeriados] = useState(true);
+    const [errorFeriados, setErrorFeriados] = useState("");
+    const [intentosCargaFeriados, setIntentosCargaFeriados] = useState(0);
+
+    useEffect(() => {
+        let cancelado = false;
+        setCargandoFeriados(true);
+        setErrorFeriados("");
+        setFeriados(new Map());
+
+        obtenerFeriadosDelAnio(mesVisible.getFullYear())
+            .then((resultado) => {
+                if (!cancelado) setFeriados(resultado);
+            })
+            .catch(() => {
+                if (!cancelado) {
+                    setErrorFeriados("No se pudieron cargar los feriados. No es posible elegir fechas hasta volver a intentarlo.");
+                }
+            })
+            .finally(() => {
+                if (!cancelado) setCargandoFeriados(false);
+            });
+
+        return () => {
+            cancelado = true;
+        };
+    }, [intentosCargaFeriados, mesVisible]);
 
     const diasDelCalendario = useMemo(() => {
         const primerDia = new Date(
@@ -168,19 +197,31 @@ interface CalendarioTurnosProps {
                                 const sinDisponibilidad = !horarios.some(
                                     (horario) => !horario.ocupado && !horario.pasado,
                                 );
-                                const deshabilitado = fechaPasada || sinDisponibilidad;
+                                const nombreFeriado = feriados.get(claveFecha);
+                                const esFeriado = Boolean(nombreFeriado);
+                                const deshabilitado = cargandoFeriados
+                                    || Boolean(errorFeriados)
+                                    || esFeriado
+                                    || fechaPasada
+                                    || sinDisponibilidad;
                                 const seleccionado = fechaSeleccionada === claveFecha;
 
                                 return (
                                     <Button
                                         key={claveFecha}
                                         type="button"
-                                        variant={seleccionado ? "success": sinDisponibilidad ? "light" : "outline-success" }
+                                        variant={esFeriado ? "danger" : seleccionado ? "success": sinDisponibilidad ? "light" : "outline-success" }
                                         className={`rounded-0 p-1 ${sinDisponibilidad ? "" : "fw-semibold"}`}
                                         disabled={deshabilitado}
                                         aria-pressed={seleccionado}
                                         title={
-                                            fechaPasada
+                                            esFeriado
+                                                ? nombreFeriado
+                                                : cargandoFeriados
+                                                    ? "Cargando feriados..."
+                                                    : errorFeriados
+                                                        ? "No se pudieron validar los feriados"
+                                                        : fechaPasada
                                                 ? "No se pueden elegir fechas pasadas"
                                                 : sinDisponibilidad && !fueraDelMes
                                                     ? "El médico no atiende este día o no hay horarios disponibles"
@@ -195,6 +236,33 @@ interface CalendarioTurnosProps {
                         </div>
                     </Card.Body>
                 </Card>
+                {cargandoFeriados && (
+                    <div className="d-flex align-items-center gap-2 mb-3">
+                        <Spinner size="sm" />
+                        <span>Cargando feriados...</span>
+                    </div>
+                )}
+                {errorFeriados && (
+                    <Alert variant="danger">
+                        <div className="d-flex justify-content-between align-items-center gap-2">
+                            <span>{errorFeriados}</span>
+                            <Button
+                                type="button"
+                                variant="outline-danger"
+                                size="sm"
+                                onClick={() => setIntentosCargaFeriados((intento) => intento + 1)}
+                            >
+                                Reintentar
+                            </Button>
+                        </div>
+                    </Alert>
+                )}
+                {!cargandoFeriados && !errorFeriados && feriados.size > 0 && (
+                    <small className="text-body-secondary d-block mb-3">
+                        <span className="badge bg-danger me-2">Feriado</span>
+                        Las fechas en rojo no se pueden elegir.
+                    </small>
+                )}
 
                 {fechaSeleccionada && (
                     <div>
